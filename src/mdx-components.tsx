@@ -1,9 +1,9 @@
 import type { MDXComponents } from "mdx/types";
-import { Paragraph } from "./components/Paragraph";
+import { TextBlock } from "./components/TextBlock";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
-    p: ({ children }) => <Paragraph text={children}></Paragraph>,
+    p: ({ children }) => <TextBlock>{children}</TextBlock>,
     ...components,
   };
 }

@@ -1,0 +1,9 @@
+.word {
+  display: inline;
+
+  &:hover {
+    background: var(--surface-light);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+}

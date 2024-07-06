@@ -1,0 +1,32 @@
+"use client";
+
+import { KuromojiToken } from "kuromojin";
+import { ReactNode, useEffect, useState } from "react";
+import { Word } from "../Word";
+
+type ParsedTextProps = {
+  tokens: KuromojiToken[];
+  children?: ReactNode;
+};
+
+const posToSkip = ["助動詞", "記号"];
+
+function ParsedText({ tokens }: ParsedTextProps) {
+  const [words, setWords] = useState<ReactNode[] | []>([]);
+
+  useEffect(() => {
+    const text = tokens.map((word) => {
+      const id = crypto.randomUUID();
+      if (word.word_type === "UNKNOWN") return <>{word.surface_form}</>;
+      if (posToSkip.includes(word.pos)) return <>{word.surface_form}</>;
+
+      return <Word key={id}>{word.surface_form}</Word>;
+    });
+
+    setWords(text);
+  }, [tokens]);
+
+  return <>{words}</>;
+}
+
+export default ParsedText;
