@@ -17,8 +17,10 @@ function ParsedText({ tokens }: ParsedTextProps) {
   useEffect(() => {
     const text = tokens.map((word) => {
       const id = crypto.randomUUID();
-      if (word.word_type === "UNKNOWN") return <>{word.surface_form}</>;
-      if (posToSkip.includes(word.pos)) return <>{word.surface_form}</>;
+      if (word.word_type === "UNKNOWN")
+        return <span key={id}>{word.surface_form}</span>;
+      if (posToSkip.includes(word.pos))
+        return <span key={id}>{word.surface_form}</span>;
 
       return <Word key={id}>{word.surface_form}</Word>;
     });

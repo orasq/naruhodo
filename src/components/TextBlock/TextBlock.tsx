@@ -25,7 +25,11 @@ function TextBlock({ children }: TextBlockProps) {
 
   return (
     <>
-      <p className={`${notoSansJp.className} ${styles.textBlock}`}>
+      <p
+        tabIndex={!!parsedText.length ? 0 : undefined}
+        role={!!parsedText.length ? "group" : undefined}
+        className={`${notoSansJp.className} ${styles.textBlock}`}
+      >
         {!!parsedText.length ? <ParsedText tokens={parsedText} /> : children}
       </p>
       <button onClick={handleClick}>click</button>
