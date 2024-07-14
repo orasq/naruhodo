@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ElementRef, LegacyRef, ReactNode, RefObject, useState } from "react";
 import { Noto_Sans_JP } from "next/font/google";
 
 import { getTokens } from "@/actions/getTokens";
@@ -10,11 +10,12 @@ import { ParsedText } from "../ParsedText";
 
 const notoSansJp = Noto_Sans_JP({ subsets: ["latin"] });
 
-type TextBlockProps = {
+export type TextBlockProps = {
+  paragraphRef: (el: HTMLParagraphElement | null) => void;
   children?: ReactNode;
 };
 
-function TextBlock({ children }: TextBlockProps) {
+function TextBlock({ paragraphRef, children }: TextBlockProps) {
   const [parsedText, setParsedText] = useState<KuromojiToken[] | []>([]);
 
   async function handleClick() {
@@ -26,6 +27,7 @@ function TextBlock({ children }: TextBlockProps) {
   return (
     <>
       <p
+        ref={paragraphRef}
         tabIndex={!!parsedText.length ? 0 : undefined}
         role={!!parsedText.length ? "group" : undefined}
         className={`${notoSansJp.className} ${styles.textBlock}`}
