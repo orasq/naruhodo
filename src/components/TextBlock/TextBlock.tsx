@@ -12,10 +12,11 @@ const notoSansJp = Noto_Sans_JP({ subsets: ["latin"] });
 
 export type TextBlockProps = {
   paragraphRef: (el: HTMLParagraphElement | null) => void;
+  isVisible: boolean;
   children?: ReactNode;
 };
 
-function TextBlock({ paragraphRef, children }: TextBlockProps) {
+function TextBlock({ paragraphRef, isVisible, children }: TextBlockProps) {
   const [parsedText, setParsedText] = useState<KuromojiToken[] | []>([]);
 
   async function handleClick() {
@@ -30,7 +31,9 @@ function TextBlock({ paragraphRef, children }: TextBlockProps) {
         ref={paragraphRef}
         tabIndex={!!parsedText.length ? 0 : undefined}
         role={!!parsedText.length ? "group" : undefined}
-        className={`${notoSansJp.className} ${styles.textBlock}`}
+        className={`${notoSansJp.className} ${styles.textBlock} ${
+          isVisible ? "coucou" : ""
+        }`}
       >
         {!!parsedText.length ? <ParsedText tokens={parsedText} /> : children}
       </p>
