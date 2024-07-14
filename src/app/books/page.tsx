@@ -167,6 +167,9 @@ function Books() {
     }));
   });
 
+  const { addToQueue, removeFromQueue, isInQueue, setVisibility } =
+    useParseText(paragraphs);
+
   // Create array of refs with page's paragraphs
   const textBlockRefs = useRef<HTMLParagraphElement[]>([]);
   const addToRefs = (el: HTMLParagraphElement | null) => {
@@ -189,20 +192,24 @@ function Books() {
         );
         const isSetVisible = paragraphs[index].isVisible;
 
-        // skip
-        if (!entry.isIntersecting && !isSetVisible) return;
+        // change visibility, then skip
+        if (!entry.isIntersecting && isSetVisible) {
+          setVisibility(index, false);
+          return;
+        }
 
-        // change 'isVisible' value
-        const newParagraphs = await useParseText(
-          paragraphs,
-          index,
-          entry.isIntersecting
-        );
-        setParagraphs(newParagraphs);
+        // remove item from queue
+        if (!entry.isIntersecting && !isSetVisible) {
+          if (isInQueue(index)) removeFromQueue(index);
+          return;
+        }
+
+        // add item to queue
+        addToQueue(paragraphs[index].baseText, index);
       });
     });
 
-    // Observe each <TextBlock>
+    // observe each <TextBlock>
     textBlockRefs.current.forEach((ref) => {
       if (ref) observer.observe(ref);
     });
