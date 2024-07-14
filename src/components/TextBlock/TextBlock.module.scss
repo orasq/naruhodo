@@ -1,7 +1,11 @@
 .textBlock {
+  margin-bottom: 40px;
   font-size: 20px;
+  opacity: 0.3;
+  transition: 0.3s ease-out;
+  transition-property: opacity;
 
-  strong {
-    color: red;
+  &.parsed {
+    opacity: 1;
   }
 }

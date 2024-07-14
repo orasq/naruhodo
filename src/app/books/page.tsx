@@ -1,6 +1,8 @@
 "use client";
 
 import { TextBlock } from "@/components/TextBlock";
+import useParseText from "@/hooks/useParseText";
+import { KuromojiToken } from "kuromojin";
 import { useEffect, useRef, useState } from "react";
 
 const baseText = `【速報中】関東 局地的に雷伴い激しい雨 浸水や川の氾濫に警戒
@@ -150,17 +152,17 @@ const baseText = `【速報中】関東 局地的に雷伴い激しい雨 浸水
 
 低い土地の浸水や川の増水、氾濫に警戒するとともに、土砂災害や落雷、竜巻などの激しい突風、ひょうにも十分注意し、急に冷たい風が吹くなど発達した積乱雲が近づく兆しがある場合は頑丈な建物の中に移動するなど安全を確保してください。`;
 
-type ParsedText = {
+export type ParsedParagraph = {
   baseText: string;
-  parsedText: object;
+  parsedText: KuromojiToken[];
   isVisible: boolean;
 };
 
 function Books() {
-  const [paragraphs, setParagraphs] = useState<ParsedText[]>(() => {
+  const [paragraphs, setParagraphs] = useState<ParsedParagraph[]>(() => {
     return baseText.split("\n\n").map((text) => ({
       baseText: text,
-      parsedText: {},
+      parsedText: [],
       isVisible: false,
     }));
   });
@@ -180,7 +182,7 @@ function Books() {
    */
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      entries.forEach(async (entry) => {
         // get entry's index
         const index = textBlockRefs.current.indexOf(
           entry.target as HTMLParagraphElement
@@ -191,11 +193,12 @@ function Books() {
         if (!entry.isIntersecting && !isSetVisible) return;
 
         // change 'isVisible' value
-        setParagraphs((prev) => {
-          const copy = [...prev];
-          copy[index].isVisible = entry.isIntersecting;
-          return copy;
-        });
+        const newParagraphs = await useParseText(
+          paragraphs,
+          index,
+          entry.isIntersecting
+        );
+        setParagraphs(newParagraphs);
       });
     });
 
@@ -205,6 +208,9 @@ function Books() {
     });
 
     return () => {
+      textBlockRefs.current.forEach((ref) => {
+        observer.unobserve(ref);
+      });
       observer.disconnect();
     };
   }, []);
@@ -216,6 +222,7 @@ function Books() {
           key={index}
           paragraphRef={addToRefs}
           isVisible={item.isVisible}
+          parsedParagraph={item.parsedText}
         >
           {item.baseText}
         </TextBlock>
