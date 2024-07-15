@@ -12,11 +12,20 @@ function useParseText(initialParagraphs: ParsedParagraph[]) {
   const [updatedParagraphs, setUpdatedParagraphs] =
     useState<ParsedParagraph[]>(initialParagraphs);
 
-  // Ref to keep track of the latest queue state (useful for isInQueue)
+  // Ref to keep track of the latest queue state (useful in isInQueue to solve closure issue)
+  // TODO - there's probably a better way to do this
   const queueRef = useRef(queue);
 
   useEffect(() => {
     queueRef.current = queue;
+
+    // Debounce before handling the queue
+    // TODO - there's probably a better way to do this
+    const timeout = setTimeout(() => {
+      console.log("handle queue");
+    }, 1000);
+
+    return () => clearTimeout(timeout);
   }, [queue]);
 
   //   // Change visibility
