@@ -167,8 +167,13 @@ function Books() {
     }));
   });
 
-  const { addToQueue, removeFromQueue, isInQueue, setVisibility } =
-    useParseText(paragraphs);
+  const {
+    addToQueue,
+    removeFromQueue,
+    isInQueue,
+    setVisibility,
+    updatedParagraphs,
+  } = useParseText(paragraphs);
 
   // Create array of refs with page's paragraphs
   const textBlockRefs = useRef<HTMLParagraphElement[]>([]);
@@ -177,6 +182,13 @@ function Books() {
 
     textBlockRefs?.current?.push(el);
   };
+
+  // Update displayed paragraphs array when parsed text changes
+  useEffect(() => {
+    console.log({ updatedParagraphs });
+
+    setParagraphs(updatedParagraphs);
+  }, [updatedParagraphs]);
 
   /**
    * Add IntersectionObserver to ascertain if a <TextBlock> is visible on the screen or not.
@@ -205,7 +217,8 @@ function Books() {
         }
 
         // add item to queue
-        addToQueue(paragraphs[index].baseText, index);
+        addToQueue(index);
+        setVisibility(index, true);
       });
     });
 
