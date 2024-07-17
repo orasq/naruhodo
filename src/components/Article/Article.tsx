@@ -4,19 +4,20 @@ import { TextBlock } from "@/components/TextBlock";
 import useParseText from "@/hooks/useParseText";
 import { KuromojiToken } from "kuromojin";
 import { useEffect, useRef, useState } from "react";
+import styles from "./Article.module.scss";
 
 type ArticleProps = {
   articleParagraphs: string[];
 };
 
-export type ParsedParagraph = {
+export type ParagraphObject = {
   baseText: string;
   parsedText: KuromojiToken[];
   isVisible: boolean;
 };
 
 function Article({ articleParagraphs }: ArticleProps) {
-  const [paragraphs, setParagraphs] = useState<ParsedParagraph[]>(() => {
+  const [paragraphs, setParagraphs] = useState<ParagraphObject[]>(() => {
     return articleParagraphs.map((text) => ({
       baseText: text,
       parsedText: [],
@@ -93,7 +94,7 @@ function Article({ articleParagraphs }: ArticleProps) {
   }, []);
 
   return (
-    <article>
+    <article className={styles.article}>
       {paragraphs.map((item, index) => (
         <TextBlock
           key={index}

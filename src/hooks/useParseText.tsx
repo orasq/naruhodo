@@ -1,5 +1,5 @@
 import { getTokens } from "@/actions/getTokens";
-import type { ParsedParagraph } from "@/app/books/page";
+import type { ParagraphObject } from "@/components/Article/Article";
 import { useEffect, useRef, useState } from "react";
 
 type QueueItem = number;
@@ -9,11 +9,11 @@ export type BatchItem = {
   index: number;
 };
 
-function useParseText(initialParagraphs: ParsedParagraph[]) {
+function useParseText(initialParagraphs: ParagraphObject[]) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [batch, setBatch] = useState<BatchItem[]>([]);
   const [updatedParagraphs, setUpdatedParagraphs] =
-    useState<ParsedParagraph[]>(initialParagraphs);
+    useState<ParagraphObject[]>(initialParagraphs);
 
   const canProcessNewBatch = useRef(true);
 
@@ -99,7 +99,7 @@ function useParseText(initialParagraphs: ParsedParagraph[]) {
     if (!queue.length) return;
 
     const itemsToProcess = updatedParagraphs.reduce(
-      (acc: BatchItem[], curr: ParsedParagraph, currIndex: number) => {
+      (acc: BatchItem[], curr: ParagraphObject, currIndex: number) => {
         // if not in queue, skip
         if (!isInQueue(currIndex)) return acc;
 
