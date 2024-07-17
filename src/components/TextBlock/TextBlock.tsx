@@ -5,7 +5,7 @@ import { Noto_Sans_JP } from "next/font/google";
 
 import styles from "./TextBlock.module.scss";
 import { KuromojiToken } from "kuromojin";
-import { ParsedText } from "../ParsedText";
+import { ParsedParagraph } from "../ParsedParagraph";
 
 const notoSansJp = Noto_Sans_JP({ subsets: ["latin"] });
 
@@ -35,7 +35,7 @@ function TextBlock({
         } ${parsedParagraph ? styles.parsed : ""}`}
       >
         {hasParsedText && isVisible ? (
-          <ParsedText tokens={parsedParagraph} />
+          <ParsedParagraph tokens={parsedParagraph} />
         ) : (
           children
         )}

@@ -4,14 +4,14 @@ import { KuromojiToken } from "kuromojin";
 import { ReactNode, useEffect, useState } from "react";
 import { Word } from "../Word";
 
-type ParsedTextProps = {
+type ParsedParagraphProps = {
   tokens: KuromojiToken[];
   children?: ReactNode;
 };
 
 const posToSkip = ["助動詞", "記号"];
 
-function ParsedText({ tokens }: ParsedTextProps) {
+function ParsedParagraph({ tokens }: ParsedParagraphProps) {
   const [words, setWords] = useState<ReactNode[] | []>([]);
 
   useEffect(() => {
@@ -31,4 +31,4 @@ function ParsedText({ tokens }: ParsedTextProps) {
   return <>{words}</>;
 }
 
-export default ParsedText;
+export default ParsedParagraph;

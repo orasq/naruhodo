@@ -52,7 +52,7 @@ function useParseText(initialParagraphs: ParsedParagraph[]) {
         return newArray;
       });
 
-      // empty batch
+      // empty the batch
       setBatch([]);
       canProcessNewBatch.current = true;
     })();
@@ -113,7 +113,7 @@ function useParseText(initialParagraphs: ParsedParagraph[]) {
 
     setBatch(itemsToProcess);
 
-    // empty queue
+    // empty the queue
     setQueue([]);
   }
 
