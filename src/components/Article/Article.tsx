@@ -62,20 +62,16 @@ function Article({ articleParagraphs }: ArticleProps) {
         );
         const isSetVisible = paragraphs[index].isVisible;
 
-        // change visibility, then skip
-        if (!entry.isIntersecting && isSetVisible) {
+        // change visibility and remove from queue (if applicable)
+        if (!entry.isIntersecting) {
+          if (isInQueue(index)) removeFromQueue(index);
+
           setVisibility(index, false);
           return;
         }
 
-        // remove item from queue
-        if (!entry.isIntersecting && !isSetVisible) {
-          if (isInQueue(index)) removeFromQueue(index);
-          return;
-        }
-
         // add item to queue
-        addToQueue(index);
+        if (!isInQueue(index)) addToQueue(index);
         setVisibility(index, true);
       });
     });
