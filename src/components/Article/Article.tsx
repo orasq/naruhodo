@@ -43,8 +43,6 @@ function Article({ articleParagraphs }: ArticleProps) {
 
   // Update displayed paragraphs array when parsed text changes
   useEffect(() => {
-    console.log({ updatedParagraphs });
-
     setParagraphs(updatedParagraphs);
   }, [updatedParagraphs]);
 
