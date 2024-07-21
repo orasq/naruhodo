@@ -1,11 +1,10 @@
 "use client";
 
-import { ReactNode } from "react";
-import { Noto_Sans_JP } from "next/font/google";
-
-import styles from "./TextBlock.module.scss";
+import { ReactNode, useMemo } from "react";
 import { KuromojiToken } from "kuromojin";
-import { ParsedText } from "../ParsedText";
+import styles from "./TextBlock.module.scss";
+import { Noto_Sans_JP } from "next/font/google";
+import { Word } from "../Word";
 
 const notoSansJp = Noto_Sans_JP({ subsets: ["latin"] });
 
@@ -22,7 +21,22 @@ function TextBlock({
   parsedParagraph,
   children,
 }: TextBlockProps) {
-  const hasParsedText = !!parsedParagraph.length;
+  const POS_TO_SKIP = ["助動詞", "記号"];
+
+  const words = useMemo(() => {
+    return parsedParagraph.map((word) => {
+      const id = crypto.randomUUID();
+
+      if (word.word_type === "UNKNOWN")
+        return <span key={id}>{word.surface_form}</span>;
+      if (POS_TO_SKIP.includes(word.pos))
+        return <span key={id}>{word.surface_form}</span>;
+
+      return <Word key={id}>{word.surface_form}</Word>;
+    });
+  }, [parsedParagraph]);
+
+  const hasParsedText = !!words.length;
 
   return (
     <>
@@ -31,14 +45,10 @@ function TextBlock({
         tabIndex={hasParsedText ? 0 : undefined}
         role={hasParsedText ? "group" : undefined}
         className={`${notoSansJp.className} ${styles.textBlock} ${
-          isVisible ? "coucou" : ""
-        } ${parsedParagraph ? styles.parsed : ""}`}
+          hasParsedText ? styles.parsed : ""
+        }`}
       >
-        {hasParsedText && isVisible ? (
-          <ParsedText tokens={parsedParagraph} />
-        ) : (
-          children
-        )}
+        {hasParsedText && isVisible ? words : children}
       </p>
     </>
   );
