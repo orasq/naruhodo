@@ -5,22 +5,29 @@ import useParseText from "@/hooks/useParseText";
 import { KuromojiToken } from "kuromojin";
 import { useEffect, useRef, useState } from "react";
 import styles from "./Article.module.scss";
+import { ArticleHeader } from "../ArticleHeader";
+import type { BookInfo } from "../ArticleHeader/ArticleHeader";
+import { TextBlockTag } from "../TextBlock/TextBlock";
+import initializeBaseText from "@/lib/utils/initializeBaseText";
 
 type ArticleProps = {
+  bookInfo: BookInfo;
   articleParagraphs: string[];
 };
 
 export type ParagraphObject = {
   baseText: string;
   parsedText: KuromojiToken[];
+  htmlTag: TextBlockTag;
   isVisible: boolean;
 };
 
-function Article({ articleParagraphs }: ArticleProps) {
+function Article({ bookInfo, articleParagraphs }: ArticleProps) {
   const [paragraphs, setParagraphs] = useState<ParagraphObject[]>(() => {
     return articleParagraphs.map((text) => ({
-      baseText: text,
+      baseText: initializeBaseText(text)?.baseText,
       parsedText: [],
+      htmlTag: initializeBaseText(text)?.htmlTag,
       isVisible: false,
     }));
   });
@@ -89,12 +96,17 @@ function Article({ articleParagraphs }: ArticleProps) {
 
   return (
     <article className={styles.article}>
+      {/* Book info */}
+      <ArticleHeader bookInfo={bookInfo} />
+
+      {/* Main content */}
       {paragraphs.map((item, index) => (
         <TextBlock
           key={index}
           paragraphRef={addToRefs}
-          isVisible={item.isVisible}
           parsedParagraph={item.parsedText}
+          htmlTag={item.htmlTag}
+          isVisible={item.isVisible}
         >
           {item.baseText}
         </TextBlock>
