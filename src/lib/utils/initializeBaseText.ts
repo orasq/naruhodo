@@ -17,7 +17,7 @@ function initializeBaseText(text: string): {
   ];
 
   for (const { prefix, tag } of tagLevels) {
-    if (text.startsWith(prefix)) {
+    if (text.trim().startsWith(prefix)) {
       baseText = text.slice(prefix.length);
       htmlTag = tag;
       break;

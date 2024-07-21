@@ -28,7 +28,7 @@ function useParseText(initialParagraphs: ParagraphObject[]) {
     // TODO - there's probably a better way to do this
     const timeout = setTimeout(() => {
       handleQueue();
-    }, 1000);
+    }, 800);
 
     return () => clearTimeout(timeout);
   }, [queue]);
