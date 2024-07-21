@@ -8,17 +8,21 @@ import { Word } from "../Word";
 
 const notoSansJp = Noto_Sans_JP({ subsets: ["latin"] });
 
+export type TextBlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+
 export type TextBlockProps = {
   paragraphRef: (el: HTMLParagraphElement | null) => void;
-  isVisible: boolean;
   parsedParagraph: KuromojiToken[];
+  htmlTag: TextBlockTag;
+  isVisible: boolean;
   children?: ReactNode;
 };
 
 function TextBlock({
   paragraphRef,
-  isVisible,
   parsedParagraph,
+  isVisible,
+  htmlTag,
   children,
 }: TextBlockProps) {
   const POS_TO_SKIP = ["助動詞", "記号"];
@@ -37,10 +41,11 @@ function TextBlock({
   }, [parsedParagraph]);
 
   const hasParsedText = !!words.length;
+  const Tag = htmlTag || "p";
 
   return (
     <>
-      <p
+      <Tag
         ref={paragraphRef}
         tabIndex={hasParsedText ? 0 : undefined}
         role={hasParsedText ? "group" : undefined}
@@ -49,7 +54,7 @@ function TextBlock({
         }`}
       >
         {hasParsedText && isVisible ? words : children}
-      </p>
+      </Tag>
     </>
   );
 }

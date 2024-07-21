@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./Article.module.scss";
 import { ArticleHeader } from "../ArticleHeader";
 import type { BookInfo } from "../ArticleHeader/ArticleHeader";
+import { TextBlockTag } from "../TextBlock/TextBlock";
+import initializeBaseText from "@/lib/utils/initializeBaseText";
 
 type ArticleProps = {
   bookInfo: BookInfo;
@@ -16,14 +18,16 @@ type ArticleProps = {
 export type ParagraphObject = {
   baseText: string;
   parsedText: KuromojiToken[];
+  htmlTag: TextBlockTag;
   isVisible: boolean;
 };
 
 function Article({ bookInfo, articleParagraphs }: ArticleProps) {
   const [paragraphs, setParagraphs] = useState<ParagraphObject[]>(() => {
     return articleParagraphs.map((text) => ({
-      baseText: text,
+      baseText: initializeBaseText(text)?.baseText,
       parsedText: [],
+      htmlTag: initializeBaseText(text)?.htmlTag,
       isVisible: false,
     }));
   });
@@ -100,8 +104,9 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
         <TextBlock
           key={index}
           paragraphRef={addToRefs}
-          isVisible={item.isVisible}
           parsedParagraph={item.parsedText}
+          htmlTag={item.htmlTag}
+          isVisible={item.isVisible}
         >
           {item.baseText}
         </TextBlock>
