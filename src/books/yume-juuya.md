@@ -1,7 +1,7 @@
 ---
 title: "夢十夜"
 author: "夏目漱石"
-image: "xxx"
+image: "yume-juuya.jpg"
 ---
 
 ## 第一夜

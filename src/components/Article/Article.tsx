@@ -5,8 +5,11 @@ import useParseText from "@/hooks/useParseText";
 import { KuromojiToken } from "kuromojin";
 import { useEffect, useRef, useState } from "react";
 import styles from "./Article.module.scss";
+import { ArticleHeader } from "../ArticleHeader";
+import type { BookInfo } from "../ArticleHeader/ArticleHeader";
 
 type ArticleProps = {
+  bookInfo: BookInfo;
   articleParagraphs: string[];
 };
 
@@ -16,7 +19,7 @@ export type ParagraphObject = {
   isVisible: boolean;
 };
 
-function Article({ articleParagraphs }: ArticleProps) {
+function Article({ bookInfo, articleParagraphs }: ArticleProps) {
   const [paragraphs, setParagraphs] = useState<ParagraphObject[]>(() => {
     return articleParagraphs.map((text) => ({
       baseText: text,
@@ -89,6 +92,10 @@ function Article({ articleParagraphs }: ArticleProps) {
 
   return (
     <article className={styles.article}>
+      {/* Book info */}
+      <ArticleHeader bookInfo={bookInfo} />
+
+      {/* Main content */}
       {paragraphs.map((item, index) => (
         <TextBlock
           key={index}

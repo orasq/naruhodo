@@ -1,5 +1,7 @@
 import { Article } from "@/components/Article";
+import { ArticleHeader } from "@/components/ArticleHeader";
 import { allBooks } from "content-collections";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 type BookProps = {
@@ -17,13 +19,19 @@ async function Book({ params }: BookProps) {
 
   if (!book) notFound();
 
+  const bookInfo = {
+    title: book.title,
+    author: book.author,
+    image: book.image,
+    publishedYear: book.publishedYear,
+  };
   const paragraphs = book.content
     .split("\n")
     .filter((paragraph) => paragraph.length > 0);
 
   return (
     <>
-      <Article articleParagraphs={paragraphs} />
+      <Article bookInfo={bookInfo} articleParagraphs={paragraphs} />
     </>
   );
 }

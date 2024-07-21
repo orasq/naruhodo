@@ -7,6 +7,7 @@ const books = defineCollection({
   schema: (z) => ({
     title: z.string(),
     author: z.string(),
+    publishedYear: z.string().optional(),
     image: z.string(),
   }),
 });
