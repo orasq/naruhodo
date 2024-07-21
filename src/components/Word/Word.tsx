@@ -10,8 +10,6 @@ function Word({ children }: WordProps) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   function handleClick() {
-    console.log({ showTooltip });
-
     setShowTooltip(!showTooltip);
   }
   return (

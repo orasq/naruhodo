@@ -2,4 +2,14 @@
   position: absolute;
   left: 0;
   top: 0;
+
+  background: #fff;
+  padding: 16px;
+  border-radius: 5px;
+  isolation: isolate;
+  color: #000;
+
+  &.is-hidden {
+    display: 0;
+  }
 }
