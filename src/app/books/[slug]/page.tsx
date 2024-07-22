@@ -14,6 +14,12 @@ const getBook = async (slug: string) => {
   return allBooks.find((book) => book._meta.path === slug);
 };
 
+export async function generateStaticParams() {
+  return allBooks.map((book) => ({
+    slug: book._meta.path,
+  }));
+}
+
 async function Book({ params }: BookProps) {
   const book = await getBook(params.slug);
 

@@ -3,10 +3,7 @@
 import { ReactNode, useMemo } from "react";
 import { KuromojiToken } from "kuromojin";
 import styles from "./TextBlock.module.scss";
-import { Noto_Sans_JP } from "next/font/google";
 import { Word } from "../Word";
-
-const notoSansJp = Noto_Sans_JP({ subsets: ["latin"] });
 
 export type TextBlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
@@ -49,9 +46,7 @@ function TextBlock({
         ref={paragraphRef}
         tabIndex={hasParsedText ? 0 : undefined}
         role={hasParsedText ? "group" : undefined}
-        className={`${notoSansJp.className} ${styles.textBlock} ${
-          hasParsedText ? styles.parsed : ""
-        }`}
+        className={`${styles.textBlock} ${hasParsedText ? styles.parsed : ""}`}
       >
         {hasParsedText && isVisible ? words : children}
       </Tag>
