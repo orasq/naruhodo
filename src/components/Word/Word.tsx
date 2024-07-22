@@ -14,7 +14,11 @@ function Word({ children }: WordProps) {
   }
   return (
     <>
-      <span ref={wordRef} className={styles.word} onClick={handleClick}>
+      <span
+        ref={wordRef}
+        className={`${styles.word} ${showTooltip ? styles["is-active"] : ""}`}
+        onClick={handleClick}
+      >
         {children}
       </span>
 
