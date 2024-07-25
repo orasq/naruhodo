@@ -1,22 +1,41 @@
+$bg-padding: 4px;
+
 .word {
   position: relative;
   display: inline;
-  border-radius: 3px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -$bg-padding;
+    width: calc(100% + (#{$bg-padding} * 2));
+    height: calc(100% + #{$bg-padding} * 2);
+    background: var(--surface-light);
+    border-radius: 3px;
+    opacity: 0;
+    z-index: -1;
+  }
 
   &:hover {
-    background: var(--surface-light);
     cursor: pointer;
+
+    &::after {
+      opacity: 1;
+    }
   }
 
   &.is-active {
-    background: var(--text-color);
-    color: var(--bg-color);
     z-index: 10;
+
+    &::after {
+      opacity: 1;
+    }
   }
 
   &.is-closing {
-    background: var(--bg-color);
-    color: var(--text-color);
+    &::after {
+      opacity: 0;
+    }
     z-index: unset;
   }
 }
