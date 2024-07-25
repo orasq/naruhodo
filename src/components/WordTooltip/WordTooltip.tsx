@@ -52,13 +52,27 @@ function WordTooltip({ linkedTo, setShowTooltip, word }: WordTooltipProps) {
 
   return (
     <div
-      ref={tooltipRef}
       className={`${styles.tooltip} ${
-        tooltipPosition.left === 0 ? styles["is-hidden"] : ""
+        tooltipPosition.left !== 0 ? styles["is-visible"] : ""
       }`}
-      style={{ top: tooltipPosition.top, left: tooltipPosition.left }}
     >
-      {word}
+      {/* Background overlay */}
+      <div className={styles["tooltip-background"]}></div>
+
+      {/* Position wrapper */}
+      <div
+        ref={tooltipRef}
+        className={`${styles["tooltip-position-wrapper"]}`}
+        style={{ top: tooltipPosition.top, left: tooltipPosition.left }}
+      >
+        {/* Content panel */}
+        <div className={`${styles["tooltip-panel"]}`}>
+          {word}
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium
+          neque modi labore. Eligendi quibusdam perferendis, consectetur aliquam
+          est voluptatum a.
+        </div>
+      </div>
     </div>
   );
 }
@@ -78,7 +92,7 @@ function calculateTooltipTop({
   wordTop: number;
   wordHeight: number;
 }) {
-  const VERTICAL_PADDING = 0;
+  const VERTICAL_PADDING = 12;
 
   // when not enough place to put tooltip on top of word, put it below it
   const isPositionnedBelow = tooltipHeight >= wordTop;
