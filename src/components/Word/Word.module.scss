@@ -13,4 +13,10 @@
     color: var(--bg-color);
     z-index: 10;
   }
+
+  &.is-closing {
+    background: var(--bg-color);
+    color: var(--text-color);
+    z-index: unset;
+  }
 }

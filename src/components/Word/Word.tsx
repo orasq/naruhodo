@@ -8,6 +8,7 @@ import { createPortal } from "react-dom";
 function Word({ children }: WordProps) {
   const wordRef = useRef<HTMLSpanElement>(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipIsClosing, setTooltipIsClosing] = useState(false);
 
   function handleClick() {
     setShowTooltip(!showTooltip);
@@ -16,7 +17,9 @@ function Word({ children }: WordProps) {
     <>
       <span
         ref={wordRef}
-        className={`${styles.word} ${showTooltip ? styles["is-active"] : ""}`}
+        className={`${styles.word} ${showTooltip ? styles["is-active"] : ""} ${
+          tooltipIsClosing ? styles["is-closing"] : ""
+        }`}
         onClick={handleClick}
       >
         {children}
@@ -27,6 +30,8 @@ function Word({ children }: WordProps) {
           <WordTooltip
             linkedTo={wordRef}
             setShowTooltip={setShowTooltip}
+            setTooltipIsClosing={setTooltipIsClosing}
+            tooltipIsClosing={tooltipIsClosing}
             word={children}
           />,
           document.body

@@ -3,58 +3,106 @@ import {
   RefObject,
   SetStateAction,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import styles from "./WordTooltip.module.scss";
+import useWindowSize from "@/hooks/useWindowSize";
 
 type WordTooltipProps = {
   linkedTo: RefObject<HTMLSpanElement>;
   setShowTooltip: Dispatch<SetStateAction<boolean>>;
+  setTooltipIsClosing: Dispatch<SetStateAction<boolean>>;
+  tooltipIsClosing: boolean;
   word: React.ReactNode;
 };
 
-function WordTooltip({ linkedTo, setShowTooltip, word }: WordTooltipProps) {
+function WordTooltip({
+  linkedTo,
+  setShowTooltip,
+  setTooltipIsClosing,
+  tooltipIsClosing,
+  word,
+}: WordTooltipProps) {
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({
+  const [tooltipPosition, setTooltipPosition] = useState<{
+    top: number | null;
+    left: number | null;
+  }>({
     top: 0,
     left: 0,
   });
 
+  const { currentBreakpoint } = useWindowSize();
+  const isMobile = currentBreakpoint.isMobile;
+
   /**
    * Define tooltip position
    */
-  useEffect(() => {
-    const position = defineTooltipPosition(
-      tooltipRef.current,
-      linkedTo.current
-    );
+  useLayoutEffect(() => {
+    function handleResize() {
+      if (isMobile) {
+        setTooltipPosition({ top: null, left: null });
+        return;
+      }
 
-    if (position) setTooltipPosition(position);
-  }, [linkedTo, tooltipRef]);
+      const position = defineTooltipPosition(
+        tooltipRef.current,
+        linkedTo.current
+      );
+
+      if (position) setTooltipPosition(position);
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [linkedTo, tooltipRef, isMobile]);
 
   /**
    * Hide tooltip on outside click
    */
   useEffect(() => {
+    function closeTooltip() {
+      // trigger closing transition
+      setTooltipIsClosing(true);
+
+      // wait for animation to finish
+      tooltipRef.current?.addEventListener("transitionend", () => {
+        setShowTooltip(false);
+        setTooltipIsClosing(false);
+      });
+    }
+
     function handleClick(e: MouseEvent) {
       if (!tooltipRef.current?.contains(e.target as Node)) {
-        setShowTooltip(false);
+        closeTooltip();
       }
     }
 
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") closeTooltip();
+    }
+
     document.addEventListener("click", handleClick);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener("click", handleClick);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
   return (
     <div
-      className={`${styles.tooltip} ${
-        tooltipPosition.left !== 0 ? styles["is-visible"] : ""
-      }`}
+      className={`${styles.tooltip}
+                  ${tooltipPosition.left !== 0 ? styles["is-visible"] : ""}
+                  ${tooltipIsClosing ? styles["is-closing"] : ""}`}
     >
       {/* Background overlay */}
       <div className={styles["tooltip-background"]}></div>
@@ -95,7 +143,7 @@ function calculateTooltipTop({
   const VERTICAL_PADDING = 12;
 
   // when not enough place to put tooltip on top of word, put it below it
-  const isPositionnedBelow = tooltipHeight >= wordTop;
+  const isPositionnedBelow = tooltipHeight + VERTICAL_PADDING >= wordTop;
 
   return isPositionnedBelow
     ? wordTop + window.scrollY + wordHeight + VERTICAL_PADDING

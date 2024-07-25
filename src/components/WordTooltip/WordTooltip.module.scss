@@ -1,3 +1,5 @@
+$panel-transition: translateY(20px) scale(0.95);
+
 .tooltip {
   position: absolute;
   top: 0;
@@ -7,19 +9,37 @@
   isolation: isolate;
   z-index: 1;
 
-  &.is-visible .tooltip-panel {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  &.is-visible {
+    .tooltip-panel {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .tooltip-background {
+      opacity: 0.8;
+      pointer-events: all;
+    }
   }
 
-  &.is-visible .tooltip-background {
-    opacity: 0.8;
-    pointer-events: all;
+  &.is-closing {
+    .tooltip-panel {
+      opacity: 0;
+      transform: $panel-transition;
+    }
+    .tooltip-background {
+      opacity: 0;
+    }
   }
 }
 
 .tooltip-position-wrapper {
   position: absolute;
+
+  @media (max-width: 640px) {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
 }
 
 .tooltip-panel {
@@ -33,9 +53,12 @@
   color: #000;
 
   opacity: 0;
-  transform: translateY(10px) scale(0.95);
-  transition: 0.2s ease-out;
+  transform: $panel-transition;
+  transition: 0.6s cubic-bezier(0, 1, 0, 1);
   transition-property: opacity, transform;
+
+  @media (max-width: 640px) {
+  }
 }
 
 .tooltip-background {
