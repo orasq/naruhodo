@@ -95,7 +95,7 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
   }, []);
 
   return (
-    <article className={styles.article}>
+    <article id="articleContent" className={styles.article}>
       {/* Book info */}
       <ArticleHeader bookInfo={bookInfo} />
 
