@@ -1,27 +1,35 @@
 "use client";
 
-import { ReactNode, useMemo } from "react";
+import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { KuromojiToken } from "kuromojin";
 import styles from "./TextBlock.module.scss";
 import { Word } from "../Word";
+import { IconBookmark, IconBookmarkFilled } from "@tabler/icons-react";
 
 export type TextBlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 export type TextBlockProps = {
+  blockId: number;
   paragraphRef: (el: HTMLParagraphElement | null) => void;
   parsedParagraph: KuromojiToken[];
   htmlTag: TextBlockTag;
   isVisible: boolean;
+  setBookmarked: Dispatch<SetStateAction<number | null>>;
+  isBookmarked: boolean;
   children?: ReactNode;
 };
 
 function TextBlock({
+  blockId,
   paragraphRef,
   parsedParagraph,
-  isVisible,
   htmlTag,
+  isVisible,
+  setBookmarked,
+  isBookmarked,
   children,
 }: TextBlockProps) {
+  const Tag = htmlTag || "p";
   const POS_TO_SKIP = ["助動詞", "記号"];
 
   const words = useMemo(() => {
@@ -38,7 +46,10 @@ function TextBlock({
   }, [parsedParagraph]);
 
   const hasParsedText = !!words.length;
-  const Tag = htmlTag || "p";
+
+  function handleBookmarkClick() {
+    setBookmarked(isBookmarked ? null : blockId);
+  }
 
   return (
     <>
@@ -48,6 +59,15 @@ function TextBlock({
         role={hasParsedText ? "group" : undefined}
         className={`${styles.textBlock} ${hasParsedText ? styles.parsed : ""}`}
       >
+        {/* Bookmark icon */}
+        <button
+          className={styles["bookmark-button"]}
+          onClick={handleBookmarkClick}
+        >
+          {isBookmarked ? <IconBookmarkFilled /> : <IconBookmark />}
+        </button>
+
+        {/* Text */}
         {hasParsedText && isVisible ? words : children}
       </Tag>
     </>

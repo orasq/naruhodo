@@ -1,4 +1,5 @@
 .textBlock {
+  position: relative;
   margin-bottom: 40px;
   opacity: 0.5;
   transition: 0.3s ease-out;
@@ -6,5 +7,22 @@
 
   &.parsed {
     opacity: 1;
+  }
+}
+
+.bookmark-button {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 8px);
+  padding: 0.25em;
+  padding-top: 0.2em;
+  cursor: pointer;
+  font-size: 12px;
+  background: transparent;
+  border: 0;
+  opacity: 0.5;
+
+  > svg {
+    display: block; // remove space below svg
   }
 }

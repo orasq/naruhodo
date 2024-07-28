@@ -20,6 +20,7 @@ export type ParagraphObject = {
   parsedText: KuromojiToken[];
   htmlTag: TextBlockTag;
   isVisible: boolean;
+  isBookmarked: boolean;
 };
 
 function Article({ bookInfo, articleParagraphs }: ArticleProps) {
@@ -29,8 +30,11 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
       parsedText: [],
       htmlTag: initializeBaseText(text)?.htmlTag,
       isVisible: false,
+      isBookmarked: false,
     }));
   });
+
+  const [bookmarked, setBookmarked] = useState<number | null>(null);
 
   const {
     addToQueue,
@@ -40,6 +44,19 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
     updatedParagraphs,
   } = useParseText(paragraphs);
 
+  // Change bookmarked paragraph item
+  useEffect(() => {
+    const newArray = [...paragraphs].map((paragraph, index) => {
+      return { ...paragraph, isBookmarked: index === bookmarked };
+    });
+    setParagraphs(newArray);
+  }, [bookmarked]);
+
+  // Update displayed paragraphs array when parsed text changes
+  useEffect(() => {
+    setParagraphs(updatedParagraphs);
+  }, [updatedParagraphs]);
+
   // Create array of refs with page's paragraphs
   const textBlockRefs = useRef<HTMLParagraphElement[]>([]);
   const addToRefs = (el: HTMLParagraphElement | null) => {
@@ -47,11 +64,6 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
 
     textBlockRefs?.current?.push(el);
   };
-
-  // Update displayed paragraphs array when parsed text changes
-  useEffect(() => {
-    setParagraphs(updatedParagraphs);
-  }, [updatedParagraphs]);
 
   /**
    * Add IntersectionObserver to ascertain if a <TextBlock> is visible on the screen or not.
@@ -65,7 +77,6 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
         const index = textBlockRefs.current.indexOf(
           entry.target as HTMLParagraphElement
         );
-        const isSetVisible = paragraphs[index].isVisible;
 
         // change visibility and remove from queue (if applicable)
         if (!entry.isIntersecting) {
@@ -103,10 +114,13 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
       {paragraphs.map((item, index) => (
         <TextBlock
           key={index}
+          blockId={index}
           paragraphRef={addToRefs}
           parsedParagraph={item.parsedText}
           htmlTag={item.htmlTag}
           isVisible={item.isVisible}
+          setBookmarked={setBookmarked}
+          isBookmarked={item.isBookmarked}
         >
           {item.baseText}
         </TextBlock>
