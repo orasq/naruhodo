@@ -3,8 +3,10 @@
   opacity: 0.5;
   transition: 0.3s ease-out;
   transition-property: opacity;
+  content-visibility: auto;
 
   &.parsed {
     opacity: 1;
+    content-visibility: visible; // to solve z-index issue with active word. Better way of solving this?
   }
 }
