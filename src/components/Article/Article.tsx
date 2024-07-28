@@ -9,6 +9,7 @@ import { ArticleHeader } from "../ArticleHeader";
 import type { BookInfo } from "../ArticleHeader/ArticleHeader";
 import { TextBlockTag } from "../TextBlock/TextBlock";
 import initializeBaseText from "@/lib/utils/initializeBaseText";
+import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 
 type ArticleProps = {
   bookInfo: BookInfo;
@@ -20,6 +21,7 @@ export type ParagraphObject = {
   parsedText: KuromojiToken[];
   htmlTag: TextBlockTag;
   isVisible: boolean;
+  isBookmarked: boolean;
 };
 
 function Article({ bookInfo, articleParagraphs }: ArticleProps) {
@@ -29,16 +31,12 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
       parsedText: [],
       htmlTag: initializeBaseText(text)?.htmlTag,
       isVisible: false,
+      isBookmarked: false,
     }));
   });
 
-  const {
-    addToQueue,
-    removeFromQueue,
-    isInQueue,
-    setVisibility,
-    updatedParagraphs,
-  } = useParseText(paragraphs);
+  const { addToQueue, removeFromQueue, isInQueue, setVisibility } =
+    useParseText(paragraphs, setParagraphs);
 
   // Create array of refs with page's paragraphs
   const textBlockRefs = useRef<HTMLParagraphElement[]>([]);
@@ -47,11 +45,6 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
 
     textBlockRefs?.current?.push(el);
   };
-
-  // Update displayed paragraphs array when parsed text changes
-  useEffect(() => {
-    setParagraphs(updatedParagraphs);
-  }, [updatedParagraphs]);
 
   /**
    * Add IntersectionObserver to ascertain if a <TextBlock> is visible on the screen or not.
@@ -65,7 +58,6 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
         const index = textBlockRefs.current.indexOf(
           entry.target as HTMLParagraphElement
         );
-        const isSetVisible = paragraphs[index].isVisible;
 
         // change visibility and remove from queue (if applicable)
         if (!entry.isIntersecting) {
@@ -94,6 +86,39 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
     };
   }, []);
 
+  /**
+   * Bookmarked paragraph
+   */
+  const [bookmarked, setBookmarked] = useState<number | null>(null);
+
+  // handle change of bookmarked value
+  useEffect(() => {
+    const newArray = [...paragraphs].map((paragraph, index) => {
+      return { ...paragraph, isBookmarked: index === bookmarked };
+    });
+    setParagraphs(newArray);
+  }, [bookmarked]);
+
+  // check localeStorage bookmarked value and scroll to it
+  useEffect(() => {
+    const storageBookmarked = localStorage.getItem("bookmarked");
+
+    if (!storageBookmarked) return;
+
+    const bookmarkedId = parseInt(storageBookmarked);
+    setBookmarked(bookmarkedId);
+
+    const bookmarkedRef = textBlockRefs.current.find((_, index) => {
+      return index === bookmarkedId;
+    });
+
+    if (!bookmarkedRef) return;
+
+    bookmarkedRef.scrollIntoView({
+      behavior: prefersReducedMotion() ? "instant" : "smooth",
+    });
+  }, []);
+
   return (
     <article id="articleContent" className={styles.article}>
       {/* Book info */}
@@ -103,10 +128,13 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
       {paragraphs.map((item, index) => (
         <TextBlock
           key={index}
+          blockId={index}
           paragraphRef={addToRefs}
           parsedParagraph={item.parsedText}
           htmlTag={item.htmlTag}
           isVisible={item.isVisible}
+          setBookmarked={setBookmarked}
+          isBookmarked={item.isBookmarked}
         >
           {item.baseText}
         </TextBlock>
