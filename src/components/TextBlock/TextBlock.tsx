@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
+import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo } from "react";
 import { KuromojiToken } from "kuromojin";
 import styles from "./TextBlock.module.scss";
 import { Word } from "../Word";
@@ -49,6 +49,12 @@ function TextBlock({
 
   function handleBookmarkClick() {
     setBookmarked(isBookmarked ? null : blockId);
+
+    if (isBookmarked) {
+      localStorage.removeItem("bookmarked");
+    } else {
+      localStorage.setItem("bookmarked", JSON.stringify(blockId));
+    }
   }
 
   return (

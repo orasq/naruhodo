@@ -1,6 +1,6 @@
 import { getTokens } from "@/actions/getTokens";
 import type { ParagraphObject } from "@/components/Article/Article";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 type QueueItem = number;
 
@@ -9,11 +9,12 @@ export type BatchItem = {
   index: number;
 };
 
-function useParseText(initialParagraphs: ParagraphObject[]) {
+function useParseText(
+  paragraphs: ParagraphObject[],
+  setParagraphs: Dispatch<SetStateAction<ParagraphObject[]>>
+) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [batch, setBatch] = useState<BatchItem[]>([]);
-  const [updatedParagraphs, setUpdatedParagraphs] =
-    useState<ParagraphObject[]>(initialParagraphs);
 
   const canProcessNewBatch = useRef(true);
 
@@ -41,7 +42,7 @@ function useParseText(initialParagraphs: ParagraphObject[]) {
       canProcessNewBatch.current = false;
       const parsedText = await getTokens(batch);
 
-      setUpdatedParagraphs((prev) => {
+      setParagraphs((prev) => {
         const newArray = [...prev];
 
         parsedText.forEach((paragraph, index) => {
@@ -60,7 +61,7 @@ function useParseText(initialParagraphs: ParagraphObject[]) {
 
   // Set visibility
   function setVisibility(index: number, isVisible: boolean) {
-    setUpdatedParagraphs((prev) => {
+    setParagraphs((prev) => {
       const newArray = [...prev];
       newArray[index].isVisible = isVisible;
       return newArray;
@@ -98,7 +99,7 @@ function useParseText(initialParagraphs: ParagraphObject[]) {
   function handleQueue() {
     if (!queue.length) return;
 
-    const itemsToProcess = updatedParagraphs.reduce(
+    const itemsToProcess = paragraphs.reduce(
       (acc: BatchItem[], curr: ParagraphObject, currIndex: number) => {
         // if not in queue, skip
         if (!isInQueue(currIndex)) return acc;
@@ -122,7 +123,6 @@ function useParseText(initialParagraphs: ParagraphObject[]) {
     removeFromQueue,
     isInQueue,
     setVisibility,
-    updatedParagraphs,
   };
 }
 

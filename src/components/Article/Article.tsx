@@ -9,6 +9,7 @@ import { ArticleHeader } from "../ArticleHeader";
 import type { BookInfo } from "../ArticleHeader/ArticleHeader";
 import { TextBlockTag } from "../TextBlock/TextBlock";
 import initializeBaseText from "@/lib/utils/initializeBaseText";
+import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 
 type ArticleProps = {
   bookInfo: BookInfo;
@@ -34,28 +35,8 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
     }));
   });
 
-  const [bookmarked, setBookmarked] = useState<number | null>(null);
-
-  const {
-    addToQueue,
-    removeFromQueue,
-    isInQueue,
-    setVisibility,
-    updatedParagraphs,
-  } = useParseText(paragraphs);
-
-  // Change bookmarked paragraph item
-  useEffect(() => {
-    const newArray = [...paragraphs].map((paragraph, index) => {
-      return { ...paragraph, isBookmarked: index === bookmarked };
-    });
-    setParagraphs(newArray);
-  }, [bookmarked]);
-
-  // Update displayed paragraphs array when parsed text changes
-  useEffect(() => {
-    setParagraphs(updatedParagraphs);
-  }, [updatedParagraphs]);
+  const { addToQueue, removeFromQueue, isInQueue, setVisibility } =
+    useParseText(paragraphs, setParagraphs);
 
   // Create array of refs with page's paragraphs
   const textBlockRefs = useRef<HTMLParagraphElement[]>([]);
@@ -103,6 +84,39 @@ function Article({ bookInfo, articleParagraphs }: ArticleProps) {
       });
       observer.disconnect();
     };
+  }, []);
+
+  /**
+   * Bookmarked paragraph
+   */
+  const [bookmarked, setBookmarked] = useState<number | null>(null);
+
+  // handle change of bookmarked value
+  useEffect(() => {
+    const newArray = [...paragraphs].map((paragraph, index) => {
+      return { ...paragraph, isBookmarked: index === bookmarked };
+    });
+    setParagraphs(newArray);
+  }, [bookmarked]);
+
+  // check localeStorage bookmarked value and scroll to it
+  useEffect(() => {
+    const storageBookmarked = localStorage.getItem("bookmarked");
+
+    if (!storageBookmarked) return;
+
+    const bookmarkedId = parseInt(storageBookmarked);
+    setBookmarked(bookmarkedId);
+
+    const bookmarkedRef = textBlockRefs.current.find((_, index) => {
+      return index === bookmarkedId;
+    });
+
+    if (!bookmarkedRef) return;
+
+    bookmarkedRef.scrollIntoView({
+      behavior: prefersReducedMotion() ? "instant" : "smooth",
+    });
   }, []);
 
   return (
