@@ -2,6 +2,8 @@
   position: relative;
   display: inline;
   border-radius: 2px;
+  transition: 0.1s ease-out;
+  transition-property: background, box-shadow;
 
   &:hover,
   &.is-active {

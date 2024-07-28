@@ -1,7 +1,12 @@
 .article {
+  position: relative;
   width: 100%;
   max-width: 60ch;
   margin: 0 auto;
 
   font-size: 20px;
+  line-height: 1.8;
+
+  // z-index: 0;
+  // isolation: isolate;
 }

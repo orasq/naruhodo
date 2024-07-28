@@ -1,16 +1,27 @@
 :root {
-  --bg-color: #efefef;
-  --text-color: #151515;
+  --theme-hue: 42;
+  --theme-saturation: 0.05;
 
-  --surface-light: #d0d0d0;
+  --lightness-bg: 0.9;
+  --lightness-text: 0.05;
+  --lightness-surface-light: 0.5;
+
+  --bg-color: oklch(
+    var(--lightness-bg) var(--theme-saturation) var(--theme-hue)
+  );
+  --text-color: oklch(
+    var(--lightness-text) var(--theme-saturation) var(--theme-hue)
+  );
+  --surface-light: oklch(
+    var(--lightness-surface-light) var(--theme-saturation) var(--theme-hue)
+  );
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #151515;
-    --text-color: #d2d2d2;
-
-    --surface-light: #2c2c2c;
+    --lightness-bg: 0.15;
+    --lightness-text: 0.9;
+    --lightness-surface-light: 0.4;
   }
 }
 
