@@ -28,11 +28,11 @@ function useParseText(
     // Debounce before handling the queue
     // TODO - there's probably a better way to do this
     const timeout = setTimeout(() => {
-      handleQueue();
+      if (canProcessNewBatch.current) handleQueue();
     }, 800);
 
     return () => clearTimeout(timeout);
-  }, [queue]);
+  }, [queue, canProcessNewBatch]);
 
   // Process batch
   useEffect(() => {
@@ -40,33 +40,22 @@ function useParseText(
 
     (async function handleBatch() {
       canProcessNewBatch.current = false;
+      const nextParagraphs = [...paragraphs];
       const parsedText = await getTokens(batch);
 
-      setParagraphs((prev) => {
-        const newArray = [...prev];
-
-        parsedText.forEach((paragraph, index) => {
-          newArray[paragraph.index].parsedText = paragraph.parsedText;
-          newArray[paragraph.index].isVisible = true;
-        });
-
-        return newArray;
+      // add parsed text
+      parsedText.forEach((paragraph) => {
+        nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
       });
+
+      setParagraphs(nextParagraphs);
 
       // empty the batch
       setBatch([]);
+
       canProcessNewBatch.current = true;
     })();
   }, [batch]);
-
-  // Set visibility
-  function setVisibility(index: number, isVisible: boolean) {
-    setParagraphs((prev) => {
-      const newArray = [...prev];
-      newArray[index].isVisible = isVisible;
-      return newArray;
-    });
-  }
 
   // Is already inside queue?
   function isInQueue(currIndex: number) {
@@ -99,6 +88,15 @@ function useParseText(
   function handleQueue() {
     if (!queue.length) return;
 
+    // set paragraphs' visibility
+    // TODO: refactor to combine this with batch to remove one unnecessary re-render
+    const nextParagraphs = paragraphs.map((paragraph, index) => {
+      return { ...paragraph, isVisible: queue.includes(index) };
+    });
+
+    setParagraphs(nextParagraphs);
+
+    // define items needing to have its text parsed
     const itemsToProcess = paragraphs.reduce(
       (acc: BatchItem[], curr: ParagraphObject, currIndex: number) => {
         // if not in queue, skip
@@ -122,7 +120,6 @@ function useParseText(
     addToQueue,
     removeFromQueue,
     isInQueue,
-    setVisibility,
   };
 }
 

@@ -16,4 +16,5 @@
   max-width: calc(var(--text-max-width) + (var(--toolbox-width) * 2) + 1rem);
   height: 100vh;
   margin: 0 auto;
+  pointer-events: none;
 }

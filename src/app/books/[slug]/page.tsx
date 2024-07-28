@@ -1,9 +1,7 @@
 import { Article } from "@/components/Article";
 import { ArticleHeader } from "@/components/ArticleHeader";
 import { TextPage } from "@/components/TextPage";
-import { ToolBox } from "@/components/ToolBox";
 import { allBooks } from "content-collections";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 
 type BookProps = {
@@ -40,7 +38,11 @@ async function Book({ params }: BookProps) {
   return (
     <>
       <TextPage>
-        <Article bookInfo={bookInfo} articleParagraphs={paragraphs} />
+        {/* Book info */}
+        <ArticleHeader bookInfo={bookInfo} />
+
+        {/* Main content */}
+        <Article articleParagraphs={paragraphs} />
       </TextPage>
     </>
   );
