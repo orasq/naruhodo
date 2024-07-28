@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "./ArticleHeader.module.scss";
+import styles from "./BookPageHeader.module.scss";
 
 export type BookInfo = {
   title: string;
@@ -8,15 +8,15 @@ export type BookInfo = {
   publishedYear?: string;
 };
 
-type ArticleHeaderProps = {
+type BookPageHeaderProps = {
   bookInfo: BookInfo;
 };
 
-function ArticleHeader({
+function BookPageHeader({
   bookInfo: { title, author, image, publishedYear },
-}: ArticleHeaderProps) {
+}: BookPageHeaderProps) {
   return (
-    <header className={styles["article-header"]}>
+    <header className={styles["book-page-header"]}>
       <Image
         src={`/images/covers/${image}`}
         alt={title}
@@ -33,4 +33,4 @@ function ArticleHeader({
   );
 }
 
-export default ArticleHeader;
+export default BookPageHeader;

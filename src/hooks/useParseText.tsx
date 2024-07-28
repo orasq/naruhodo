@@ -1,5 +1,5 @@
 import { getTokens } from "@/actions/getTokens";
-import type { ParagraphObject } from "@/components/Article/Article";
+import type { ParagraphObject } from "@/components/BookText/BookText";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 type QueueItem = number;

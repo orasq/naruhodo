@@ -3,7 +3,7 @@
  */
 
 import useParseText from "@/hooks/useParseText";
-import { ParagraphObject } from "../Article/Article";
+import { ParagraphObject } from "../BookText/BookText";
 import { Dispatch, MutableRefObject, SetStateAction, useEffect } from "react";
 
 type ScrollQueueProps = {

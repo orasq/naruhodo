@@ -3,14 +3,13 @@
 import { TextBlock } from "@/components/TextBlock";
 import { KuromojiToken } from "kuromojin";
 import { useEffect, useRef, useState } from "react";
-import styles from "./Article.module.scss";
 import { TextBlockTag } from "../TextBlock/TextBlock";
 import initializeBaseText from "@/lib/utils/initializeBaseText";
 import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 import { ScrollQueue } from "../ScrollQueue";
 
-type ArticleProps = {
-  articleParagraphs: string[];
+type BookTextProps = {
+  textParagraphs: string[];
 };
 
 export type ParagraphObject = {
@@ -21,9 +20,9 @@ export type ParagraphObject = {
   isBookmarked: boolean;
 };
 
-function Article({ articleParagraphs }: ArticleProps) {
+function BookText({ textParagraphs }: BookTextProps) {
   const [paragraphs, setParagraphs] = useState<ParagraphObject[]>(() => {
-    return articleParagraphs.map((text) => ({
+    return textParagraphs.map((text) => ({
       baseText: initializeBaseText(text)?.baseText,
       parsedText: [],
       htmlTag: initializeBaseText(text)?.htmlTag,
@@ -76,7 +75,7 @@ function Article({ articleParagraphs }: ArticleProps) {
       paragraphs={paragraphs}
       setParagraphs={setParagraphs}
     >
-      <article id="articleContent" className={styles.article}>
+      <div id="articleContent">
         {paragraphs.map((item, index) => (
           <TextBlock
             key={index}
@@ -91,9 +90,9 @@ function Article({ articleParagraphs }: ArticleProps) {
             {item.baseText}
           </TextBlock>
         ))}
-      </article>
+      </div>
     </ScrollQueue>
   );
 }
 
-export default Article;
+export default BookText;

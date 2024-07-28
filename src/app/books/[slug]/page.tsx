@@ -1,5 +1,5 @@
-import { Article } from "@/components/Article";
-import { ArticleHeader } from "@/components/ArticleHeader";
+import BookPageHeader from "@/components/BookPageHeader/BookPageHeader";
+import { BookText } from "@/components/BookText";
 import { TextPage } from "@/components/TextPage";
 import { allBooks } from "content-collections";
 import { notFound } from "next/navigation";
@@ -38,11 +38,13 @@ async function Book({ params }: BookProps) {
   return (
     <>
       <TextPage>
-        {/* Book info */}
-        <ArticleHeader bookInfo={bookInfo} />
+        <article>
+          {/* Book info */}
+          <BookPageHeader bookInfo={bookInfo} />
 
-        {/* Main content */}
-        <Article articleParagraphs={paragraphs} />
+          {/* Main text */}
+          <BookText textParagraphs={paragraphs} />
+        </article>
       </TextPage>
     </>
   );
