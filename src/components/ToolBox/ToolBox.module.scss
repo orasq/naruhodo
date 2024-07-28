@@ -1,0 +1,45 @@
+.toolbox {
+  position: absolute;
+  bottom: 32px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: red;
+
+  width: var(--toolbox-width);
+  border-radius: calc(var(--toolbox-width) / 2);
+}
+
+.toolbox-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toolbox-width);
+  height: var(--toolbox-width);
+  border-radius: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  svg {
+    display: block; // remove space below svg
+  }
+}
+
+.tool-list {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: 1s cubic-bezier(0, 1, 0, 1);
+  transition-property: grid;
+
+  &.is-open {
+    grid-template-rows: 1fr;
+  }
+
+  ul {
+    overflow: hidden;
+  }
+}

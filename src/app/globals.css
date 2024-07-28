@@ -3,6 +3,9 @@
   --text-color: #151515;
 
   --surface-light: #d0d0d0;
+
+  --text-max-width: 60ch;
+  --toolbox-width: 40px;
 }
 
 @media (prefers-color-scheme: dark) {
