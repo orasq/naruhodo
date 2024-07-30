@@ -6,6 +6,7 @@ import { BookInfo } from "../BookPageHeader/BookPageHeader";
 import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
 import styles from "./TextPage.module.scss";
+import useToggle from "@/hooks/useToggle";
 
 type TextPageProps = {
   bookInfo: BookInfo;
@@ -15,6 +16,7 @@ type TextPageProps = {
 export type BookFontSize = "sm" | "md" | "lg";
 
 function TextPage({ bookInfo, paragraphs }: TextPageProps) {
+  const [isBookmarkModeActive, setIsBookmarkModeActive] = useToggle();
   const [fontSize, setFontSize] = useState<BookFontSize>(() => {
     return (localStorage.getItem("bookFontSize") as BookFontSize) || "sm";
   });
@@ -46,11 +48,18 @@ function TextPage({ bookInfo, paragraphs }: TextPageProps) {
       <BookPageHeader bookInfo={bookInfo} />
 
       {/* Main text */}
-      <BookText textParagraphs={paragraphs} />
+      <BookText
+        textParagraphs={paragraphs}
+        isBookmarkModeActive={isBookmarkModeActive}
+      />
 
       {/* Toolbox */}
       <div className={styles["toolbox-wrapper"]}>
-        <ToolBox toggleFontSize={toggleFontSize} />
+        <ToolBox
+          toggleFontSize={toggleFontSize}
+          toggleBookmarkMode={setIsBookmarkModeActive}
+          isBookmarkModeActive={isBookmarkModeActive}
+        />
       </div>
     </article>
   );

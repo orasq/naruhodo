@@ -17,6 +17,7 @@ export type TextBlockProps = {
   isVisible: boolean;
   setBookmarked: Dispatcher<number | null>;
   isBookmarked: boolean;
+  isBookmarkModeActive: boolean;
   children?: ReactNode;
 };
 
@@ -28,6 +29,7 @@ function TextBlock({
   isVisible,
   setBookmarked,
   isBookmarked,
+  isBookmarkModeActive,
   children,
 }: TextBlockProps) {
   const Tag = htmlTag || "p";
@@ -67,12 +69,14 @@ function TextBlock({
         className={`${styles.textBlock} ${hasParsedText ? styles.parsed : ""}`}
       >
         {/* Bookmark icon */}
-        <button
-          className={styles["bookmark-button"]}
-          onClick={handleBookmarkClick}
-        >
-          {isBookmarked ? <IconBookmarkFilled /> : <IconBookmark />}
-        </button>
+        {isBookmarkModeActive && (
+          <button
+            className={styles["bookmark-button"]}
+            onClick={handleBookmarkClick}
+          >
+            {isBookmarked ? <IconBookmarkFilled /> : <IconBookmark />}
+          </button>
+        )}
 
         {/* Text */}
         {hasParsedText && isVisible ? words : children}

@@ -10,6 +10,7 @@ import { ScrollQueue } from "../ScrollQueue";
 
 type BookTextProps = {
   textParagraphs: string[];
+  isBookmarkModeActive: boolean;
 };
 
 export type ParagraphObject = {
@@ -20,7 +21,7 @@ export type ParagraphObject = {
   isBookmarked: boolean;
 };
 
-function BookText({ textParagraphs }: BookTextProps) {
+function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {
   const [paragraphs, setParagraphs] = useState<ParagraphObject[]>(() => {
     return textParagraphs.map((text) => ({
       baseText: initializeBaseText(text)?.baseText,
@@ -86,6 +87,7 @@ function BookText({ textParagraphs }: BookTextProps) {
             isVisible={item.isVisible}
             setBookmarked={setBookmarked}
             isBookmarked={item.isBookmarked}
+            isBookmarkModeActive={isBookmarkModeActive}
           >
             {item.baseText}
           </TextBlock>

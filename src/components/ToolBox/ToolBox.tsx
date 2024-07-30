@@ -2,6 +2,7 @@
 
 import {
   IconBookmark,
+  IconBookmarkFilled,
   IconCircleCheck,
   IconSettings,
   IconTextSize,
@@ -12,9 +13,15 @@ import useToggle from "@/hooks/useToggle";
 
 type ToolBoxProps = {
   toggleFontSize: () => void;
+  toggleBookmarkMode: () => void;
+  isBookmarkModeActive: boolean;
 };
 
-function ToolBox({ toggleFontSize }: ToolBoxProps) {
+function ToolBox({
+  toggleFontSize,
+  toggleBookmarkMode,
+  isBookmarkModeActive,
+}: ToolBoxProps) {
   const [isToolboxOpen, toggleToolbox] = useToggle(false);
 
   return (
@@ -26,8 +33,11 @@ function ToolBox({ toggleFontSize }: ToolBoxProps) {
       >
         <ul>
           <li>
-            <button className={styles["tool-list-button"]}>
-              <IconBookmark />
+            <button
+              className={styles["tool-list-button"]}
+              onClick={toggleBookmarkMode}
+            >
+              {isBookmarkModeActive ? <IconBookmarkFilled /> : <IconBookmark />}
             </button>
           </li>
           <li>
