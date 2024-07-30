@@ -1,19 +1,12 @@
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./WordTooltip.module.scss";
 import useWindowSize from "@/hooks/useWindowSize";
+import { Dispatcher } from "@/lib/types/generics.types";
 
 type WordTooltipProps = {
   linkedTo: RefObject<HTMLSpanElement>;
-  setShowTooltip: Dispatch<SetStateAction<boolean>>;
-  setTooltipIsClosing: Dispatch<SetStateAction<boolean>>;
+  setShowTooltip: Dispatcher<boolean>;
+  setTooltipIsClosing: Dispatcher<boolean>;
   tooltipIsClosing: boolean;
   word: React.ReactNode;
 };

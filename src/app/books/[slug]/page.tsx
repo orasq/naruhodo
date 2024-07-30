@@ -1,7 +1,7 @@
-import { Article } from "@/components/Article";
-import { ArticleHeader } from "@/components/ArticleHeader";
+import BookPageHeader from "@/components/BookPageHeader/BookPageHeader";
+import { BookText } from "@/components/BookText";
+import { TextPage } from "@/components/TextPage";
 import { allBooks } from "content-collections";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 
 type BookProps = {
@@ -37,7 +37,7 @@ async function Book({ params }: BookProps) {
 
   return (
     <>
-      <Article bookInfo={bookInfo} articleParagraphs={paragraphs} />
+      <TextPage bookInfo={bookInfo} paragraphs={paragraphs} />
     </>
   );
 }

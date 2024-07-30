@@ -1,0 +1,76 @@
+.toolbox {
+  position: absolute;
+  bottom: 32px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-color);
+  border: 1px solid var(--surface-light);
+  border-radius: calc(var(--toolbox-width) / 2);
+  pointer-events: all;
+}
+
+.toolbox-button {
+  opacity: 0.5;
+  transition: 0.3s ease-out;
+  transition-property: opacity;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.toolbox-button,
+.tool-list-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toolbox-width);
+  height: var(--toolbox-width);
+  border-radius: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  svg {
+    display: block; // remove space below svg
+  }
+}
+
+.tool-list {
+  position: relative;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: 1s cubic-bezier(0, 1, 0, 1);
+  transition-property: grid, opacity;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--surface-light);
+    opacity: 0;
+    transition: 1s ease-out 0.5s;
+    transition-property: opacity;
+  }
+
+  &.is-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  ul {
+    overflow: hidden;
+  }
+}
