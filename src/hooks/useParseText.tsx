@@ -15,17 +15,28 @@ function useParseText(
   setParagraphs: Dispatcher<ParagraphObject[]>
 ) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
+  const [visibleParagraphs, setVisibleParagraphs] = useState<QueueItem[]>([]);
 
   const canProcessNewBatch = useRef(true);
 
   const processQueue = useCallback(async () => {
     canProcessNewBatch.current = false;
 
+    // queue
     const batchToProcess = getParagraphsFromQueue(queue, paragraphs);
     setQueue([]);
 
-    const nextParagraphs = await processBatch(batchToProcess, paragraphs);
-    setParagraphs(nextParagraphs ?? paragraphs);
+    // batch
+    const processedParagraphs =
+      (await processBatch(batchToProcess, paragraphs)) ?? paragraphs;
+
+    // visibility
+    const newParagraphs = setParagraphsVisibility(
+      processedParagraphs,
+      visibleParagraphs
+    );
+
+    setParagraphs(newParagraphs);
 
     canProcessNewBatch.current = true;
   }, [queue]);
@@ -33,7 +44,9 @@ function useParseText(
   useEffect(() => {
     // Debounce before handling the queue
     const timeout = setTimeout(() => {
-      if (canProcessNewBatch.current && queue.length) processQueue();
+      if (canProcessNewBatch.current && queue.length) {
+        processQueue();
+      }
     }, 800);
 
     return () => clearTimeout(timeout);
@@ -45,6 +58,10 @@ function useParseText(
     removeFromQueue: (currIndex: number) =>
       setQueue((prev) => removeFromQueue(prev, currIndex)),
     isInQueue: (currIndex: number) => isInQueue(queue, currIndex),
+    setCurrentParagraphVisibility: (currIndex: number, value: boolean) =>
+      setVisibleParagraphs((prev) =>
+        setCurrentParagraphVisibility(prev, currIndex, value)
+      ),
   };
 }
 
@@ -79,7 +96,7 @@ function getParagraphsFromQueue(
       // if not in queue, skip
       if (!isInQueue(queue, currIndex)) return acc;
 
-      // if already has parsed text, skip
+      // if it already has parsed text, skip
       if (curr.parsedText.length) return acc;
 
       return [...acc, { baseText: curr.baseText, index: currIndex }];
@@ -100,4 +117,26 @@ async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
   });
 
   return nextParagraphs;
+}
+
+function setCurrentParagraphVisibility(
+  visibleParagraphs: QueueItem[],
+  currIndex: number,
+  isVisible: boolean
+): QueueItem[] {
+  if (isVisible && visibleParagraphs.includes(currIndex))
+    return visibleParagraphs;
+
+  if (isVisible) return [...visibleParagraphs, currIndex];
+
+  return visibleParagraphs.filter((item) => item !== currIndex);
+}
+
+function setParagraphsVisibility(
+  paragraphs: ParagraphObject[],
+  visibleParagraphs: QueueItem[]
+) {
+  return paragraphs.map((paragraph, index) => {
+    return { ...paragraph, isVisible: visibleParagraphs.includes(index) };
+  });
 }
