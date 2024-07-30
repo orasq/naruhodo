@@ -1,6 +1,6 @@
 import BookPageHeader from "@/components/BookPageHeader/BookPageHeader";
 import { BookText } from "@/components/BookText";
-import { TextPage } from "@/components/TextPage";
+import { BookPage } from "@/components/BookPage";
 import { allBooks } from "content-collections";
 import { notFound } from "next/navigation";
 
@@ -37,7 +37,7 @@ async function Book({ params }: BookProps) {
 
   return (
     <>
-      <TextPage bookInfo={bookInfo} paragraphs={paragraphs} />
+      <BookPage bookInfo={bookInfo} paragraphs={paragraphs} />
     </>
   );
 }

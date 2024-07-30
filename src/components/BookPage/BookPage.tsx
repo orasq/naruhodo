@@ -5,17 +5,17 @@ import { BookPageHeader } from "../BookPageHeader";
 import { BookInfo } from "../BookPageHeader/BookPageHeader";
 import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
-import styles from "./TextPage.module.scss";
+import styles from "./BookPage.module.scss";
 import useToggle from "@/hooks/useToggle";
 
-type TextPageProps = {
+type BookPageProps = {
   bookInfo: BookInfo;
   paragraphs: string[];
 };
 
 export type BookFontSize = "sm" | "md" | "lg";
 
-function TextPage({ bookInfo, paragraphs }: TextPageProps) {
+function BookPage({ bookInfo, paragraphs }: BookPageProps) {
   const [isBookmarkModeActive, setIsBookmarkModeActive] = useToggle();
   const [fontSize, setFontSize] = useState<BookFontSize>(() => {
     return (localStorage.getItem("bookFontSize") as BookFontSize) || "sm";
@@ -43,7 +43,7 @@ function TextPage({ bookInfo, paragraphs }: TextPageProps) {
   }, [fontSize]);
 
   return (
-    <article className={styles["text-page"]}>
+    <article className={styles["book-page"]}>
       {/* Book info */}
       <BookPageHeader bookInfo={bookInfo} />
 
@@ -65,4 +65,4 @@ function TextPage({ bookInfo, paragraphs }: TextPageProps) {
   );
 }
 
-export default TextPage;
+export default BookPage;
