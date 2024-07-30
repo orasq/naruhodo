@@ -40,6 +40,12 @@
   }
 }
 
+.tool-list-button {
+  opacity: 0;
+  transition: 1s ease-out 0.2s;
+  transition-property: opacity;
+}
+
 .tool-list {
   position: relative;
   display: grid;
@@ -66,6 +72,10 @@
     opacity: 1;
 
     &::after {
+      opacity: 1;
+    }
+
+    .tool-list-button {
       opacity: 1;
     }
   }
