@@ -1,6 +1,7 @@
 import { getTokens } from "@/actions/getTokens";
 import type { ParagraphObject } from "@/components/BookText/BookText";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatcher } from "@/lib/types/generics.types";
+import { useEffect, useRef, useState } from "react";
 
 type QueueItem = number;
 
@@ -11,7 +12,7 @@ export type BatchItem = {
 
 function useParseText(
   paragraphs: ParagraphObject[],
-  setParagraphs: Dispatch<SetStateAction<ParagraphObject[]>>
+  setParagraphs: Dispatcher<ParagraphObject[]>
 ) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [batch, setBatch] = useState<BatchItem[]>([]);

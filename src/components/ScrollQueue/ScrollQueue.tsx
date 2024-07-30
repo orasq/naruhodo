@@ -4,12 +4,13 @@
 
 import useParseText from "@/hooks/useParseText";
 import { ParagraphObject } from "../BookText/BookText";
-import { Dispatch, MutableRefObject, SetStateAction, useEffect } from "react";
+import { MutableRefObject, useEffect } from "react";
+import { Dispatcher } from "@/lib/types/generics.types";
 
 type ScrollQueueProps = {
   textBlockRefs: MutableRefObject<HTMLParagraphElement[]>;
   paragraphs: ParagraphObject[];
-  setParagraphs: Dispatch<SetStateAction<ParagraphObject[]>>;
+  setParagraphs: Dispatcher<ParagraphObject[]>;
   children: React.ReactNode;
 };
 

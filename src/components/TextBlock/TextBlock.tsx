@@ -1,10 +1,11 @@
 "use client";
 
-import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import { KuromojiToken } from "kuromojin";
 import styles from "./TextBlock.module.scss";
 import { Word } from "../Word";
 import { IconBookmark, IconBookmarkFilled } from "@tabler/icons-react";
+import { Dispatcher } from "@/lib/types/generics.types";
 
 export type TextBlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
@@ -14,7 +15,7 @@ export type TextBlockProps = {
   parsedParagraph: KuromojiToken[];
   htmlTag: TextBlockTag;
   isVisible: boolean;
-  setBookmarked: Dispatch<SetStateAction<number | null>>;
+  setBookmarked: Dispatcher<number | null>;
   isBookmarked: boolean;
   children?: ReactNode;
 };

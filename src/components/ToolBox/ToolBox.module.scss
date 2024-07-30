@@ -6,13 +6,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: red;
-
-  width: var(--toolbox-width);
+  background: var(--bg-color);
+  border: 1px solid var(--surface-light);
   border-radius: calc(var(--toolbox-width) / 2);
+  pointer-events: all;
 }
 
 .toolbox-button {
+  opacity: 0.5;
+  transition: 0.3s ease-out;
+  transition-property: opacity;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.toolbox-button,
+.tool-list-button {
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -30,13 +41,33 @@
 }
 
 .tool-list {
+  position: relative;
   display: grid;
   grid-template-rows: 0fr;
+  opacity: 0;
   transition: 1s cubic-bezier(0, 1, 0, 1);
-  transition-property: grid;
+  transition-property: grid, opacity;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--surface-light);
+    opacity: 0;
+    transition: 1s ease-out 0.5s;
+    transition-property: opacity;
+  }
 
   &.is-open {
     grid-template-rows: 1fr;
+    opacity: 1;
+
+    &::after {
+      opacity: 1;
+    }
   }
 
   ul {

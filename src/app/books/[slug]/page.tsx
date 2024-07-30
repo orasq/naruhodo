@@ -37,15 +37,7 @@ async function Book({ params }: BookProps) {
 
   return (
     <>
-      <TextPage>
-        <article>
-          {/* Book info */}
-          <BookPageHeader bookInfo={bookInfo} />
-
-          {/* Main text */}
-          <BookText textParagraphs={paragraphs} />
-        </article>
-      </TextPage>
+      <TextPage bookInfo={bookInfo} paragraphs={paragraphs} />
     </>
   );
 }

@@ -8,10 +8,14 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import styles from "./ToolBox.module.scss";
-import { useState } from "react";
+import useToggle from "@/hooks/useToggle";
 
-function ToolBox() {
-  const [isToolboxOpen, setIsToolboxOpen] = useState(false);
+type ToolBoxProps = {
+  toggleFontSize: () => void;
+};
+
+function ToolBox({ toggleFontSize }: ToolBoxProps) {
+  const [isToolboxOpen, toggleToolbox] = useToggle(false);
 
   return (
     <div className={styles.toolbox}>
@@ -22,22 +26,25 @@ function ToolBox() {
       >
         <ul>
           <li>
-            <IconBookmark />
+            <button className={styles["tool-list-button"]}>
+              <IconBookmark />
+            </button>
           </li>
           <li>
-            <IconCircleCheck />
+            <button className={styles["tool-list-button"]}>
+              <IconCircleCheck />
+            </button>
           </li>
           <li>
-            <IconTextSize />
+            <button className={styles["tool-list-button"]}>
+              <IconTextSize onClick={toggleFontSize} />
+            </button>
           </li>
         </ul>
       </div>
 
       {/* Open / close button   */}
-      <button
-        className={styles["toolbox-button"]}
-        onClick={() => setIsToolboxOpen(!isToolboxOpen)}
-      >
+      <button className={styles["toolbox-button"]} onClick={toggleToolbox}>
         {isToolboxOpen ? <IconX /> : <IconSettings />}
       </button>
     </div>
