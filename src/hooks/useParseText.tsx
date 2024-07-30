@@ -1,7 +1,7 @@
 import { getTokens } from "@/actions/getTokens";
 import type { ParagraphObject } from "@/components/BookText/BookText";
 import { Dispatcher } from "@/lib/types/generics.types";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type QueueItem = number;
 
@@ -15,113 +15,128 @@ function useParseText(
   setParagraphs: Dispatcher<ParagraphObject[]>
 ) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
-  const [batch, setBatch] = useState<BatchItem[]>([]);
+  const [visibleParagraphs, setVisibleParagraphs] = useState<QueueItem[]>([]);
 
   const canProcessNewBatch = useRef(true);
 
-  // Ref to keep track of the latest queue state (useful in isInQueue to solve closure issue)
-  // TODO - there's probably a better way to do this
-  const queueRef = useRef(queue);
+  const processQueue = useCallback(async () => {
+    canProcessNewBatch.current = false;
+
+    // queue
+    const batchToProcess = getParagraphsFromQueue(queue, paragraphs);
+    setQueue([]);
+
+    // batch
+    const processedParagraphs =
+      (await processBatch(batchToProcess, paragraphs)) ?? paragraphs;
+
+    // visibility
+    const newParagraphs = setParagraphsVisibility(
+      processedParagraphs,
+      visibleParagraphs
+    );
+
+    setParagraphs(newParagraphs);
+
+    canProcessNewBatch.current = true;
+  }, [queue]);
 
   useEffect(() => {
-    queueRef.current = queue;
-
     // Debounce before handling the queue
-    // TODO - there's probably a better way to do this
     const timeout = setTimeout(() => {
-      if (canProcessNewBatch.current) handleQueue();
+      if (canProcessNewBatch.current && queue.length) {
+        processQueue();
+      }
     }, 800);
 
     return () => clearTimeout(timeout);
-  }, [queue, canProcessNewBatch]);
-
-  // Process batch
-  useEffect(() => {
-    if (!batch.length) return;
-
-    (async function handleBatch() {
-      canProcessNewBatch.current = false;
-      const nextParagraphs = [...paragraphs];
-      const parsedText = await getTokens(batch);
-
-      // add parsed text
-      parsedText.forEach((paragraph) => {
-        nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
-      });
-
-      setParagraphs(nextParagraphs);
-
-      // empty the batch
-      setBatch([]);
-
-      canProcessNewBatch.current = true;
-    })();
-  }, [batch]);
-
-  // Is already inside queue?
-  function isInQueue(currIndex: number) {
-    const queue = queueRef.current;
-
-    return queue.some((queueItemIndex) => queueItemIndex === currIndex);
-  }
-
-  // Add to queue
-  function addToQueue(currIndex: number) {
-    if (isInQueue(currIndex)) return;
-
-    setQueue((prev) => {
-      const newArray = [...prev, currIndex];
-      return newArray;
-    });
-  }
-
-  // Remove from queue
-  function removeFromQueue(currIndex: number) {
-    setQueue((prev) => {
-      const newArray = prev.filter(
-        (queueItemIndex) => queueItemIndex !== currIndex
-      );
-      return newArray;
-    });
-  }
-
-  // Handle queue
-  function handleQueue() {
-    if (!queue.length) return;
-
-    // set paragraphs' visibility
-    // TODO: refactor to combine this with batch to remove one unnecessary re-render
-    const nextParagraphs = paragraphs.map((paragraph, index) => {
-      return { ...paragraph, isVisible: queue.includes(index) };
-    });
-
-    setParagraphs(nextParagraphs);
-
-    // define items needing to have its text parsed
-    const itemsToProcess = paragraphs.reduce(
-      (acc: BatchItem[], curr: ParagraphObject, currIndex: number) => {
-        // if not in queue, skip
-        if (!isInQueue(currIndex)) return acc;
-
-        // if already has parsed text, skip
-        if (curr.parsedText.length) return acc;
-
-        return [...acc, { baseText: curr.baseText, index: currIndex }];
-      },
-      [] as BatchItem[]
-    );
-
-    setBatch(itemsToProcess);
-
-    // empty the queue
-    setQueue([]);
-  }
+  }, [queue]);
 
   return {
-    addToQueue,
-    removeFromQueue,
-    isInQueue,
+    addToQueue: (currIndex: number) =>
+      setQueue((prev) => addToQueue(prev, currIndex)),
+    removeFromQueue: (currIndex: number) =>
+      setQueue((prev) => removeFromQueue(prev, currIndex)),
+    isInQueue: (currIndex: number) => isInQueue(queue, currIndex),
+    setCurrentParagraphVisibility: (currIndex: number, value: boolean) =>
+      setVisibleParagraphs((prev) =>
+        setCurrentParagraphVisibility(prev, currIndex, value)
+      ),
   };
 }
 
 export default useParseText;
+
+/**
+ * Utils
+ */
+
+function isInQueue(queue: QueueItem[], currIndex: number): boolean {
+  return queue.some((queueItemIndex) => queueItemIndex === currIndex);
+}
+
+function addToQueue(queue: QueueItem[], currIndex: number): QueueItem[] {
+  if (isInQueue(queue, currIndex)) return queue;
+
+  return [...queue, currIndex];
+}
+
+function removeFromQueue(queue: QueueItem[], currIndex: number): QueueItem[] {
+  return queue.filter((queueItemIndex) => queueItemIndex !== currIndex);
+}
+
+function getParagraphsFromQueue(
+  queue: QueueItem[],
+  paragraphs: ParagraphObject[]
+): BatchItem[] {
+  if (!queue.length) return [];
+
+  return paragraphs.reduce(
+    (acc: BatchItem[], curr: ParagraphObject, currIndex: number) => {
+      // if not in queue, skip
+      if (!isInQueue(queue, currIndex)) return acc;
+
+      // if it already has parsed text, skip
+      if (curr.parsedText.length) return acc;
+
+      return [...acc, { baseText: curr.baseText, index: currIndex }];
+    },
+    [] as BatchItem[]
+  );
+}
+
+async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
+  if (!batch.length) return;
+
+  const nextParagraphs = [...paragraphs];
+  const parsedText = await getTokens(batch);
+
+  // add parsed text
+  parsedText.forEach((paragraph) => {
+    nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
+  });
+
+  return nextParagraphs;
+}
+
+function setCurrentParagraphVisibility(
+  visibleParagraphs: QueueItem[],
+  currIndex: number,
+  isVisible: boolean
+): QueueItem[] {
+  if (isVisible && visibleParagraphs.includes(currIndex))
+    return visibleParagraphs;
+
+  if (isVisible) return [...visibleParagraphs, currIndex];
+
+  return visibleParagraphs.filter((item) => item !== currIndex);
+}
+
+function setParagraphsVisibility(
+  paragraphs: ParagraphObject[],
+  visibleParagraphs: QueueItem[]
+) {
+  return paragraphs.map((paragraph, index) => {
+    return { ...paragraph, isVisible: visibleParagraphs.includes(index) };
+  });
+}

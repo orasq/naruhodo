@@ -20,10 +20,12 @@ function ScrollQueue({
   setParagraphs,
   children,
 }: ScrollQueueProps) {
-  const { addToQueue, removeFromQueue, isInQueue } = useParseText(
-    paragraphs,
-    setParagraphs
-  );
+  const {
+    addToQueue,
+    removeFromQueue,
+    isInQueue,
+    setCurrentParagraphVisibility,
+  } = useParseText(paragraphs, setParagraphs);
 
   /**
    * Add IntersectionObserver to ascertain if a <TextBlock> is visible on the screen or not.
@@ -42,11 +44,15 @@ function ScrollQueue({
         if (!entry.isIntersecting) {
           if (isInQueue(index)) removeFromQueue(index);
 
+          setCurrentParagraphVisibility(index, false);
+
           return;
         }
 
         // add item to queue
         if (!isInQueue(index)) addToQueue(index);
+
+        setCurrentParagraphVisibility(index, true);
       });
     });
 
