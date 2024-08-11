@@ -10,7 +10,7 @@ module.exports = {
         word: "0 0 0 4px rgba(var(--surface-light))",
       },
       borderRadius: {
-        " 4xl": "2rem",
+        "4xl": "2rem",
       },
       colors: {
         background: "rgba(var(--bg-color))",

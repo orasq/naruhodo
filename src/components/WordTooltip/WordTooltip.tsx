@@ -12,8 +12,8 @@ type WordTooltipProps = {
 };
 
 type TooltipPosition = {
-  top: number | "auto";
-  left: number | "auto";
+  top?: number | "auto";
+  left?: number | "auto";
 };
 
 const tooltipBackgroundStyle = tv({
@@ -30,16 +30,19 @@ const tooltipBackgroundStyle = tv({
 
 const tooltipPanelStyle = tv({
   base: [
-    "rounded-tl-4xl rounded-tr-4xl ease-smooth w-full bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000",
+    "ease-smooth rounded-t-4xl w-full bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000",
     "sm:w-full sm:max-w-72 sm:rounded-md sm:p-4",
   ],
   variants: {
     state: {
-      visible: "translate-y-0 scale-100 opacity-100",
+      visible: [
+        "translate-y-0 scale-100 opacity-100",
+        "sm:translate-y-0 sm:scale-100",
+      ],
       hidden: ["translate-y-3/4 opacity-0", "sm:translate-y-5 sm:scale-95"],
     },
     isClosing: {
-      true: "translate-y-3/4 opacity-0 sm:translate-y-5 sm:scale-95",
+      true: ["translate-y-3/4 opacity-0", "sm:translate-y-5 sm:scale-95"],
     },
   },
 });
@@ -66,7 +69,7 @@ function WordTooltip({
   useLayoutEffect(() => {
     function handleResize() {
       if (isMobile) {
-        setTooltipPosition({ top: "auto", left: "auto" });
+        setTooltipPosition({ left: 0 });
         return;
       }
 
@@ -135,7 +138,7 @@ function WordTooltip({
       <div
         ref={tooltipRef}
         style={{ top: tooltipPosition.top, left: tooltipPosition.left }}
-        className="fixed bottom-0 left-0 w-full sm:absolute sm:bottom-auto sm:left-auto sm:isolate sm:z-30 sm:w-auto"
+        className="fixed bottom-0 left-0 isolate z-30 w-full sm:absolute sm:bottom-auto sm:left-auto sm:w-auto"
       >
         {/* Content panel */}
         <div
