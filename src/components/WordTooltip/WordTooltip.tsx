@@ -20,8 +20,8 @@ function WordTooltip({
 }: WordTooltipProps) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{
-    top: number | null;
-    left: number | null;
+    top: number;
+    left: number;
   }>({
     top: 0,
     left: 0,
@@ -36,13 +36,13 @@ function WordTooltip({
   useLayoutEffect(() => {
     function handleResize() {
       if (isMobile) {
-        setTooltipPosition({ top: null, left: null });
+        setTooltipPosition({ top: 0, left: 0 });
         return;
       }
 
       const position = defineTooltipPosition(
         tooltipRef.current,
-        linkedTo.current
+        linkedTo.current,
       );
 
       if (position) setTooltipPosition(position);
@@ -93,9 +93,7 @@ function WordTooltip({
 
   return (
     <div
-      className={`${styles.tooltip}
-                  ${tooltipPosition.left !== 0 ? styles["is-visible"] : ""}
-                  ${tooltipIsClosing ? styles["is-closing"] : ""}`}
+      className={`${styles.tooltip} ${tooltipPosition.left !== 0 ? styles["is-visible"] : ""} ${tooltipIsClosing ? styles["is-closing"] : ""}`}
     >
       {/* Background overlay */}
       <div className={styles["tooltip-background"]}></div>
@@ -176,11 +174,11 @@ function calculateTooltipLeft({
 
 function defineTooltipPosition(
   tooltip: HTMLDivElement | null,
-  clickedWord: HTMLSpanElement | null
+  clickedWord: HTMLSpanElement | null,
 ) {
   const articleRef = document.getElementById("articleContent");
 
-  if (!tooltip || !clickedWord || !articleRef) return;
+  if (!tooltip || !clickedWord || !articleRef) return { top: 0, left: 0 };
 
   // get elements' dimensions and positions
   const { width: tooltipWidth, height: tooltipHeight } =

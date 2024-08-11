@@ -5,6 +5,7 @@ import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { THEME_COOKIE_KEY } from "@/lib/utils/variants";
+import Link from "next/link";
 
 type HeaderProps = {
   initialTheme: ThemeMode;
@@ -23,10 +24,12 @@ function Header({ initialTheme }: HeaderProps) {
   }
 
   return (
-    <header className="flex items-center justify-between py-7">
-      <a href="/" className="text-xl">
+    <header className="mx-auto flex max-w-6xl items-center justify-between py-7">
+      {/* Logo */}
+      <Link href="/" className="text-xl">
         なるほど
-      </a>
+      </Link>
+
       <div>
         {/* Light / Dark theme toggle */}
         <button onClick={handleThemeToggle}>
