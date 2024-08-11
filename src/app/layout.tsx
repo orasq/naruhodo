@@ -3,8 +3,11 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 
 import { cookies } from "next/headers";
-import { ThemeMode } from "@/lib/utils/types";
-import { THEME_COOKIE_KEY } from "@/lib/utils/variants";
+import { BookFontSize, ThemeMode } from "@/lib/utils/types";
+import {
+  BOOK_FONT_SIZE_COOKIE_VALUE,
+  THEME_COOKIE_KEY,
+} from "@/lib/utils/variants";
 
 export const metadata: Metadata = {
   title: "なるほど",
@@ -16,17 +19,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // get initial theme
   const savedTheme = cookies().get(THEME_COOKIE_KEY);
-  const theme = (savedTheme?.value as ThemeMode) ?? "light";
+  const initialTheme = (savedTheme?.value as ThemeMode) ?? "light";
+
+  // get initial font size
+  const savedFontSize = cookies().get(BOOK_FONT_SIZE_COOKIE_VALUE);
+  const initialFontSize = (savedFontSize?.value as BookFontSize) || "sm";
 
   return (
     <html
       lang="en"
-      data-color-mode={theme}
+      data-color-mode={initialTheme}
+      data-font-size={initialFontSize}
       className="max-w-full-screen overflow-x-clip"
     >
-      <body className="bg-background text-copy max-w-full-screen overflow-x-clip px-4">
-        <Header initialTheme={theme} />
+      <body className="max-w-full-screen overflow-x-clip bg-background px-4 text-copy">
+        <Header initialTheme={initialTheme} />
         {children}
       </body>
     </html>

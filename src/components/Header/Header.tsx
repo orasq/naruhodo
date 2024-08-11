@@ -32,7 +32,10 @@ function Header({ initialTheme }: HeaderProps) {
 
       <div>
         {/* Light / Dark theme toggle */}
-        <button onClick={handleThemeToggle}>
+        <button
+          onClick={handleThemeToggle}
+          aria-label={`Toggle theme | Current theme: ${theme}`}
+        >
           {theme === "light" ? <IconSunFilled /> : <IconMoonFilled />}
         </button>
       </div>

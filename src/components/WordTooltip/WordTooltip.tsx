@@ -58,7 +58,7 @@ function WordTooltip({
   }, [linkedTo, tooltipRef, isMobile]);
 
   /**
-   * Hide tooltip on outside click
+   * Hide tooltip on outside click and keydown
    */
   useEffect(() => {
     function closeTooltip() {

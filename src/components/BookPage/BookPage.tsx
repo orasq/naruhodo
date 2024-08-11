@@ -7,19 +7,20 @@ import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
 import styles from "./BookPage.module.scss";
 import useToggle from "@/hooks/useToggle";
+import { cookies } from "next/headers";
+import Cookies from "js-cookie";
+import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/variants";
+import { BookFontSize } from "@/lib/utils/types";
 
 type BookPageProps = {
   bookInfo: BookInfo;
   paragraphs: string[];
+  initialFontSize: BookFontSize;
 };
 
-export type BookFontSize = "sm" | "md" | "lg";
-
-function BookPage({ bookInfo, paragraphs }: BookPageProps) {
+function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
   const [isBookmarkModeActive, setIsBookmarkModeActive] = useToggle();
-  const [fontSize, setFontSize] = useState<BookFontSize>(() => {
-    return (localStorage.getItem("bookFontSize") as BookFontSize) || "sm";
-  });
+  const [fontSize, setFontSize] = useState<BookFontSize>(initialFontSize);
 
   function toggleFontSize() {
     if (fontSize === "sm") setFontSize("md");
@@ -28,18 +29,9 @@ function BookPage({ bookInfo, paragraphs }: BookPageProps) {
   }
 
   useEffect(() => {
-    const fontSizeValues = {
-      sm: "1rem",
-      md: "1.25rem",
-      lg: "1.5rem",
-    };
+    document.documentElement.setAttribute("data-font-size", fontSize);
 
-    document.documentElement.style.setProperty(
-      "--book-font-size",
-      fontSizeValues[fontSize]
-    );
-
-    localStorage.setItem("bookFontSize", fontSize);
+    Cookies.set(BOOK_FONT_SIZE_COOKIE_VALUE, fontSize, { expires: 365 });
   }, [fontSize]);
 
   return (

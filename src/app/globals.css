@@ -5,7 +5,7 @@
 :root {
   --text-max-width: 60ch;
   --toolbox-width: 45px;
-  --book-font-size: 20px;
+  --book-font-size: 1.25rem;
 }
 
 html[data-color-mode="light"] {
@@ -22,8 +22,14 @@ html[data-color-mode="dark"] {
   --surface-light: 54, 63, 85;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: light;
-  }
-} */
+html[data-font-size="sm"] {
+  --book-font-size: 1rem;
+}
+
+html[data-font-size="md"] {
+  --book-font-size: 1.25rem;
+}
+
+html[data-font-size="lg"] {
+  --book-font-size: 1.5rem;
+}

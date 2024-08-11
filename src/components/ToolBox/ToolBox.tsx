@@ -27,6 +27,7 @@ function ToolBox({
   return (
     <div className={styles.toolbox}>
       <div
+        id="toolList"
         className={`${styles["tool-list"]} ${
           isToolboxOpen ? styles["is-open"] : ""
         }`}
@@ -54,7 +55,14 @@ function ToolBox({
       </div>
 
       {/* Open / close button   */}
-      <button className={styles["toolbox-button"]} onClick={toggleToolbox}>
+      <button
+        className={styles["toolbox-button"]}
+        onClick={toggleToolbox}
+        aria-haspopup="true"
+        aria-label="Toggle toolbox opening"
+        aria-expanded={isToolboxOpen}
+        aria-controls="toolList"
+      >
         {isToolboxOpen ? <IconX /> : <IconSettings />}
       </button>
     </div>
