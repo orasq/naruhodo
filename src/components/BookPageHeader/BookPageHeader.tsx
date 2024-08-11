@@ -1,5 +1,4 @@
 import Image from "next/image";
-import styles from "./BookPageHeader.module.scss";
 
 export type BookInfo = {
   title: string;
@@ -16,7 +15,7 @@ function BookPageHeader({
   bookInfo: { title, author, image, publishedYear },
 }: BookPageHeaderProps) {
   return (
-    <header className={styles["book-page-header"]}>
+    <header className="mb-28 flex gap-5">
       <Image
         src={`/images/covers/${image}`}
         alt={title}

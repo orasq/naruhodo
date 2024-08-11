@@ -3,10 +3,10 @@
 import { TextBlock } from "@/components/TextBlock";
 import { KuromojiToken } from "kuromojin";
 import { useEffect, useRef, useState } from "react";
-import { TextBlockTag } from "../TextBlock/TextBlock";
 import initializeBaseText from "@/lib/utils/initializeBaseText";
 import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 import { ScrollQueue } from "../ScrollQueue";
+import { TextBlockTag } from "@/lib/utils/types";
 
 type BookTextProps = {
   textParagraphs: string[];
@@ -76,7 +76,7 @@ function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {
       paragraphs={paragraphs}
       setParagraphs={setParagraphs}
     >
-      <div id="articleContent">
+      <div id="bookContent">
         {paragraphs.map((item, index) => (
           <TextBlock
             key={index}

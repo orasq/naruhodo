@@ -5,9 +5,7 @@ import { BookPageHeader } from "../BookPageHeader";
 import { BookInfo } from "../BookPageHeader/BookPageHeader";
 import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
-import styles from "./BookPage.module.scss";
 import useToggle from "@/hooks/useToggle";
-import { cookies } from "next/headers";
 import Cookies from "js-cookie";
 import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/variants";
 import { BookFontSize } from "@/lib/utils/types";
@@ -35,7 +33,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
   }, [fontSize]);
 
   return (
-    <article className={styles["book-page"]}>
+    <article className="text-book-fs relative mx-auto w-full max-w-[var(--text-max-width)]">
       {/* Book info */}
       <BookPageHeader bookInfo={bookInfo} />
 
@@ -46,7 +44,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
       />
 
       {/* Toolbox */}
-      <div className={styles["toolbox-wrapper"]}>
+      <div className="pointer-events-none fixed left-1/2 top-0 mx-auto h-full w-full max-w-toolbox-wrapper -translate-x-1/2">
         <ToolBox
           toggleFontSize={toggleFontSize}
           toggleBookmarkMode={setIsBookmarkModeActive}
