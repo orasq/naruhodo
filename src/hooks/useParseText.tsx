@@ -12,7 +12,7 @@ export type BatchItem = {
 
 function useParseText(
   paragraphs: ParagraphObject[],
-  setParagraphs: Dispatcher<ParagraphObject[]>
+  setParagraphs: Dispatcher<ParagraphObject[]>,
 ) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [visibleParagraphs, setVisibleParagraphs] = useState<QueueItem[]>([]);
@@ -33,7 +33,7 @@ function useParseText(
     // visibility
     const newParagraphs = setParagraphsVisibility(
       processedParagraphs,
-      visibleParagraphs
+      visibleParagraphs,
     );
 
     setParagraphs(newParagraphs);
@@ -60,7 +60,7 @@ function useParseText(
     isInQueue: (currIndex: number) => isInQueue(queue, currIndex),
     setCurrentParagraphVisibility: (currIndex: number, value: boolean) =>
       setVisibleParagraphs((prev) =>
-        setCurrentParagraphVisibility(prev, currIndex, value)
+        setCurrentParagraphVisibility(prev, currIndex, value),
       ),
   };
 }
@@ -87,7 +87,7 @@ function removeFromQueue(queue: QueueItem[], currIndex: number): QueueItem[] {
 
 function getParagraphsFromQueue(
   queue: QueueItem[],
-  paragraphs: ParagraphObject[]
+  paragraphs: ParagraphObject[],
 ): BatchItem[] {
   if (!queue.length) return [];
 
@@ -101,7 +101,7 @@ function getParagraphsFromQueue(
 
       return [...acc, { baseText: curr.baseText, index: currIndex }];
     },
-    [] as BatchItem[]
+    [] as BatchItem[],
   );
 }
 
@@ -122,7 +122,7 @@ async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
 function setCurrentParagraphVisibility(
   visibleParagraphs: QueueItem[],
   currIndex: number,
-  isVisible: boolean
+  isVisible: boolean,
 ): QueueItem[] {
   if (isVisible && visibleParagraphs.includes(currIndex))
     return visibleParagraphs;
@@ -134,7 +134,7 @@ function setCurrentParagraphVisibility(
 
 function setParagraphsVisibility(
   paragraphs: ParagraphObject[],
-  visibleParagraphs: QueueItem[]
+  visibleParagraphs: QueueItem[],
 ) {
   return paragraphs.map((paragraph, index) => {
     return { ...paragraph, isVisible: visibleParagraphs.includes(index) };

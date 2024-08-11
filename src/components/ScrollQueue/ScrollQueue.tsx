@@ -37,12 +37,12 @@ function ScrollQueue({
       entries.forEach(async (entry) => {
         // get entry's index
         const index = textBlockRefs.current.indexOf(
-          entry.target as HTMLParagraphElement
+          entry.target as HTMLParagraphElement,
         );
 
         // remove from queue (if applicable)
         if (!entry.isIntersecting) {
-          if (isInQueue(index)) removeFromQueue(index);
+          removeFromQueue(index);
 
           setCurrentParagraphVisibility(index, false);
 

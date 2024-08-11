@@ -14,20 +14,28 @@
     "@next/mdx": "^14.2.4",
     "@tabler/icons-react": "^3.11.0",
     "@types/mdx": "^2.0.13",
+    "js-cookie": "^3.0.5",
     "kuromojin": "^3.0.0",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
-    "sass": "^1.77.6"
+    "sass": "^1.77.6",
+    "tailwind-variants": "^0.2.1"
   },
   "devDependencies": {
     "@content-collections/core": "^0.6.2",
     "@content-collections/next": "^0.2.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
+    "postcss": "^8.4.41",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6",
+    "tailwindcss": "^3.4.9",
     "typescript": "^5"
   }
 }

@@ -2,12 +2,11 @@
 
 import { ReactNode, useMemo } from "react";
 import { KuromojiToken } from "kuromojin";
-import styles from "./TextBlock.module.scss";
 import { Word } from "../Word";
 import { IconBookmark, IconBookmarkFilled } from "@tabler/icons-react";
 import { Dispatcher } from "@/lib/types/generics.types";
-
-export type TextBlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+import { tv } from "tailwind-variants";
+import { TextBlockTag } from "@/lib/utils/types";
 
 export type TextBlockProps = {
   blockId: number;
@@ -20,6 +19,16 @@ export type TextBlockProps = {
   isBookmarkModeActive: boolean;
   children?: ReactNode;
 };
+
+const textBlockStyle = tv({
+  base: "relative mb-10 scroll-mt-6 duration-1000 ease-out motion-safe:transition-opacity",
+  variants: {
+    state: {
+      visible: "opacity-100",
+      hidden: "opacity-50",
+    },
+  },
+});
 
 function TextBlock({
   blockId,
@@ -66,12 +75,14 @@ function TextBlock({
         ref={paragraphRef}
         tabIndex={hasParsedText ? 0 : undefined}
         role={hasParsedText ? "group" : undefined}
-        className={`${styles.textBlock} ${hasParsedText ? styles.parsed : ""}`}
+        className={textBlockStyle({
+          state: hasParsedText ? "visible" : "hidden",
+        })}
       >
         {/* Bookmark icon */}
         {isBookmarkModeActive && (
           <button
-            className={styles["bookmark-button"]}
+            className="absolute left-[-0.5em] right-auto top-[-2em] cursor-pointer border-0 bg-transparent p-[0.25em] pt-[0.2em] text-xs opacity-50 lg:left-auto lg:right-[calc(100%+8px)] lg:top-0"
             onClick={handleBookmarkClick}
           >
             {isBookmarked ? <IconBookmarkFilled /> : <IconBookmark />}

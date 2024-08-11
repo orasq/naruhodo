@@ -2,8 +2,23 @@ type WordProps = { children: React.ReactNode };
 
 import { useRef, useState } from "react";
 import { WordTooltip } from "../WordTooltip";
-import styles from "./Word.module.scss";
 import { createPortal } from "react-dom";
+import { tv } from "tailwind-variants";
+
+const wordStyle = tv({
+  base: [
+    "relative inline rounded-sm",
+    "hover:isolate hover:z-20 hover:cursor-pointer hover:bg-surface-light hover:shadow-word",
+  ],
+  variants: {
+    isActive: {
+      true: "isolate z-20 cursor-pointer bg-surface-light shadow-word",
+    },
+    isClosing: {
+      true: "z-20 bg-transparent shadow-none hover:shadow-none",
+    },
+  },
+});
 
 function Word({ children }: WordProps) {
   const wordRef = useRef<HTMLSpanElement>(null);
@@ -13,13 +28,15 @@ function Word({ children }: WordProps) {
   function handleClick() {
     setShowTooltip(!showTooltip);
   }
+
   return (
     <>
       <span
         ref={wordRef}
-        className={`${styles.word} ${showTooltip ? styles["is-active"] : ""} ${
-          tooltipIsClosing ? styles["is-closing"] : ""
-        }`}
+        className={wordStyle({
+          isActive: showTooltip && !tooltipIsClosing,
+          isClosing: tooltipIsClosing,
+        })}
         onClick={handleClick}
       >
         {children}
@@ -34,7 +51,7 @@ function Word({ children }: WordProps) {
             tooltipIsClosing={tooltipIsClosing}
             word={children}
           />,
-          document.body
+          document.body,
         )}
     </>
   );

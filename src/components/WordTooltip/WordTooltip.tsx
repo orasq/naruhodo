@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
-import styles from "./WordTooltip.module.scss";
 import useWindowSize from "@/hooks/useWindowSize";
 import { Dispatcher } from "@/lib/types/generics.types";
+import { tv } from "tailwind-variants";
 
 type WordTooltipProps = {
   linkedTo: RefObject<HTMLSpanElement>;
@@ -11,6 +11,42 @@ type WordTooltipProps = {
   word: React.ReactNode;
 };
 
+type TooltipPosition = {
+  top?: number | "auto";
+  left?: number | "auto";
+};
+
+const tooltipBackgroundStyle = tv({
+  base: "pointer-events-none fixed inset-0 h-full w-full bg-background opacity-0 transition-opacity",
+  variants: {
+    isVisible: {
+      true: "pointer-events-auto opacity-90",
+    },
+    isClosing: {
+      true: "opacity-0",
+    },
+  },
+});
+
+const tooltipPanelStyle = tv({
+  base: [
+    "ease-smooth rounded-t-4xl w-full bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000",
+    "sm:w-full sm:max-w-72 sm:rounded-md sm:p-4",
+  ],
+  variants: {
+    state: {
+      visible: [
+        "translate-y-0 scale-100 opacity-100",
+        "sm:translate-y-0 sm:scale-100",
+      ],
+      hidden: ["translate-y-3/4 opacity-0", "sm:translate-y-5 sm:scale-95"],
+    },
+    isClosing: {
+      true: ["translate-y-3/4 opacity-0", "sm:translate-y-5 sm:scale-95"],
+    },
+  },
+});
+
 function WordTooltip({
   linkedTo,
   setShowTooltip,
@@ -19,12 +55,9 @@ function WordTooltip({
   word,
 }: WordTooltipProps) {
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{
-    top: number | null;
-    left: number | null;
-  }>({
-    top: 0,
-    left: 0,
+  const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>({
+    top: "auto",
+    left: "auto",
   });
 
   const { currentBreakpoint } = useWindowSize();
@@ -36,13 +69,13 @@ function WordTooltip({
   useLayoutEffect(() => {
     function handleResize() {
       if (isMobile) {
-        setTooltipPosition({ top: null, left: null });
+        setTooltipPosition({ left: 0 });
         return;
       }
 
       const position = defineTooltipPosition(
         tooltipRef.current,
-        linkedTo.current
+        linkedTo.current,
       );
 
       if (position) setTooltipPosition(position);
@@ -58,7 +91,7 @@ function WordTooltip({
   }, [linkedTo, tooltipRef, isMobile]);
 
   /**
-   * Hide tooltip on outside click
+   * Hide tooltip on outside click and keydown
    */
   useEffect(() => {
     function closeTooltip() {
@@ -92,22 +125,28 @@ function WordTooltip({
   }, []);
 
   return (
-    <div
-      className={`${styles.tooltip}
-                  ${tooltipPosition.left !== 0 ? styles["is-visible"] : ""}
-                  ${tooltipIsClosing ? styles["is-closing"] : ""}`}
-    >
+    <div className="absolute left-0 top-0 h-full w-full">
       {/* Background overlay */}
-      <div className={styles["tooltip-background"]}></div>
+      <div
+        className={tooltipBackgroundStyle({
+          isVisible: tooltipPosition.left !== "auto",
+          isClosing: tooltipIsClosing,
+        })}
+      ></div>
 
       {/* Position wrapper */}
       <div
         ref={tooltipRef}
-        className={`${styles["tooltip-position-wrapper"]}`}
         style={{ top: tooltipPosition.top, left: tooltipPosition.left }}
+        className="fixed bottom-0 left-0 isolate z-30 w-full sm:absolute sm:bottom-auto sm:left-auto sm:w-auto"
       >
         {/* Content panel */}
-        <div className={`${styles["tooltip-panel"]}`}>
+        <div
+          className={tooltipPanelStyle({
+            state: tooltipPosition.left !== "auto" ? "visible" : "hidden",
+            isClosing: tooltipIsClosing,
+          })}
+        >
           {word}
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium
           neque modi labore. Eligendi quibusdam perferendis, consectetur aliquam
@@ -176,11 +215,12 @@ function calculateTooltipLeft({
 
 function defineTooltipPosition(
   tooltip: HTMLDivElement | null,
-  clickedWord: HTMLSpanElement | null
-) {
-  const articleRef = document.getElementById("articleContent");
+  clickedWord: HTMLSpanElement | null,
+): TooltipPosition {
+  const articleRef = document.getElementById("bookContent");
 
-  if (!tooltip || !clickedWord || !articleRef) return;
+  if (!tooltip || !clickedWord || !articleRef)
+    return { top: "auto", left: "auto" };
 
   // get elements' dimensions and positions
   const { width: tooltipWidth, height: tooltipHeight } =
