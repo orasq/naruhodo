@@ -1,15 +1,8 @@
 .word {
-  position: relative;
-  display: inline;
-  border-radius: 2px;
-
   &:hover,
   &.is-active {
     background: var(--surface-light);
     box-shadow: 0 0 0 4px var(--surface-light);
-    cursor: pointer;
-    isolation: isolate;
-    z-index: 2;
   }
 
   &.is-closing {
