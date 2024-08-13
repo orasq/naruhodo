@@ -29,7 +29,7 @@ module.exports = {
       maxWidth: {
         "full-screen": "100vw",
         "toolbox-wrapper":
-          "calc(var(--text-max-width) + (var(--toolbox-width) * 2) + 1rem)",
+          "calc(var(--text-max-width) + (var(--toolbox-width) * 2) + 10rem)",
       },
       transitionDuration: {
         2000: "2000ms",

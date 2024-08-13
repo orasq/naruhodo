@@ -10,7 +10,7 @@ import {
 } from "@/lib/utils/variants";
 
 export const metadata: Metadata = {
-  title: "なるほど",
+  title: { template: "%s | なるほど", default: "なるほど" },
   description: "...",
 };
 
