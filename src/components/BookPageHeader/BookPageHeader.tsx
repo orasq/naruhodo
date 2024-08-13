@@ -10,13 +10,14 @@ function BookPageHeader({
 }: BookPageHeaderProps) {
   return (
     <header className="mb-28 flex flex-col items-center gap-8 md:flex-row md:items-start">
-      <Image
-        className="object-cove h-72 w-52 rounded-lg"
-        src={`/images/covers/${image}`}
-        alt={title}
-        width="208"
-        height="285"
-      />
+      <div className="relative h-72 w-52 shrink-0">
+        <Image
+          className="rounded-lg object-cover"
+          src={`/images/covers/${image}`}
+          alt={title}
+          fill
+        />
+      </div>
 
       <div className="max-w-96 py-4 text-center text-base md:max-w-full md:text-left">
         <h1 className="mb-4 text-3xl font-semibold">{title}</h1>

@@ -36,7 +36,7 @@ export default function RootLayout({
     >
       <body className="relative max-w-full-screen overflow-x-clip bg-background px-6 text-copy">
         <Header initialTheme={initialTheme} />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

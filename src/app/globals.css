@@ -9,10 +9,10 @@
 }
 
 html[data-color-mode="light"] {
-  --bg-color: 239, 239, 239;
-  --copy-color: 21, 21, 21;
+  --bg-color: 255, 243, 217;
+  --copy-color: 72, 62, 43;
 
-  --surface-light: 208, 208, 208;
+  --surface-light: 255, 253, 247;
 }
 
 html[data-color-mode="dark"] {

@@ -33,7 +33,7 @@ const toolboxButtonStyle = tv({
 const toolboxListStyle = tv({
   base: [
     "relative grid duration-1000 ease-smooth motion-safe:transition-[opacity,grid]",
-    "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-surface-light after:opacity-0 after:delay-300 after:duration-1000 after:motion-safe:transition-opacity",
+    "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-copy/20 after:opacity-0 after:delay-300 after:duration-1000 after:motion-safe:transition-opacity",
   ],
   variants: {
     state: {
@@ -51,7 +51,7 @@ function ToolBox({
   const [isToolboxOpen, toggleToolbox] = useToggle(false);
 
   return (
-    <div className="pointer-events-auto absolute bottom-8 right-0 flex flex-col items-center justify-center rounded-[calc(var(--toolbox-width)/2)] border-1 border-surface-light bg-background">
+    <div className="pointer-events-auto absolute bottom-8 right-0 flex flex-col items-center justify-center rounded-[calc(var(--toolbox-width)/2)] border-1 border-copy/20 bg-background">
       <div
         id="toolList"
         className={toolboxListStyle({
