@@ -17,9 +17,9 @@ type ToolBoxProps = {
   isBookmarkModeActive: boolean;
 };
 
-const toolboxButton = tv({
+const toolboxButtonStyle = tv({
   base: [
-    "w-toolbox h-toolbox flex shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent opacity-50 duration-300 motion-safe:transition-opacity",
+    "flex h-toolbox w-toolbox shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent opacity-50 duration-300 motion-safe:transition-opacity",
     "hover:opacity-100",
   ],
   variants: {
@@ -30,9 +30,9 @@ const toolboxButton = tv({
   },
 });
 
-const toolboxList = tv({
+const toolboxListStyle = tv({
   base: [
-    "ease-smooth relative grid duration-1000 motion-safe:transition-[opacity,grid]",
+    "relative grid duration-1000 ease-smooth motion-safe:transition-[opacity,grid]",
     "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-surface-light after:opacity-0 after:delay-300 after:duration-1000 after:motion-safe:transition-opacity",
   ],
   variants: {
@@ -51,15 +51,17 @@ function ToolBox({
   const [isToolboxOpen, toggleToolbox] = useToggle(false);
 
   return (
-    <div className="border-1 pointer-events-auto absolute bottom-8 right-0 flex flex-col items-center justify-center rounded-[calc(var(--toolbox-width)/2)] border-surface-light bg-background">
+    <div className="pointer-events-auto absolute bottom-8 right-0 flex flex-col items-center justify-center rounded-[calc(var(--toolbox-width)/2)] border-1 border-surface-light bg-background">
       <div
         id="toolList"
-        className={toolboxList({ state: isToolboxOpen ? "visible" : "hidden" })}
+        className={toolboxListStyle({
+          state: isToolboxOpen ? "visible" : "hidden",
+        })}
       >
         <ul className="overflow-hidden">
           <li>
             <button
-              className={toolboxButton({
+              className={toolboxButtonStyle({
                 state: isToolboxOpen ? "visible" : "hidden",
               })}
               onClick={toggleBookmarkMode}
@@ -69,7 +71,7 @@ function ToolBox({
           </li>
           <li>
             <button
-              className={toolboxButton({
+              className={toolboxButtonStyle({
                 state: isToolboxOpen ? "visible" : "hidden",
               })}
             >
@@ -78,7 +80,7 @@ function ToolBox({
           </li>
           <li>
             <button
-              className={toolboxButton({
+              className={toolboxButtonStyle({
                 state: isToolboxOpen ? "visible" : "hidden",
               })}
             >
@@ -90,7 +92,7 @@ function ToolBox({
 
       {/* Open / close button   */}
       <button
-        className={toolboxButton()}
+        className={toolboxButtonStyle()}
         onClick={toggleToolbox}
         aria-haspopup="true"
         aria-label="Toggle toolbox opening"

@@ -59,6 +59,10 @@ function TextBlock({
 
   const hasParsedText = !!words.length;
 
+  if (hasParsedText) {
+    console.log({ parsedParagraph });
+  }
+
   function handleBookmarkClick() {
     setBookmarked(isBookmarked ? null : blockId);
 
