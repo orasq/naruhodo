@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { BookPageHeader } from "../BookPageHeader";
-import { BookInfo } from "../BookPageHeader/BookPageHeader";
 import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
 import useToggle from "@/hooks/useToggle";
 import Cookies from "js-cookie";
 import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/variants";
-import { BookFontSize } from "@/lib/utils/types";
+import { BookFontSize, BookInfo } from "@/lib/utils/types";
 
 type BookPageProps = {
   bookInfo: BookInfo;
@@ -33,7 +32,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
   }, [fontSize]);
 
   return (
-    <article className="text-book-fs relative mx-auto w-full max-w-[var(--text-max-width)]">
+    <article className="relative mx-auto w-full max-w-[var(--text-max-width)] text-book-fs">
       {/* Book info */}
       <BookPageHeader bookInfo={bookInfo} />
 

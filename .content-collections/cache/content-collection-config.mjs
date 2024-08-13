@@ -7,8 +7,9 @@ var books = defineCollection({
   schema: (z) => ({
     title: z.string(),
     author: z.string(),
+    image: z.string(),
     publishedYear: z.string().optional(),
-    image: z.string()
+    synopsis: z.string().optional()
   })
 });
 var content_collections_default = defineConfig({

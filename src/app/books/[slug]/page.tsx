@@ -1,5 +1,3 @@
-import BookPageHeader from "@/components/BookPageHeader/BookPageHeader";
-import { BookText } from "@/components/BookText";
 import { BookPage } from "@/components/BookPage";
 import { allBooks } from "content-collections";
 import { notFound } from "next/navigation";
@@ -33,6 +31,7 @@ async function Book({ params }: BookProps) {
     author: book.author,
     image: book.image,
     publishedYear: book.publishedYear,
+    synopsis: book.synopsis,
   };
 
   const paragraphs = book.content
