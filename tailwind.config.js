@@ -14,6 +14,7 @@ module.exports = {
       },
       colors: {
         background: "rgba(var(--bg-color))",
+        backdrop: "rgba(var(--backdrop-color))",
         copy: "rgba(var(--copy-color))",
         "surface-light": "rgba(var(--surface-light))",
       },

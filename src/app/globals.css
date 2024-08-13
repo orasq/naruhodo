@@ -12,7 +12,8 @@ html[data-color-mode="light"] {
   --bg-color: 255, 243, 217;
   --copy-color: 72, 62, 43;
 
-  --surface-light: 255, 253, 247;
+  --surface-light: 255, 255, 255;
+  --backdrop-color: 149, 144, 125;
 }
 
 html[data-color-mode="dark"] {
@@ -20,6 +21,7 @@ html[data-color-mode="dark"] {
   --copy-color: 215, 220, 235;
 
   --surface-light: 54, 63, 85;
+  --backdrop-color: 26, 34, 45;
 }
 
 html[data-font-size="sm"] {

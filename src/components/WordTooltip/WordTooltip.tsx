@@ -17,10 +17,10 @@ type TooltipPosition = {
 };
 
 const tooltipBackgroundStyle = tv({
-  base: "pointer-events-none fixed inset-0 h-full w-full bg-background opacity-0 transition-opacity",
+  base: "pointer-events-none fixed inset-0 h-full w-full bg-backdrop opacity-0 transition-opacity",
   variants: {
     isVisible: {
-      true: "pointer-events-auto opacity-90",
+      true: "pointer-events-auto opacity-50",
     },
     isClosing: {
       true: "opacity-0",
@@ -30,7 +30,7 @@ const tooltipBackgroundStyle = tv({
 
 const tooltipPanelStyle = tv({
   base: [
-    "ease-smooth rounded-t-4xl w-full bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000",
+    "w-full rounded-t-4xl bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000 ease-smooth",
     "sm:w-full sm:max-w-72 sm:rounded-md sm:p-4",
   ],
   variants: {
@@ -126,7 +126,7 @@ function WordTooltip({
 
   return (
     <div className="absolute left-0 top-0 h-full w-full">
-      {/* Background overlay */}
+      {/* Backdrop */}
       <div
         className={tooltipBackgroundStyle({
           isVisible: tooltipPosition.left !== "auto",
