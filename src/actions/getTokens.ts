@@ -41,10 +41,12 @@ function reduceParsedParagraphs(parsedParagraphs: KuromojiToken[]) {
 
         if (!nextWord) return [...acc, curr];
 
-        curr.surface_form += nextWord.surface_form;
+        const newSurfaceForm = curr.surface_form + nextWord.surface_form;
+
+        // don't handle next word
         baseArray[index + 1] = { ...nextWord, skip: true };
 
-        return [...acc, curr];
+        return [...acc, { ...curr, surface_form: newSurfaceForm }];
       }
 
       // merge current item with previous one
@@ -54,9 +56,9 @@ function reduceParsedParagraphs(parsedParagraphs: KuromojiToken[]) {
 
         if (!prevWord) return [...acc, curr];
 
-        prevWord.surface_form += curr.surface_form;
+        const newSurfaceWord = prevWord.surface_form + curr.surface_form;
 
-        return [...acc, prevWord];
+        return [...acc, { ...prevWord, surface_form: newSurfaceWord }];
       }
 
       return [...acc, curr];

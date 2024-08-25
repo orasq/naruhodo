@@ -10,6 +10,8 @@ export type BatchItem = {
   index: number;
 };
 
+const QUEUE_DEBOUNCE_TIME = 1000;
+
 function useParseText(
   paragraphs: ParagraphObject[],
   setParagraphs: Dispatcher<ParagraphObject[]>,
@@ -47,7 +49,7 @@ function useParseText(
       if (canProcessNewBatch.current && queue.length) {
         processQueue();
       }
-    }, 800);
+    }, QUEUE_DEBOUNCE_TIME);
 
     return () => clearTimeout(timeout);
   }, [queue]);
