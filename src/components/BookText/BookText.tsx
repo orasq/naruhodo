@@ -76,7 +76,7 @@ function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {
       paragraphs={paragraphs}
       setParagraphs={setParagraphs}
     >
-      <div id="bookContent">
+      <div id="bookContent" className="leading-loose">
         {paragraphs.map((item, index) => (
           <TextBlock
             key={index}

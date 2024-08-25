@@ -10,7 +10,7 @@ import {
 } from "@/lib/utils/variants";
 
 export const metadata: Metadata = {
-  title: "なるほど",
+  title: { template: "%s | なるほど", default: "なるほど" },
   description: "...",
 };
 
@@ -34,9 +34,9 @@ export default function RootLayout({
       data-font-size={initialFontSize}
       className="max-w-full-screen overflow-x-clip"
     >
-      <body className="relative max-w-full-screen overflow-x-clip bg-background px-4 text-copy">
+      <body className="relative max-w-full-screen overflow-x-clip bg-background px-6 text-copy">
         <Header initialTheme={initialTheme} />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

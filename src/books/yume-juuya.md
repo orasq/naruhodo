@@ -2,6 +2,8 @@
 title: "夢十夜"
 author: "夏目漱石"
 image: "yume-juuya.jpg"
+publishedYear: "1908"
+synopsis: 'This collection of ten connected stories or dreams has a surrealistic atmosphere. Some are weird, others are grotesquely funny. Among the ten nights, the first, second, third, and fifth nights start with the same sentence "This is the dream I dreamed." Whether Sosecki actually had these dreams or whether they were complete fictions is not known.'
 ---
 
 ## 第一夜

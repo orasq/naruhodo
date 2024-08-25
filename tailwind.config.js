@@ -14,6 +14,7 @@ module.exports = {
       },
       colors: {
         background: "rgba(var(--bg-color))",
+        backdrop: "rgba(var(--backdrop-color))",
         copy: "rgba(var(--copy-color))",
         "surface-light": "rgba(var(--surface-light))",
       },
@@ -29,7 +30,7 @@ module.exports = {
       maxWidth: {
         "full-screen": "100vw",
         "toolbox-wrapper":
-          "calc(var(--text-max-width) + (var(--toolbox-width) * 2) + 1rem)",
+          "calc(var(--text-max-width) + (var(--toolbox-width) * 2) + 10rem)",
       },
       transitionDuration: {
         2000: "2000ms",

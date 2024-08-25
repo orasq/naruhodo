@@ -24,7 +24,7 @@ function Header({ initialTheme }: HeaderProps) {
   }
 
   return (
-    <header className="mx-auto flex max-w-6xl items-center justify-between py-7">
+    <header className="mx-auto flex max-w-6xl items-center justify-between pb-10 pt-7 md:pb-20 md:pt-10">
       {/* Logo */}
       <Link href="/" className="text-xl">
         なるほど

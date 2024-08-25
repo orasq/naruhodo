@@ -1,11 +1,10 @@
-import BookPageHeader from "@/components/BookPageHeader/BookPageHeader";
-import { BookText } from "@/components/BookText";
 import { BookPage } from "@/components/BookPage";
 import { allBooks } from "content-collections";
 import { notFound } from "next/navigation";
 import { BookFontSize } from "@/lib/utils/types";
 import { cookies } from "next/headers";
 import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/variants";
+import { cache } from "react";
 
 type BookProps = {
   params: {
@@ -13,9 +12,17 @@ type BookProps = {
   };
 };
 
-const getBook = async (slug: string) => {
+const getBook = cache(async (slug: string) => {
   return allBooks.find((book) => book._meta.path === slug);
-};
+});
+
+export async function generateMetadata({ params }: BookProps) {
+  const book = await getBook(params.slug);
+
+  return {
+    title: book?.title,
+  };
+}
 
 export async function generateStaticParams() {
   return allBooks.map((book) => ({
@@ -33,6 +40,7 @@ async function Book({ params }: BookProps) {
     author: book.author,
     image: book.image,
     publishedYear: book.publishedYear,
+    synopsis: book.synopsis,
   };
 
   const paragraphs = book.content

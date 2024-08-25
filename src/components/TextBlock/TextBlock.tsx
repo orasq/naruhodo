@@ -21,7 +21,7 @@ export type TextBlockProps = {
 };
 
 const textBlockStyle = tv({
-  base: "relative mb-10 scroll-mt-6 duration-1000 ease-out motion-safe:transition-opacity",
+  base: "relative mb-[3em] scroll-mt-6 duration-1000 ease-out motion-safe:transition-opacity",
   variants: {
     state: {
       visible: "opacity-100",
@@ -58,6 +58,10 @@ function TextBlock({
   }, [parsedParagraph]);
 
   const hasParsedText = !!words.length;
+
+  if (hasParsedText) {
+    console.log({ parsedParagraph });
+  }
 
   function handleBookmarkClick() {
     setBookmarked(isBookmarked ? null : blockId);
