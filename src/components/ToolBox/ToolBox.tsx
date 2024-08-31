@@ -31,11 +31,11 @@ const toolboxButtonStyle = tv({
 const toolboxListStyle = tv({
   base: [
     "relative grid duration-1000 ease-smooth motion-safe:transition-[opacity,grid]",
-    "after:delay-20 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-background after:opacity-0 after:duration-1000 after:motion-safe:transition-opacity",
+    "after:delay-20 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-copy/15 after:opacity-0 after:duration-1000 after:motion-safe:transition-opacity",
   ],
   variants: {
     state: {
-      visible: "grid-rows-[1fr] opacity-100 after:opacity-100",
+      visible: "grid-rows-[1fr] pb-2 opacity-100 after:opacity-100",
       hidden: "grid-rows-[0fr] opacity-0 after:opacity-0",
     },
   },
@@ -47,7 +47,7 @@ function ToolBox({
   isBookmarkModeActive,
 }: ToolBoxProps) {
   const [isToolboxOpen, toggleToolbox] = useToggle(false);
-  const [isBookFinished, setIsBookFinished] = useState(false);
+  const [isBookFinished, setIsBookFinished] = useState(false); // TODO: use useToggle when understood why it's not working in strict mode
 
   const { slug } = useParams();
 
@@ -55,12 +55,6 @@ function ToolBox({
     const savedFinishedBook = localStorage.getItem(FINISHED_BOOK_KEY(slug));
 
     if (savedFinishedBook === "true") setIsBookFinished(true);
-
-    console.log({
-      isBookFinished,
-      savedFinishedBook,
-      slug: FINISHED_BOOK_KEY(slug),
-    });
   }, []);
 
   function handleBookFinishedClick() {
