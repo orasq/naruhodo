@@ -2,8 +2,10 @@
 
 import { BatchItem } from "@/hooks/useParseText";
 import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
+const sqlite3 = require("sqlite3").verbose();
 
 const DIC_URL = "src/lib/kuromoji/dict";
+const DB_PATH = "src/lib/jmdict/dict.db";
 
 export const getTokens = async (paragraphs: BatchItem[]) => {
   getTokenizer({ dicPath: DIC_URL });
@@ -16,6 +18,30 @@ export const getTokens = async (paragraphs: BatchItem[]) => {
       };
     }),
   );
+
+  // Open database
+  const db = new sqlite3.Database(DB_PATH);
+
+  parsedParagraphs.forEach((paragraph) => {
+    return paragraph.parsedText.forEach(async (token) => {
+      await fetchWordByKanji(db, token.basic_form);
+    });
+  });
+
+  // await fetchWordByKanji(db, "殿");
+  // await fetchWordByKanji(db, "殿下");
+  // await fetchWordByKanji(db, "殿方");
+  // await fetchWordByKanji(db, "殿堂");
+  // await fetchWordByKanji(db, "澱粉");
+  // await fetchWordByKanji(db, "殿様蝗虫");
+  // await fetchWordByKanji(db, "殿堂入り");
+
+  // console.log("coucou");
+
+  // Fetch word based on a kanji entry
+
+  // Close the database when done
+  db.close();
 
   return parsedParagraphs;
 };
@@ -92,5 +118,26 @@ function shouldMergeWithPrev(token: KuromojiToken) {
     (token.pos === "動詞" &&
       token.conjugated_type === "一段" &&
       token.pos_detail_1 === "非自立")
+  );
+}
+
+// Function to fetch word details based on a kanji
+async function fetchWordByKanji(db, kanjiText) {
+  db.get(
+    `SELECT word_id FROM kanji WHERE text = ?`,
+    [kanjiText],
+    (err, row) => {
+      if (err) throw err;
+
+      if (!row) {
+        console.log("No word found for this kanji.");
+        return;
+      } else {
+        db.get(`SELECT * FROM word WHERE id = ?`, [row.word_id], (err, row) => {
+          if (err) throw err;
+          console.log(row);
+        });
+      }
+    },
   );
 }

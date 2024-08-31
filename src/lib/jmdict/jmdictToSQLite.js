@@ -29,7 +29,7 @@ async function jmdictToSQLite(input, output) {
   // Create tables
   db.serialize(() => {
     // word
-    db.run("CREATE TABLE word (id INTEGER PRIMARY KEY)");
+    db.run("CREATE TABLE word (id INTEGER PRIMARY KEY, content TEXT)");
 
     // kanji
     db.run(
@@ -40,46 +40,12 @@ async function jmdictToSQLite(input, output) {
     db.run(
       "CREATE TABLE kana (id TEXT PRIMARY KEY, text TEXT, common INTEGER, applies_to_kanji TEXT, word_id INTEGER, FOREIGN KEY(word_id) REFERENCES word(id))",
     );
-
-    // sense
-    db.run(
-      "CREATE TABLE sense (id TEXT PRIMARY KEY, applies_to_kanji TEXT, applies_to_kana TEXT, word_id INTEGER, FOREIGN KEY(word_id) REFERENCES word(id))",
-    );
-
-    // gloss
-    db.run(
-      "CREATE TABLE gloss (id TEXT PRIMARY KEY, text TEXT, sense_id TEXT, FOREIGN KEY(sense_id) REFERENCES sense(id))",
-    );
-
-    // tag
-    db.run("CREATE TABLE tag (id TEXT PRIMARY KEY, text TEXT)");
-
-    // kanji's tag
-    db.run(
-      "CREATE TABLE kanji_tag (kanji_id TEXT, tag_id TEXT, FOREIGN KEY(kanji_id) REFERENCES kanji(id), FOREIGN KEY(tag_id) REFERENCES tag(id))",
-    );
-
-    // kana's tag
-    db.run(
-      "CREATE TABLE kana_tag (kana_id TEXT, tag_id TEXT, FOREIGN KEY(kana_id) REFERENCES kana(id), FOREIGN KEY(tag_id) REFERENCES tag(id))",
-    );
-
-    // sense's part of speech
-    db.run(
-      "CREATE TABLE sense_pos (sense_id TEXT, tag_id TEXT, FOREIGN KEY(sense_id) REFERENCES sense(id), FOREIGN KEY(tag_id) REFERENCES tag(id))",
-    );
   });
 
   // Read and parse the JMDict JSON
   const jsonData = JSON.parse(fs.readFileSync(input));
 
-  const tags = jsonData.tags || {};
   const words = jsonData.words || [];
-
-  // Process each entry in the tags object
-  for (const [key, value] of Object.entries(tags)) {
-    db.run("INSERT INTO tag (id, text) VALUES (?, ?)", [key, value]);
-  }
 
   // Process each entry in the words array
   words.forEach((entry) => {
@@ -90,18 +56,11 @@ async function jmdictToSQLite(input, output) {
       const kanjiId = crypto.randomUUID();
 
       // insert kanji
-      db.run(
-        "INSERT INTO kanji (id, text, common, word_id) VALUES (?, ?, ?, ?)",
-        [kanjiId, kanji.text, kanji.common ? 1 : 0, wordId],
-      );
-
-      // insert kanji's tags
-      kanji?.tags?.forEach((tag) => {
-        db.run("INSERT INTO kanji_tag (kanji_id, tag_id) VALUES (?, ?)", [
-          kanjiId,
-          tag,
-        ]);
-      });
+      db.run("INSERT INTO kanji (id, text,  word_id) VALUES (?, ?, ?)", [
+        kanjiId,
+        kanji.text,
+        wordId,
+      ]);
     });
 
     // handle kana array
@@ -109,64 +68,19 @@ async function jmdictToSQLite(input, output) {
       const kanaId = crypto.randomUUID();
 
       // insert kana
-      db.run(
-        "INSERT INTO kana (id, text, common, applies_to_kanji, word_id) VALUES (?, ?, ?, ?, ?)",
-        [
-          kanaId,
-          kana.text,
-          kana.common ? 1 : 0,
-          kana.appliesToKanji.join(""),
-          wordId,
-        ],
-      );
-
-      // insert kana's tags
-      kana?.tags?.forEach((tag) => {
-        db.run("INSERT INTO kana_tag (kana_id, tag_id) VALUES (?, ?)", [
-          kanaId,
-          tag,
-        ]);
-      });
-    });
-
-    // handle sense array
-    entry.sense?.forEach((sense) => {
-      const senseId = crypto.randomUUID();
-
-      // insert sense
-      db.run(
-        "INSERT INTO sense (id, applies_to_kanji, applies_to_kana, word_id) VALUES (?, ?, ?, ?)",
-        [
-          senseId,
-          sense.appliesToKanji.join(""),
-          sense.appliesToKana.join(""),
-          wordId,
-        ],
-      );
-
-      // insert sense's part of speech tags
-      sense?.partOfSpeech?.forEach((tag) => {
-        db.run("INSERT INTO sense_pos (sense_id, tag_id) VALUES (?, ?)", [
-          senseId,
-          tag,
-        ]);
-      });
-
-      // insert sense's gloss array
-      sense?.gloss?.forEach((term) => {
-        const glossId = crypto.randomUUID();
-
-        db.run("INSERT INTO gloss (id, text, sense_id) VALUES (?, ?, ?)", [
-          glossId,
-          term.text,
-          senseId,
-        ]);
-      });
+      db.run("INSERT INTO kana (id, text, word_id) VALUES (?, ?, ?)", [
+        kanaId,
+        kana.text,
+        wordId,
+      ]);
     });
 
     if (wordId !== 0) {
       converted++;
-      db.run("INSERT INTO word (id) VALUES (?)", [wordId]);
+      db.run("INSERT INTO word (id, content) VALUES (?, ?)", [
+        wordId,
+        JSON.stringify(entry),
+      ]);
     } else {
       notConverted++;
     }
