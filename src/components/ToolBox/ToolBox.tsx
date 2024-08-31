@@ -19,8 +19,8 @@ type ToolBoxProps = {
 
 const toolboxButtonStyle = tv({
   base: [
-    "flex h-toolbox w-toolbox shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent opacity-50 duration-300 motion-safe:transition-opacity",
-    "hover:opacity-100",
+    "flex h-toolbox w-toolbox shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent",
+    "hover:bg-orange-0",
   ],
   variants: {
     state: {
@@ -33,7 +33,7 @@ const toolboxButtonStyle = tv({
 const toolboxListStyle = tv({
   base: [
     "relative grid duration-1000 ease-smooth motion-safe:transition-[opacity,grid]",
-    "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-copy/20 after:opacity-0 after:delay-300 after:duration-1000 after:motion-safe:transition-opacity",
+    "after:delay-20 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-background after:opacity-0 after:duration-1000 after:motion-safe:transition-opacity",
   ],
   variants: {
     state: {
@@ -51,14 +51,14 @@ function ToolBox({
   const [isToolboxOpen, toggleToolbox] = useToggle(false);
 
   return (
-    <div className="pointer-events-auto absolute bottom-8 right-4 flex flex-col items-center justify-center rounded-[calc(var(--toolbox-width)/2)] border-1 border-copy/20 bg-background">
+    <div className="pointer-events-auto absolute bottom-8 right-4 flex flex-col items-center justify-center rounded-xl bg-surface-light p-1 shadow-sm">
       <div
         id="toolList"
         className={toolboxListStyle({
           state: isToolboxOpen ? "visible" : "hidden",
         })}
       >
-        <ul className="overflow-hidden">
+        <ul className="flex flex-col gap-1 overflow-hidden">
           <li>
             <button
               className={toolboxButtonStyle({
@@ -83,6 +83,7 @@ function ToolBox({
               className={toolboxButtonStyle({
                 state: isToolboxOpen ? "visible" : "hidden",
               })}
+              title="pomme"
             >
               <IconTextSize onClick={toggleFontSize} />
             </button>
