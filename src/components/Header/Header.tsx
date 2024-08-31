@@ -35,6 +35,7 @@ function Header({ initialTheme }: HeaderProps) {
         <button
           onClick={handleThemeToggle}
           aria-label={`Toggle theme | Current theme: ${theme}`}
+          className="flex h-[45px] w-[45px] items-center justify-center rounded-xl hover:bg-surface-light hover:shadow-sm"
         >
           {theme === "light" ? <IconSunFilled /> : <IconMoonFilled />}
         </button>
