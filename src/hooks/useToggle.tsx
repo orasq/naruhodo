@@ -1,5 +1,4 @@
-import { Dispatcher } from "@/lib/types/generics.types";
-import { MouseEventHandler, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
 function useToggle(initialValue: boolean = false) {
   const [value, setValue] = useState(initialValue);
