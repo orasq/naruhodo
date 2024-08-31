@@ -1,5 +1,5 @@
 ---
-title: "半七捕物帳 | お文の魂"
+title: "半七捕物帳"
 author: "岡本綺堂"
 image: "hanshichi-torimono-chou.jpg"
 publishedYear: "1985"

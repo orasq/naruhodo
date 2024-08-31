@@ -8,10 +8,13 @@ export default function Home() {
       <h1 className="text-center text-3xl">Book collection</h1>
 
       {/* Book list */}
-      <ul className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-4 xl:grid-cols-6 xl:gap-8">
+      <ul className="mt-10 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-5 xl:gap-3">
         {allBooks.map((book) => (
           <li key={book._meta.path}>
-            <Link href={`/books/${book._meta.path}`}>
+            <Link
+              href={`/books/${book._meta.path}`}
+              className="motion-safe:transition-background block rounded-xl p-2 duration-100 hover:bg-surface-light hover:shadow-sm"
+            >
               {/* Image */}
               <div className="relative aspect-[9/13]">
                 <Image
@@ -23,9 +26,12 @@ export default function Home() {
               </div>
 
               {/* Title */}
-              <h2 className="px-2 py-4 text-center text-base font-medium">
-                {book.title}
-              </h2>
+              <div className="px-2 py-4">
+                <h2 className="text-lg font-semibold">{book.title}</h2>
+                <p className="text-base font-medium opacity-75">
+                  {book.author}
+                </p>
+              </div>
             </Link>
           </li>
         ))}
