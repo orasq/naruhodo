@@ -7,6 +7,8 @@ import { IconBookmark, IconBookmarkFilled } from "@tabler/icons-react";
 import { Dispatcher } from "@/lib/types/generics.types";
 import { tv } from "tailwind-variants";
 import { TextBlockTag } from "@/lib/utils/types";
+import { useParams } from "next/navigation";
+import { BOOKMARK_KEY } from "@/lib/utils/constants";
 
 export type TextBlockProps = {
   blockId: number;
@@ -44,6 +46,8 @@ function TextBlock({
   const Tag = htmlTag || "p";
   const POS_TO_SKIP = ["助動詞", "記号"];
 
+  const { slug } = useParams();
+
   const words = useMemo(() => {
     return parsedParagraph.map((word) => {
       const id = crypto.randomUUID();
@@ -67,9 +71,9 @@ function TextBlock({
     setBookmarked(isBookmarked ? null : blockId);
 
     if (isBookmarked) {
-      localStorage.removeItem("bookmarked");
+      localStorage.removeItem(BOOKMARK_KEY(slug));
     } else {
-      localStorage.setItem("bookmarked", JSON.stringify(blockId));
+      localStorage.setItem(BOOKMARK_KEY(slug), JSON.stringify(blockId));
     }
   }
 

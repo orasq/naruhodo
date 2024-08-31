@@ -7,6 +7,8 @@ import initializeBaseText from "@/lib/utils/initializeBaseText";
 import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 import { ScrollQueue } from "../ScrollQueue";
 import { TextBlockTag } from "@/lib/utils/types";
+import { useParams } from "next/navigation";
+import { BOOKMARK_KEY } from "@/lib/utils/constants";
 
 type BookTextProps = {
   textParagraphs: string[];
@@ -32,6 +34,8 @@ function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {
     }));
   });
 
+  const { slug } = useParams();
+
   // Create array of refs with page's paragraphs
   const textBlockRefs = useRef<HTMLParagraphElement[]>([]);
   const addToRefs = (el: HTMLParagraphElement | null) => {
@@ -52,7 +56,7 @@ function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {
 
   // check localeStorage bookmarked value and scroll to it
   useEffect(() => {
-    const storageBookmarked = localStorage.getItem("bookmarked");
+    const storageBookmarked = localStorage.getItem(BOOKMARK_KEY(slug));
 
     if (!storageBookmarked) return;
 

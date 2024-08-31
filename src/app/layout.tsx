@@ -7,7 +7,7 @@ import { BookFontSize, ThemeMode } from "@/lib/utils/types";
 import {
   BOOK_FONT_SIZE_COOKIE_VALUE,
   THEME_COOKIE_KEY,
-} from "@/lib/utils/variants";
+} from "@/lib/utils/constants";
 
 export const metadata: Metadata = {
   title: { template: "%s | なるほど", default: "なるほど" },

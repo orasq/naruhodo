@@ -4,7 +4,7 @@ import { ThemeMode } from "@/lib/utils/types";
 import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import Cookies from "js-cookie";
-import { THEME_COOKIE_KEY } from "@/lib/utils/variants";
+import { THEME_COOKIE_KEY } from "@/lib/utils/constants";
 import Link from "next/link";
 
 type HeaderProps = {
