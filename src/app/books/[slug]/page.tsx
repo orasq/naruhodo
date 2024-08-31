@@ -3,7 +3,7 @@ import { allBooks } from "content-collections";
 import { notFound } from "next/navigation";
 import { BookFontSize } from "@/lib/utils/types";
 import { cookies } from "next/headers";
-import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/variants";
+import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
 import { cache } from "react";
 
 type BookProps = {

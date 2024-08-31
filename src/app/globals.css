@@ -4,7 +4,7 @@
 
 :root {
   --text-max-width: 60ch;
-  --toolbox-width: 45px;
+  --toolbox-width: 37px;
   --book-font-size: 1.25rem;
 }
 
@@ -13,7 +13,7 @@ html[data-color-mode="light"] {
   --copy-color: 72, 62, 43;
 
   --surface-light: 255, 255, 255;
-  --backdrop-color: 149, 144, 125;
+  --backdrop-color: 72, 62, 43;
 }
 
 html[data-color-mode="dark"] {
