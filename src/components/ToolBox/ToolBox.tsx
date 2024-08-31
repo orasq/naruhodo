@@ -52,10 +52,6 @@ function ToolBox({
   const { slug } = useParams();
 
   useEffect(() => {
-    console.log({ isBookFinishedToggle: isBookFinished });
-  }, [isBookFinished]);
-
-  useEffect(() => {
     const savedFinishedBook = localStorage.getItem(FINISHED_BOOK_KEY(slug));
 
     if (savedFinishedBook === "true") setIsBookFinished(true);
