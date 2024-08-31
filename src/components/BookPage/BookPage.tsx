@@ -6,7 +6,7 @@ import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
 import useToggle from "@/hooks/useToggle";
 import Cookies from "js-cookie";
-import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/variants";
+import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
 import { BookFontSize, BookInfo } from "@/lib/utils/types";
 
 type BookPageProps = {

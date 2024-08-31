@@ -7,6 +7,8 @@ import { IconBookmark, IconBookmarkFilled } from "@tabler/icons-react";
 import { Dispatcher } from "@/lib/types/generics.types";
 import { tv } from "tailwind-variants";
 import { TextBlockTag } from "@/lib/utils/types";
+import { useParams } from "next/navigation";
+import { BOOKMARK_KEY } from "@/lib/utils/constants";
 
 export type TextBlockProps = {
   blockId: number;
@@ -30,6 +32,18 @@ const textBlockStyle = tv({
   },
 });
 
+const bookmarkZoneStyle = tv({
+  base: [
+    "motion-safe:background absolute -inset-3 z-10 rounded-xl border-1 border-dashed border-copy/40 duration-100",
+    "hover:bg-surface-light/30",
+  ],
+  variants: {
+    isBookmarked: {
+      true: "border-2 border-solid border-copy",
+    },
+  },
+});
+
 function TextBlock({
   blockId,
   paragraphRef,
@@ -43,6 +57,8 @@ function TextBlock({
 }: TextBlockProps) {
   const Tag = htmlTag || "p";
   const POS_TO_SKIP = ["助動詞", "記号"];
+
+  const { slug } = useParams();
 
   const words = useMemo(() => {
     return parsedParagraph.map((word) => {
@@ -67,9 +83,9 @@ function TextBlock({
     setBookmarked(isBookmarked ? null : blockId);
 
     if (isBookmarked) {
-      localStorage.removeItem("bookmarked");
+      localStorage.removeItem(BOOKMARK_KEY(slug));
     } else {
-      localStorage.setItem("bookmarked", JSON.stringify(blockId));
+      localStorage.setItem(BOOKMARK_KEY(slug), JSON.stringify(blockId));
     }
   }
 
@@ -83,13 +99,17 @@ function TextBlock({
           state: hasParsedText ? "visible" : "hidden",
         })}
       >
-        {/* Bookmark icon */}
         {isBookmarkModeActive && (
           <button
-            className="absolute left-[-0.5em] right-auto top-[-2em] cursor-pointer border-0 bg-transparent p-[0.25em] pt-[0.2em] text-xs opacity-50 lg:left-auto lg:right-[calc(100%+8px)] lg:top-0"
+            className={bookmarkZoneStyle({ isBookmarked })}
             onClick={handleBookmarkClick}
           >
-            {isBookmarked ? <IconBookmarkFilled /> : <IconBookmark />}
+            {/* Bookmark icon */}
+            {isBookmarked && (
+              <div className="absolute left-[0.5em] right-auto top-[-1em] cursor-pointer p-[0.25em] pt-[0.2em] text-xs">
+                <IconBookmarkFilled />
+              </div>
+            )}
           </button>
         )}
 

@@ -10,4 +10,10 @@ export type BookInfo = {
   image: string;
   publishedYear?: string;
   synopsis?: string;
+  _meta?: {
+    directory: string;
+    fileName: string;
+    filePath: string;
+    path: string;
+  };
 };
