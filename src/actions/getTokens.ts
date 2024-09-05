@@ -1,47 +1,43 @@
 "use server";
 
 import { BatchItem } from "@/hooks/useParseText";
+import { DictionaryEntry, ParsedWord } from "@/lib/types/types";
 import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
 const sqlite3 = require("sqlite3").verbose();
 
 const DIC_URL = "src/lib/kuromoji/dict";
-const DB_PATH = "src/lib/jmdict/dict.db";
+const JMDICT_DB_PATH = "src/lib/jmdict/jmdict.db";
 
 export const getTokens = async (paragraphs: BatchItem[]) => {
   getTokenizer({ dicPath: DIC_URL });
 
+  // Open database
+  const db = new sqlite3.Database(JMDICT_DB_PATH);
+
   const parsedParagraphs = await Promise.all(
     paragraphs.map(async (paragraph) => {
+      const tokens = await getTextTokens(paragraph.baseText);
+
       return {
         ...paragraph,
-        parsedText: reduceParsedParagraphs(await tokenize(paragraph.baseText)),
+        parsedText: await mapTokenWithDictionaryEntries(tokens, db),
       };
     }),
   );
 
-  // Open database
-  const db = new sqlite3.Database(DB_PATH);
+  console.log({ parsedParagraphs });
 
-  parsedParagraphs.forEach((paragraph) => {
-    return paragraph.parsedText.forEach(async (token) => {
-      await fetchWordByKanji(db, token.basic_form);
-    });
-  });
-
-  // await fetchWordByKanji(db, "殿");
-  // await fetchWordByKanji(db, "殿下");
-  // await fetchWordByKanji(db, "殿方");
-  // await fetchWordByKanji(db, "殿堂");
-  // await fetchWordByKanji(db, "澱粉");
-  // await fetchWordByKanji(db, "殿様蝗虫");
-  // await fetchWordByKanji(db, "殿堂入り");
-
-  // console.log("coucou");
-
-  // Fetch word based on a kanji entry
-
-  // Close the database when done
-  db.close();
+  // // Get dictionary entries
+  // const dictionaryEntries: ParsedWord[][] = await Promise.all(
+  //   parsedParagraphs.map(async (paragraph) => {
+  //     return paragraph.parsedText.map((token) => token.basic_form);
+  //   }),
+  // );
+  // parsedParagraphs.forEach((paragraph) => {
+  //   return paragraph.parsedText.forEach(async (token) => {
+  //     await fetchWordByKanji(db, token.basic_form);
+  //   });
+  // });
 
   return parsedParagraphs;
 };
@@ -51,6 +47,10 @@ export const getTokens = async (paragraphs: BatchItem[]) => {
  */
 
 type SkippableKuromojiToken = KuromojiToken & { skip: boolean };
+
+async function getTextTokens(text: string) {
+  return reduceParsedParagraphs(await tokenize(text));
+}
 
 function reduceParsedParagraphs(parsedParagraphs: KuromojiToken[]) {
   return (parsedParagraphs as SkippableKuromojiToken[]).reduce(
@@ -121,23 +121,48 @@ function shouldMergeWithPrev(token: KuromojiToken) {
   );
 }
 
-// Function to fetch word details based on a kanji
-async function fetchWordByKanji(db, kanjiText) {
-  db.get(
-    `SELECT word_id FROM kanji WHERE text = ?`,
-    [kanjiText],
-    (err, row) => {
-      if (err) throw err;
-
-      if (!row) {
-        console.log("No word found for this kanji.");
-        return;
-      } else {
-        db.get(`SELECT * FROM word WHERE id = ?`, [row.word_id], (err, row) => {
-          if (err) throw err;
-          console.log(row);
-        });
-      }
-    },
+function mapTokenWithDictionaryEntries(
+  tokens: KuromojiToken[],
+  db,
+): Promise<ParsedWord[]> {
+  return Promise.all(
+    tokens.map(async (token) => {
+      return {
+        word: token.surface_form,
+        dictionaryEntries: await fetchWordByKanji(db, token.basic_form),
+      };
+    }),
   );
+}
+
+async function fetchWordByKanji(
+  db,
+  kanjiText,
+): Promise<DictionaryEntry | undefined> {
+  return new Promise((resolve, reject) => {
+    db.get(
+      `SELECT word_id FROM kanji WHERE text = ?`,
+      [kanjiText],
+      (err, row) => {
+        if (err) {
+          return reject(undefined);
+        }
+
+        if (!row) {
+          console.log("No word found for this kanji.");
+          return reject(undefined);
+        } else {
+          db.get(
+            `SELECT * FROM word WHERE id = ?`,
+            [row.word_id],
+            (err, row) => {
+              if (err) throw err;
+              console.log(row);
+              resolve(row);
+            },
+          );
+        }
+      },
+    );
+  });
 }

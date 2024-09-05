@@ -1,7 +1,7 @@
 "use client";
 
 import { FINISHED_BOOK_KEY } from "@/lib/utils/constants";
-import { BookInfo } from "@/lib/utils/types";
+import { BookInfo } from "@/lib/types/types";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";

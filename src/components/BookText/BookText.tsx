@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import initializeBaseText from "@/lib/utils/initializeBaseText";
 import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 import { ScrollQueue } from "../ScrollQueue";
-import { TextBlockTag } from "@/lib/utils/types";
+import { ParsedWord, TextBlockTag } from "@/lib/types/types";
 import { useParams } from "next/navigation";
 import { BOOKMARK_KEY } from "@/lib/utils/constants";
 
@@ -17,7 +17,7 @@ type BookTextProps = {
 
 export type ParagraphObject = {
   baseText: string;
-  parsedText: KuromojiToken[];
+  parsedText: ParsedWord[];
   htmlTag: TextBlockTag;
   isVisible: boolean;
   isBookmarked: boolean;

@@ -6,7 +6,7 @@ import { Word } from "../Word";
 import { IconBookmark, IconBookmarkFilled } from "@tabler/icons-react";
 import { Dispatcher } from "@/lib/types/generics.types";
 import { tv } from "tailwind-variants";
-import { TextBlockTag } from "@/lib/utils/types";
+import { TextBlockTag } from "@/lib/types/types";
 import { useParams } from "next/navigation";
 import { BOOKMARK_KEY } from "@/lib/utils/constants";
 

@@ -3,7 +3,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 
 import { cookies } from "next/headers";
-import { BookFontSize, ThemeMode } from "@/lib/utils/types";
+import { BookFontSize, ThemeMode } from "@/lib/types/types";
 import {
   BOOK_FONT_SIZE_COOKIE_VALUE,
   THEME_COOKIE_KEY,

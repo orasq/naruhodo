@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeMode } from "@/lib/utils/types";
+import { ThemeMode } from "@/lib/types/types";
 import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import Cookies from "js-cookie";
