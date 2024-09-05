@@ -18,6 +18,24 @@ export type BookInfo = {
   };
 };
 
+export type DBWord = {
+  id: string;
+  content: string;
+};
+
+export type DBKanji = {
+  id: string;
+  text: string;
+  word_id: number;
+};
+
+export type DBKana = {
+  id: string;
+  text: string;
+  applies_to_kanji: string;
+  word_id: number;
+};
+
 export type DictionaryEntry = {
   id: string;
   kanji: Array<{ common: boolean; text: string; tags: Array<string> }>;
@@ -48,6 +66,6 @@ export type DictionaryEntry = {
 };
 
 export type ParsedWord = {
-  word: string;
-  dictionaryEntry?: DictionaryEntry;
+  text: string;
+  dictionaryEntry?: DBWord;
 };

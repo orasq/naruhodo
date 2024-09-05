@@ -6,14 +6,14 @@ import { Word } from "../Word";
 import { IconBookmark, IconBookmarkFilled } from "@tabler/icons-react";
 import { Dispatcher } from "@/lib/types/generics.types";
 import { tv } from "tailwind-variants";
-import { TextBlockTag } from "@/lib/types/types";
+import { ParsedWord, TextBlockTag } from "@/lib/types/types";
 import { useParams } from "next/navigation";
 import { BOOKMARK_KEY } from "@/lib/utils/constants";
 
 export type TextBlockProps = {
   blockId: number;
   paragraphRef: (el: HTMLParagraphElement | null) => void;
-  parsedParagraph: KuromojiToken[];
+  parsedParagraph: ParsedWord[];
   htmlTag: TextBlockTag;
   isVisible: boolean;
   setBookmarked: Dispatcher<number | null>;
@@ -56,7 +56,6 @@ function TextBlock({
   children,
 }: TextBlockProps) {
   const Tag = htmlTag || "p";
-  const POS_TO_SKIP = ["助動詞", "記号"];
 
   const { slug } = useParams();
 
@@ -64,20 +63,13 @@ function TextBlock({
     return parsedParagraph.map((word) => {
       const id = crypto.randomUUID();
 
-      if (word.word_type === "UNKNOWN")
-        return <span key={id}>{word.surface_form}</span>;
-      if (POS_TO_SKIP.includes(word.pos))
-        return <span key={id}>{word.surface_form}</span>;
+      if (!word.dictionaryEntry) return <span key={id}>{word.text}</span>;
 
-      return <Word key={id}>{word.surface_form}</Word>;
+      return <Word key={id}>{word.text}</Word>;
     });
   }, [parsedParagraph]);
 
   const hasParsedText = !!words.length;
-
-  if (hasParsedText) {
-    console.log({ parsedParagraph });
-  }
 
   function handleBookmarkClick() {
     setBookmarked(isBookmarked ? null : blockId);

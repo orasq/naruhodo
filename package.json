@@ -14,6 +14,7 @@
     "@next/mdx": "^14.2.4",
     "@tabler/icons-react": "^3.11.0",
     "@types/mdx": "^2.0.13",
+    "@types/sqlite3": "^3.1.11",
     "js-cookie": "^3.0.5",
     "kuromojin": "^3.0.0",
     "next": "14.2.4",

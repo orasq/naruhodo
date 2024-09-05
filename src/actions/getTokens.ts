@@ -1,9 +1,9 @@
 "use server";
 
 import { BatchItem } from "@/hooks/useParseText";
-import { DictionaryEntry, ParsedWord } from "@/lib/types/types";
+import { DBKanji, DBWord, ParsedWord } from "@/lib/types/types";
 import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
-const sqlite3 = require("sqlite3").verbose();
+import sqlite3, { Database } from "sqlite3";
 
 const DIC_URL = "src/lib/kuromoji/dict";
 const JMDICT_DB_PATH = "src/lib/jmdict/jmdict.db";
@@ -20,24 +20,12 @@ export const getTokens = async (paragraphs: BatchItem[]) => {
 
       return {
         ...paragraph,
-        parsedText: await mapTokenWithDictionaryEntries(tokens, db),
+        parsedText: await mapTokenWithDictionaryEntries(db, tokens),
       };
     }),
   );
 
-  console.log({ parsedParagraphs });
-
-  // // Get dictionary entries
-  // const dictionaryEntries: ParsedWord[][] = await Promise.all(
-  //   parsedParagraphs.map(async (paragraph) => {
-  //     return paragraph.parsedText.map((token) => token.basic_form);
-  //   }),
-  // );
-  // parsedParagraphs.forEach((paragraph) => {
-  //   return paragraph.parsedText.forEach(async (token) => {
-  //     await fetchWordByKanji(db, token.basic_form);
-  //   });
-  // });
+  db.close();
 
   return parsedParagraphs;
 };
@@ -122,46 +110,42 @@ function shouldMergeWithPrev(token: KuromojiToken) {
 }
 
 function mapTokenWithDictionaryEntries(
+  db: Database,
   tokens: KuromojiToken[],
-  db,
 ): Promise<ParsedWord[]> {
   return Promise.all(
     tokens.map(async (token) => {
       return {
-        word: token.surface_form,
-        dictionaryEntries: await fetchWordByKanji(db, token.basic_form),
+        text: token.surface_form,
+        dictionaryEntry:
+          token.word_type === "UNKNOWN"
+            ? undefined
+            : await fetchDictionaryEntry(db, token.basic_form),
       };
     }),
   );
 }
 
-async function fetchWordByKanji(
-  db,
-  kanjiText,
-): Promise<DictionaryEntry | undefined> {
+async function fetchDictionaryEntry(
+  db: Database,
+  kanjiText: string,
+): Promise<DBWord | undefined> {
   return new Promise((resolve, reject) => {
     db.get(
       `SELECT word_id FROM kanji WHERE text = ?`,
       [kanjiText],
-      (err, row) => {
-        if (err) {
-          return reject(undefined);
-        }
+      (err, row: DBKanji) => {
+        if (err || !row) return resolve(undefined);
 
-        if (!row) {
-          console.log("No word found for this kanji.");
-          return reject(undefined);
-        } else {
-          db.get(
-            `SELECT * FROM word WHERE id = ?`,
-            [row.word_id],
-            (err, row) => {
-              if (err) throw err;
-              console.log(row);
-              resolve(row);
-            },
-          );
-        }
+        db.get(
+          `SELECT * FROM word WHERE id = ?`,
+          [row.word_id],
+          (err, row: DBWord) => {
+            if (err) resolve(undefined);
+
+            resolve(row);
+          },
+        );
       },
     );
   });
