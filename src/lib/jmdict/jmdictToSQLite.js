@@ -36,6 +36,9 @@ async function jmdictToSQLite(input, output) {
       "CREATE TABLE kanji (id TEXT PRIMARY KEY, text TEXT, common INTEGER, word_id INTEGER, FOREIGN KEY(word_id) REFERENCES word(id))",
     );
 
+    // Create index on kanji.text
+    db.run("CREATE INDEX idx_kanji_text ON kanji (text)");
+
     // kana
     db.run(
       "CREATE TABLE kana (id TEXT PRIMARY KEY, text TEXT, common INTEGER, applies_to_kanji TEXT, word_id INTEGER, FOREIGN KEY(word_id) REFERENCES word(id))",

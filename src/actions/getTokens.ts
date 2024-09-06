@@ -13,6 +13,7 @@ export const getTokens = async (paragraphs: BatchItem[]) => {
 
   // Open database
   const db = new sqlite3.Database(JMDICT_DB_PATH);
+  db.run("PRAGMA journal_mode = WAL;");
 
   const parsedParagraphs = await Promise.all(
     paragraphs.map(async (paragraph) => {
