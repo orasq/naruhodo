@@ -11,6 +11,7 @@
 html[data-color-mode="light"] {
   --bg-color: 255, 243, 217;
   --copy-color: 72, 62, 43;
+  --accent-color: 245, 158, 11;
 
   --surface-light: 255, 255, 255;
   --backdrop-color: 72, 62, 43;
@@ -19,6 +20,7 @@ html[data-color-mode="light"] {
 html[data-color-mode="dark"] {
   --bg-color: 40, 44, 53;
   --copy-color: 215, 220, 235;
+  --accent-color: 147, 51, 234;
 
   --surface-light: 54, 63, 85;
   --backdrop-color: 26, 34, 45;

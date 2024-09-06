@@ -1,3 +1,5 @@
+import { tags } from "../utils/functions/getDictionaryTag";
+
 export type ThemeMode = "light" | "dark";
 
 export type BookFontSize = "sm" | "md" | "lg";
@@ -38,15 +40,19 @@ export type DBKana = {
 
 export type DictionaryEntry = {
   id: string;
-  kanji: Array<{ common: boolean; text: string; tags: Array<string> }>;
+  kanji: Array<{
+    common: boolean;
+    text: string;
+    tags: Array<keyof typeof tags>;
+  }>;
   kana: Array<{
     common: boolean;
     text: string;
-    tags: Array<string>;
+    tags: Array<keyof typeof tags>;
     appliesToKanji: Array<string>;
   }>;
   sense: Array<{
-    partOfSpeech: Array<string>;
+    partOfSpeech: Array<keyof typeof tags>;
     appliesToKanji: Array<string>;
     appliesToKana: Array<string>;
     related: Array<string>;

@@ -1,9 +1,10 @@
-type WordProps = { children: React.ReactNode };
+type WordProps = { dictionaryEntry?: DBWord; children: React.ReactNode };
 
 import { useRef, useState } from "react";
 import { WordTooltip } from "../WordTooltip";
 import { createPortal } from "react-dom";
 import { tv } from "tailwind-variants";
+import { DBWord } from "@/lib/types/types";
 
 const wordStyle = tv({
   base: [
@@ -20,7 +21,7 @@ const wordStyle = tv({
   },
 });
 
-function Word({ children }: WordProps) {
+function Word({ dictionaryEntry, children }: WordProps) {
   const wordRef = useRef<HTMLSpanElement>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipIsClosing, setTooltipIsClosing] = useState(false);
@@ -49,7 +50,7 @@ function Word({ children }: WordProps) {
             setShowTooltip={setShowTooltip}
             setTooltipIsClosing={setTooltipIsClosing}
             tooltipIsClosing={tooltipIsClosing}
-            word={children}
+            dictionaryEntry={dictionaryEntry}
           />,
           document.body,
         )}

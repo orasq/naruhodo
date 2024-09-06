@@ -2,13 +2,15 @@ import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
 import { Dispatcher } from "@/lib/types/generics.types";
 import { tv } from "tailwind-variants";
+import { DBWord, DictionaryEntry } from "@/lib/types/types";
+import { getDictionaryTag } from "@/lib/utils/functions/getDictionaryTag";
 
 type WordTooltipProps = {
   linkedTo: RefObject<HTMLSpanElement>;
   setShowTooltip: Dispatcher<boolean>;
   setTooltipIsClosing: Dispatcher<boolean>;
   tooltipIsClosing: boolean;
-  word: React.ReactNode;
+  dictionaryEntry?: DBWord;
 };
 
 type TooltipPosition = {
@@ -52,7 +54,7 @@ function WordTooltip({
   setShowTooltip,
   setTooltipIsClosing,
   tooltipIsClosing,
-  word,
+  dictionaryEntry,
 }: WordTooltipProps) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>({
@@ -62,6 +64,9 @@ function WordTooltip({
 
   const { currentBreakpoint } = useWindowSize();
   const isMobile = currentBreakpoint.isMobile;
+
+  const dictionary: DictionaryEntry | undefined =
+    dictionaryEntry && JSON.parse(dictionaryEntry.content);
 
   /**
    * Define tooltip position
@@ -141,17 +146,38 @@ function WordTooltip({
         className="fixed bottom-0 left-0 isolate z-30 w-full sm:absolute sm:bottom-auto sm:left-auto sm:w-auto"
       >
         {/* Content panel */}
-        <div
-          className={tooltipPanelStyle({
-            state: tooltipPosition.left !== "auto" ? "visible" : "hidden",
-            isClosing: tooltipIsClosing,
-          })}
-        >
-          {word}
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium
-          neque modi labore. Eligendi quibusdam perferendis, consectetur aliquam
-          est voluptatum a.
-        </div>
+        {dictionary && (
+          <div
+            className={tooltipPanelStyle({
+              state: tooltipPosition.left !== "auto" ? "visible" : "hidden",
+              isClosing: tooltipIsClosing,
+            })}
+          >
+            {/* Word */}
+            <p className="text-3xl font-medium">{dictionary.kanji[0].text}</p>
+
+            {/* Main tags */}
+            {dictionary.kanji[0].tags.map((tag) => (
+              <span>{getDictionaryTag(tag)}</span>
+            ))}
+
+            {/* Common word tag */}
+            {dictionary.kanji[0].common && (
+              <span className="bg-accent rounded-md p-1 text-xs text-white">
+                Common word
+              </span>
+            )}
+
+            {/* Définitions */}
+            {dictionary.sense.map((sense, index) => (
+              <ol>
+                <li>
+                  {index + 1} {sense.gloss.map((gloss) => `${gloss.text}; `)}
+                </li>
+              </ol>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -65,7 +65,11 @@ function TextBlock({
 
       if (!word.dictionaryEntry) return <span key={id}>{word.text}</span>;
 
-      return <Word key={id}>{word.text}</Word>;
+      return (
+        <Word key={id} dictionaryEntry={word.dictionaryEntry}>
+          {word.text}
+        </Word>
+      );
     });
   }, [parsedParagraph]);
 
