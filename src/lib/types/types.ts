@@ -38,19 +38,28 @@ export type DBKana = {
   word_id: number;
 };
 
-export type DictionaryEntry = {
+export type DBResultEntry = {
+  row: DBWord;
+  foundInKanji?: boolean;
+};
+
+export type RawKanjiEntry = {
+  common: boolean;
+  text: string;
+  tags: Array<keyof typeof tags>;
+};
+
+export type RawKanaEntry = {
+  common: boolean;
+  text: string;
+  tags: Array<keyof typeof tags>;
+  appliesToKanji: Array<string>;
+};
+
+export type RawDictionaryEntry = {
   id: string;
-  kanji: Array<{
-    common: boolean;
-    text: string;
-    tags: Array<keyof typeof tags>;
-  }>;
-  kana: Array<{
-    common: boolean;
-    text: string;
-    tags: Array<keyof typeof tags>;
-    appliesToKanji: Array<string>;
-  }>;
+  kanji: RawKanjiEntry[];
+  kana: RawKanaEntry[];
   sense: Array<{
     partOfSpeech: Array<keyof typeof tags>;
     appliesToKanji: Array<string>;
@@ -71,7 +80,23 @@ export type DictionaryEntry = {
   }>;
 };
 
+export type FormatedDictionaryEntry = {
+  currentWord: RawKanjiEntry | RawKanaEntry | undefined;
+  readings?: string[];
+  alternatives?: RawKanjiEntry[] | RawKanaEntry[];
+  meanings: {
+    tags: string;
+    gloss: string;
+  }[];
+};
+
+export type ParsedWordDictionaryEntry = {
+  wordBasicForm: string;
+  type: "kanji" | "kana";
+  fullEntry?: DBWord;
+};
+
 export type ParsedWord = {
   text: string;
-  dictionaryEntry?: DBWord;
+  dictionaryEntry?: ParsedWordDictionaryEntry;
 };

@@ -2,15 +2,23 @@ import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
 import { Dispatcher } from "@/lib/types/generics.types";
 import { tv } from "tailwind-variants";
-import { DBWord, DictionaryEntry } from "@/lib/types/types";
+import {
+  DBWord,
+  FormatedDictionaryEntry,
+  ParsedWordDictionaryEntry,
+  RawDictionaryEntry,
+  RawKanaEntry,
+  RawKanjiEntry,
+} from "@/lib/types/types";
 import { getDictionaryTag } from "@/lib/utils/functions/getDictionaryTag";
+import { Tag } from "../Tag";
 
 type WordTooltipProps = {
   linkedTo: RefObject<HTMLSpanElement>;
   setShowTooltip: Dispatcher<boolean>;
   setTooltipIsClosing: Dispatcher<boolean>;
   tooltipIsClosing: boolean;
-  dictionaryEntry?: DBWord;
+  dictionaryEntry?: ParsedWordDictionaryEntry;
 };
 
 type TooltipPosition = {
@@ -32,8 +40,8 @@ const tooltipBackgroundStyle = tv({
 
 const tooltipPanelStyle = tv({
   base: [
-    "w-full rounded-t-4xl bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000 ease-smooth",
-    "sm:w-full sm:max-w-72 sm:rounded-md sm:p-4",
+    "no-scrollbar max-h-96 w-full overflow-auto rounded-t-4xl bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000 ease-smooth",
+    "shadow-sm sm:max-h-72 sm:w-max sm:max-w-80 sm:rounded-xl sm:p-6",
   ],
   variants: {
     state: {
@@ -65,8 +73,8 @@ function WordTooltip({
   const { currentBreakpoint } = useWindowSize();
   const isMobile = currentBreakpoint.isMobile;
 
-  const dictionary: DictionaryEntry | undefined =
-    dictionaryEntry && JSON.parse(dictionaryEntry.content);
+  const { currentWord, readings, alternatives, meanings } =
+    (dictionaryEntry && formatDictionaryEntry(dictionaryEntry)) || {};
 
   /**
    * Define tooltip position
@@ -103,6 +111,8 @@ function WordTooltip({
       // trigger closing transition
       setTooltipIsClosing(true);
 
+      document.documentElement.style.overflow = "auto";
+
       // wait for animation to finish
       tooltipRef.current?.addEventListener("transitionend", () => {
         setShowTooltip(false);
@@ -123,6 +133,8 @@ function WordTooltip({
     document.addEventListener("click", handleClick);
     document.addEventListener("keydown", handleKeyDown);
 
+    document.documentElement.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("click", handleClick);
       document.removeEventListener("keydown", handleKeyDown);
@@ -137,7 +149,7 @@ function WordTooltip({
           isVisible: tooltipPosition.left !== "auto",
           isClosing: tooltipIsClosing,
         })}
-      ></div>
+      />
 
       {/* Position wrapper */}
       <div
@@ -146,7 +158,7 @@ function WordTooltip({
         className="fixed bottom-0 left-0 isolate z-30 w-full sm:absolute sm:bottom-auto sm:left-auto sm:w-auto"
       >
         {/* Content panel */}
-        {dictionary && (
+        {currentWord && (
           <div
             className={tooltipPanelStyle({
               state: tooltipPosition.left !== "auto" ? "visible" : "hidden",
@@ -154,28 +166,45 @@ function WordTooltip({
             })}
           >
             {/* Word */}
-            <p className="text-3xl font-medium">{dictionary.kanji[0].text}</p>
+            <p className="mb-2 text-4xl">{currentWord?.text}</p>
 
-            {/* Main tags */}
-            {dictionary.kanji[0].tags.map((tag) => (
-              <span>{getDictionaryTag(tag)}</span>
-            ))}
+            {/* Tags */}
+            <ul className="flex flex-wrap gap-2">
+              {readings?.map((reading) => (
+                <li>
+                  <Tag theme="secondary">{reading}</Tag>
+                </li>
+              ))}
 
-            {/* Common word tag */}
-            {dictionary.kanji[0].common && (
-              <span className="bg-accent rounded-md p-1 text-xs text-white">
-                Common word
-              </span>
+              {currentWord.common && (
+                <li>
+                  <Tag theme="primary">Common</Tag>
+                </li>
+              )}
+            </ul>
+
+            {/* Definitions */}
+            {meanings && (
+              <ul className="mt-5">
+                {meanings.map((meaning) => (
+                  <li className="border-dotted border-copy/30 [&:not(:last-child)]:mb-3 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-3">
+                    <p className="text-xs italic opacity-50">{meaning.tags}</p>
+                    <p className="text">{meaning.gloss}</p>
+                  </li>
+                ))}
+              </ul>
             )}
 
-            {/* Définitions */}
-            {dictionary.sense.map((sense, index) => (
-              <ol>
-                <li>
-                  {index + 1} {sense.gloss.map((gloss) => `${gloss.text}; `)}
-                </li>
-              </ol>
-            ))}
+            {/* Alternatives */}
+            {!!alternatives?.length && (
+              <ul className="mt-5 flex gap-3">
+                {alternatives?.map((alternative) => (
+                  <li>
+                    <Tag theme="neutral">{alternative.text}</Tag>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
       </div>
@@ -278,4 +307,41 @@ function defineTooltipPosition(
   });
 
   return { top: tooltipTop, left: tooltipLeft };
+}
+
+function formatDictionaryEntry(
+  dictionaryEntry: ParsedWordDictionaryEntry,
+): FormatedDictionaryEntry | undefined {
+  const { wordBasicForm, type, fullEntry } = dictionaryEntry;
+
+  if (!fullEntry?.content) return undefined;
+
+  const rawEntry: RawDictionaryEntry = JSON.parse(fullEntry?.content);
+
+  const currentWord =
+    type === "kanji"
+      ? rawEntry.kanji.find((kanji) => kanji.text === wordBasicForm)
+      : rawEntry.kana.find((kana) => kana.text === wordBasicForm);
+
+  const readings = rawEntry.kana.map((kana) => kana.text);
+
+  const alternatives =
+    type === "kanji"
+      ? rawEntry.kanji.filter((kanji) => kanji.text !== wordBasicForm)
+      : rawEntry.kana.filter((kana) => kana.text !== wordBasicForm);
+
+  const meanings = rawEntry.sense.map((item) => ({
+    tags: item.partOfSpeech.reduce(
+      (acc, curr) => `${acc + getDictionaryTag(curr)}; `,
+      "",
+    ),
+    gloss: item.gloss.reduce((acc, curr) => `${acc + curr.text}; `, ""),
+  }));
+
+  return {
+    currentWord,
+    readings,
+    alternatives,
+    meanings,
+  };
 }

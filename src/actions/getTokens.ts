@@ -1,7 +1,7 @@
 "use server";
 
 import { BatchItem } from "@/hooks/useParseText";
-import { DBKanji, DBWord, ParsedWord } from "@/lib/types/types";
+import { DBKanji, DBResultEntry, DBWord, ParsedWord } from "@/lib/types/types";
 import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
 import sqlite3, { Database } from "sqlite3";
 
@@ -116,12 +116,17 @@ function mapTokenWithDictionaryEntries(
 ): Promise<ParsedWord[]> {
   return Promise.all(
     tokens.map(async (token) => {
+      const entry =
+        token.word_type === "UNKNOWN"
+          ? undefined
+          : await fetchDictionaryEntry(db, token.basic_form);
       return {
         text: token.surface_form,
-        dictionaryEntry:
-          token.word_type === "UNKNOWN"
-            ? undefined
-            : await fetchDictionaryEntry(db, token.basic_form),
+        dictionaryEntry: {
+          wordBasicForm: token.basic_form,
+          type: entry?.foundInKanji ? "kanji" : "kana",
+          fullEntry: entry?.row,
+        },
       };
     }),
   );
@@ -130,7 +135,7 @@ function mapTokenWithDictionaryEntries(
 async function fetchDictionaryEntry(
   db: Database,
   kanjiText: string,
-): Promise<DBWord | undefined> {
+): Promise<DBResultEntry | undefined> {
   return new Promise((resolve, reject) => {
     db.get(
       `SELECT word_id FROM kanji WHERE text = ?`,
@@ -144,7 +149,7 @@ async function fetchDictionaryEntry(
           (err, row: DBWord) => {
             if (err) resolve(undefined);
 
-            resolve(row);
+            resolve({ row, foundInKanji: true });
           },
         );
       },

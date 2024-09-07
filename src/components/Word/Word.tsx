@@ -1,10 +1,13 @@
-type WordProps = { dictionaryEntry?: DBWord; children: React.ReactNode };
+type WordProps = {
+  dictionaryEntry?: ParsedWordDictionaryEntry;
+  children: React.ReactNode;
+};
 
 import { useRef, useState } from "react";
 import { WordTooltip } from "../WordTooltip";
 import { createPortal } from "react-dom";
 import { tv } from "tailwind-variants";
-import { DBWord } from "@/lib/types/types";
+import { DBWord, ParsedWordDictionaryEntry } from "@/lib/types/types";
 
 const wordStyle = tv({
   base: [

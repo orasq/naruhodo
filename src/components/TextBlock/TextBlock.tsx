@@ -63,7 +63,8 @@ function TextBlock({
     return parsedParagraph.map((word) => {
       const id = crypto.randomUUID();
 
-      if (!word.dictionaryEntry) return <span key={id}>{word.text}</span>;
+      if (!word.dictionaryEntry?.fullEntry)
+        return <span key={id}>{word.text}</span>;
 
       return (
         <Word key={id} dictionaryEntry={word.dictionaryEntry}>
