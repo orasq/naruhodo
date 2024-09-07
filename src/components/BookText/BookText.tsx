@@ -1,26 +1,17 @@
 "use client";
 
-import { TextBlock } from "@/components/TextBlock";
-import { KuromojiToken } from "kuromojin";
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { TextBlock } from "@/components/TextBlock";
 import initializeBaseText from "@/lib/utils/initializeBaseText";
 import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 import { ScrollQueue } from "../ScrollQueue";
-import { TextBlockTag } from "@/lib/utils/types";
-import { useParams } from "next/navigation";
+import type { ParagraphObject } from "./BookText.types";
 import { BOOKMARK_KEY } from "@/lib/utils/constants";
 
 type BookTextProps = {
   textParagraphs: string[];
   isBookmarkModeActive: boolean;
-};
-
-export type ParagraphObject = {
-  baseText: string;
-  parsedText: KuromojiToken[];
-  htmlTag: TextBlockTag;
-  isVisible: boolean;
-  isBookmarked: boolean;
 };
 
 function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {

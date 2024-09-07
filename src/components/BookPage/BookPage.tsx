@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import { BookPageHeader } from "../BookPageHeader";
 import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
 import useToggle from "@/hooks/useToggle";
-import Cookies from "js-cookie";
+import type { BookFontSize, BookInfo } from "@/lib/types/types";
 import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
-import { BookFontSize, BookInfo } from "@/lib/utils/types";
 
 type BookPageProps = {
   bookInfo: BookInfo;

@@ -1,21 +1,37 @@
 "use server";
 
 import { BatchItem } from "@/hooks/useParseText";
+import {
+  DBKanji,
+  DBResultEntry,
+  DBWord,
+  ParsedWord,
+} from "@/lib/types/dictionary.types";
 import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
+import sqlite3, { Database } from "sqlite3";
 
 const DIC_URL = "src/lib/kuromoji/dict";
+const JMDICT_DB_PATH = "src/lib/jmdict/jmdict.db";
 
 export const getTokens = async (paragraphs: BatchItem[]) => {
   getTokenizer({ dicPath: DIC_URL });
 
+  // Open database
+  const db = new sqlite3.Database(JMDICT_DB_PATH);
+  db.run("PRAGMA journal_mode = WAL;");
+
   const parsedParagraphs = await Promise.all(
     paragraphs.map(async (paragraph) => {
+      const tokens = await getTextTokens(paragraph.baseText);
+
       return {
         ...paragraph,
-        parsedText: reduceParsedParagraphs(await tokenize(paragraph.baseText)),
+        parsedText: await mapTokenWithDictionaryEntries(db, tokens),
       };
     }),
   );
+
+  db.close();
 
   return parsedParagraphs;
 };
@@ -25,6 +41,10 @@ export const getTokens = async (paragraphs: BatchItem[]) => {
  */
 
 type SkippableKuromojiToken = KuromojiToken & { skip: boolean };
+
+async function getTextTokens(text: string) {
+  return reduceParsedParagraphs(await tokenize(text));
+}
 
 function reduceParsedParagraphs(parsedParagraphs: KuromojiToken[]) {
   return (parsedParagraphs as SkippableKuromojiToken[]).reduce(
@@ -93,4 +113,51 @@ function shouldMergeWithPrev(token: KuromojiToken) {
       token.conjugated_type === "一段" &&
       token.pos_detail_1 === "非自立")
   );
+}
+
+function mapTokenWithDictionaryEntries(
+  db: Database,
+  tokens: KuromojiToken[],
+): Promise<ParsedWord[]> {
+  return Promise.all(
+    tokens.map(async (token) => {
+      const entry =
+        token.word_type === "UNKNOWN"
+          ? undefined
+          : await fetchDictionaryEntry(db, token.basic_form);
+      return {
+        text: token.surface_form,
+        dictionaryEntry: {
+          wordBasicForm: token.basic_form,
+          type: entry?.foundInKanji ? "kanji" : "kana",
+          fullEntry: entry?.row,
+        },
+      };
+    }),
+  );
+}
+
+async function fetchDictionaryEntry(
+  db: Database,
+  kanjiText: string,
+): Promise<DBResultEntry | undefined> {
+  return new Promise((resolve, reject) => {
+    db.get(
+      `SELECT word_id FROM kanji WHERE text = ?`,
+      [kanjiText],
+      (err, row: DBKanji) => {
+        if (err || !row) return resolve(undefined);
+
+        db.get(
+          `SELECT * FROM word WHERE id = ?`,
+          [row.word_id],
+          (err, row: DBWord) => {
+            if (err) resolve(undefined);
+
+            resolve({ row, foundInKanji: true });
+          },
+        );
+      },
+    );
+  });
 }

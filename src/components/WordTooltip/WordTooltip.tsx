@@ -1,58 +1,33 @@
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
-import { Dispatcher } from "@/lib/types/generics.types";
-import { tv } from "tailwind-variants";
+import { Tag } from "../Tag";
+import {
+  tooltipBackgroundStyle,
+  tooltipContentWrapperStyle,
+  tooltipPanelStyle,
+} from "./WordTooltip.styles";
+import {
+  defineTooltipPosition,
+  formatDictionaryEntry,
+} from "./WordTooltip.helpers";
+import type { Dispatcher } from "@/lib/types/generics.types";
+import type { ParsedWordDictionaryEntry } from "@/lib/types/dictionary.types";
+import type { TooltipPosition } from "./WordTooltip.types";
 
 type WordTooltipProps = {
   linkedTo: RefObject<HTMLSpanElement>;
   setShowTooltip: Dispatcher<boolean>;
   setTooltipIsClosing: Dispatcher<boolean>;
   tooltipIsClosing: boolean;
-  word: React.ReactNode;
+  dictionaryEntry?: ParsedWordDictionaryEntry;
 };
-
-type TooltipPosition = {
-  top?: number | "auto";
-  left?: number | "auto";
-};
-
-const tooltipBackgroundStyle = tv({
-  base: "pointer-events-none fixed inset-0 h-full w-full bg-backdrop opacity-0 transition-opacity",
-  variants: {
-    isVisible: {
-      true: "pointer-events-auto opacity-50",
-    },
-    isClosing: {
-      true: "opacity-0",
-    },
-  },
-});
-
-const tooltipPanelStyle = tv({
-  base: [
-    "w-full rounded-t-4xl bg-surface-light p-8 text-copy transition-[opacity,transform] duration-1000 ease-smooth",
-    "sm:w-full sm:max-w-72 sm:rounded-md sm:p-4",
-  ],
-  variants: {
-    state: {
-      visible: [
-        "translate-y-0 scale-100 opacity-100",
-        "sm:translate-y-0 sm:scale-100",
-      ],
-      hidden: ["translate-y-3/4 opacity-0", "sm:translate-y-5 sm:scale-95"],
-    },
-    isClosing: {
-      true: ["translate-y-3/4 opacity-0", "sm:translate-y-5 sm:scale-95"],
-    },
-  },
-});
 
 function WordTooltip({
   linkedTo,
   setShowTooltip,
   setTooltipIsClosing,
   tooltipIsClosing,
-  word,
+  dictionaryEntry,
 }: WordTooltipProps) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>({
@@ -62,6 +37,9 @@ function WordTooltip({
 
   const { currentBreakpoint } = useWindowSize();
   const isMobile = currentBreakpoint.isMobile;
+
+  const { currentWord, readings, alternatives, meanings } =
+    (dictionaryEntry && formatDictionaryEntry(dictionaryEntry)) || {};
 
   /**
    * Define tooltip position
@@ -98,6 +76,8 @@ function WordTooltip({
       // trigger closing transition
       setTooltipIsClosing(true);
 
+      document.documentElement.style.overflow = "auto";
+
       // wait for animation to finish
       tooltipRef.current?.addEventListener("transitionend", () => {
         setShowTooltip(false);
@@ -118,6 +98,8 @@ function WordTooltip({
     document.addEventListener("click", handleClick);
     document.addEventListener("keydown", handleKeyDown);
 
+    document.documentElement.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("click", handleClick);
       document.removeEventListener("keydown", handleKeyDown);
@@ -132,7 +114,7 @@ function WordTooltip({
           isVisible: tooltipPosition.left !== "auto",
           isClosing: tooltipIsClosing,
         })}
-      ></div>
+      />
 
       {/* Position wrapper */}
       <div
@@ -141,115 +123,62 @@ function WordTooltip({
         className="fixed bottom-0 left-0 isolate z-30 w-full sm:absolute sm:bottom-auto sm:left-auto sm:w-auto"
       >
         {/* Content panel */}
-        <div
-          className={tooltipPanelStyle({
-            state: tooltipPosition.left !== "auto" ? "visible" : "hidden",
-            isClosing: tooltipIsClosing,
-          })}
-        >
-          {word}
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium
-          neque modi labore. Eligendi quibusdam perferendis, consectetur aliquam
-          est voluptatum a.
-        </div>
+        {currentWord && (
+          <div
+            className={tooltipPanelStyle({
+              state: tooltipPosition.left !== "auto" ? "visible" : "hidden",
+              isClosing: tooltipIsClosing,
+            })}
+          >
+            <div className={tooltipContentWrapperStyle()}>
+              {/* Word */}
+              <p className="mb-2 text-4xl">{currentWord?.text}</p>
+
+              {/* Tags */}
+              <ul className="flex flex-wrap gap-2">
+                {readings?.map((reading) => (
+                  <li>
+                    <Tag theme="secondary">{reading}</Tag>
+                  </li>
+                ))}
+
+                {currentWord.common && (
+                  <li>
+                    <Tag theme="primary">Common</Tag>
+                  </li>
+                )}
+              </ul>
+
+              {/* Definitions */}
+              {meanings && (
+                <ul className="mt-5">
+                  {meanings.map((meaning) => (
+                    <li className="border-dotted border-copy/30 [&:not(:last-child)]:mb-3 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-3">
+                      <p className="text-xs italic opacity-50">
+                        {meaning.tags}
+                      </p>
+                      <p className="text">{meaning.gloss}</p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Alternatives */}
+              {!!alternatives?.length && (
+                <ul className="mt-5 flex gap-3">
+                  {alternatives?.map((alternative) => (
+                    <li>
+                      <Tag theme="neutral">{alternative.text}</Tag>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 export default WordTooltip;
-
-/**
- * Utils functions
- */
-
-function calculateTooltipTop({
-  tooltipHeight,
-  wordTop,
-  wordHeight,
-}: {
-  tooltipHeight: number;
-  wordTop: number;
-  wordHeight: number;
-}) {
-  const VERTICAL_PADDING = 12;
-
-  // when not enough place to put tooltip on top of word, put it below it
-  const isPositionnedBelow = tooltipHeight + VERTICAL_PADDING >= wordTop;
-
-  return isPositionnedBelow
-    ? wordTop + window.scrollY + wordHeight + VERTICAL_PADDING
-    : wordTop + window.scrollY - tooltipHeight - VERTICAL_PADDING;
-}
-
-function calculateTooltipLeft({
-  tooltipWidth,
-  wordLeft,
-  wordWidth,
-  articleLeft,
-  articleWidth,
-}: {
-  tooltipWidth: number;
-  wordLeft: number;
-  wordWidth: number;
-  articleLeft: number;
-  articleWidth: number;
-}) {
-  const tooltipDefaultLeft = wordLeft + wordWidth / 2 - tooltipWidth / 2;
-  const overflowOnLeft = articleLeft > tooltipDefaultLeft;
-  const overflowOnRight =
-    articleLeft + articleWidth < tooltipDefaultLeft + tooltipWidth;
-
-  let tooltipLeft: number;
-
-  if (overflowOnLeft) {
-    tooltipLeft = articleLeft;
-  } else if (overflowOnRight) {
-    tooltipLeft = articleLeft + articleWidth - tooltipWidth;
-  } else {
-    tooltipLeft = tooltipDefaultLeft;
-  }
-
-  return tooltipLeft;
-}
-
-function defineTooltipPosition(
-  tooltip: HTMLDivElement | null,
-  clickedWord: HTMLSpanElement | null,
-): TooltipPosition {
-  const articleRef = document.getElementById("bookContent");
-
-  if (!tooltip || !clickedWord || !articleRef)
-    return { top: "auto", left: "auto" };
-
-  // get elements' dimensions and positions
-  const { width: tooltipWidth, height: tooltipHeight } =
-    tooltip.getBoundingClientRect();
-
-  const {
-    top: wordTop,
-    left: wordLeft,
-    width: wordWidth,
-    height: wordHeight,
-  } = clickedWord.getBoundingClientRect();
-
-  const { left: articleLeft, width: articleWidth } =
-    articleRef.getBoundingClientRect();
-
-  // calculate tooltip position
-  const tooltipTop = calculateTooltipTop({
-    tooltipHeight,
-    wordTop,
-    wordHeight,
-  });
-
-  const tooltipLeft = calculateTooltipLeft({
-    tooltipWidth,
-    wordLeft,
-    wordWidth,
-    articleLeft,
-    articleWidth,
-  });
-
-  return { top: tooltipTop, left: tooltipLeft };
-}

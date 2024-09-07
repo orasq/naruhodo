@@ -1,4 +1,4 @@
-import { BookInfo } from "@/lib/utils/types";
+import { BookInfo } from "@/lib/types/types";
 import Image from "next/image";
 
 type BookPageHeaderProps = {

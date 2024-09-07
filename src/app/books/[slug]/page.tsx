@@ -1,7 +1,7 @@
 import { BookPage } from "@/components/BookPage";
 import { allBooks } from "content-collections";
 import { notFound } from "next/navigation";
-import { BookFontSize } from "@/lib/utils/types";
+import { BookFontSize } from "@/lib/types/types";
 import { cookies } from "next/headers";
 import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
 import { cache } from "react";

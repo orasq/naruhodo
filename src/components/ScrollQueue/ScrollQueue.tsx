@@ -2,10 +2,10 @@
  * Extract from "BookText.tsx" to avoid unnecessary re-renders
  */
 
-import useParseText from "@/hooks/useParseText";
-import { ParagraphObject } from "../BookText/BookText";
 import { MutableRefObject, useEffect } from "react";
-import { Dispatcher } from "@/lib/types/generics.types";
+import useParseText from "@/hooks/useParseText";
+import type { ParagraphObject } from "../BookText/BookText.types";
+import type { Dispatcher } from "@/lib/types/generics.types";
 
 type ScrollQueueProps = {
   textBlockRefs: MutableRefObject<HTMLParagraphElement[]>;

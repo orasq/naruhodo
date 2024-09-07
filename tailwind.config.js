@@ -16,7 +16,10 @@ module.exports = {
         background: "rgba(var(--bg-color))",
         backdrop: "rgba(var(--backdrop-color))",
         copy: "rgba(var(--copy-color))",
+        "accent-primary": "rgba(var(--accent-primary-color))",
+        "accent-secondary": "rgba(var(--accent-secondary-color))",
         "surface-light": "rgba(var(--surface-light))",
+        "surface-medium": "rgba(var(--surface-medium))",
       },
       fontSize: {
         "book-fs": "var(--book-font-size)",

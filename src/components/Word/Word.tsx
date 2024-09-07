@@ -1,26 +1,15 @@
-type WordProps = { children: React.ReactNode };
-
 import { useRef, useState } from "react";
-import { WordTooltip } from "../WordTooltip";
 import { createPortal } from "react-dom";
-import { tv } from "tailwind-variants";
+import { WordTooltip } from "../WordTooltip";
+import { wordStyle } from "./Word.styles";
+import type { ParsedWordDictionaryEntry } from "@/lib/types/dictionary.types";
 
-const wordStyle = tv({
-  base: [
-    "relative inline rounded-sm",
-    "hover:isolate hover:z-20 hover:cursor-pointer hover:bg-surface-light hover:shadow-word",
-  ],
-  variants: {
-    isActive: {
-      true: "isolate z-20 cursor-pointer bg-surface-light shadow-word",
-    },
-    isClosing: {
-      true: "z-20 bg-transparent shadow-none hover:shadow-none",
-    },
-  },
-});
+type WordProps = {
+  dictionaryEntry?: ParsedWordDictionaryEntry;
+  children: React.ReactNode;
+};
 
-function Word({ children }: WordProps) {
+function Word({ dictionaryEntry, children }: WordProps) {
   const wordRef = useRef<HTMLSpanElement>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipIsClosing, setTooltipIsClosing] = useState(false);
@@ -49,7 +38,7 @@ function Word({ children }: WordProps) {
             setShowTooltip={setShowTooltip}
             setTooltipIsClosing={setTooltipIsClosing}
             tooltipIsClosing={tooltipIsClosing}
-            word={children}
+            dictionaryEntry={dictionaryEntry}
           />,
           document.body,
         )}

@@ -1,3 +1,5 @@
+import { tags } from "../utils/functions/getDictionaryTag";
+
 export type ThemeMode = "light" | "dark";
 
 export type BookFontSize = "sm" | "md" | "lg";
