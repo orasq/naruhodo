@@ -1,11 +1,11 @@
 "use client";
 
-import { ThemeMode } from "@/lib/types/types";
-import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 import { useState } from "react";
-import Cookies from "js-cookie";
-import { THEME_COOKIE_KEY } from "@/lib/utils/constants";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
+import type { ThemeMode } from "@/lib/types/types";
+import { THEME_COOKIE_KEY } from "@/lib/utils/constants";
 
 type HeaderProps = {
   initialTheme: ThemeMode;

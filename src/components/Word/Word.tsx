@@ -1,28 +1,13 @@
+import { useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { WordTooltip } from "../WordTooltip";
+import { wordStyle } from "./Word.styles";
+import type { ParsedWordDictionaryEntry } from "@/lib/types/dictionary.types";
+
 type WordProps = {
   dictionaryEntry?: ParsedWordDictionaryEntry;
   children: React.ReactNode;
 };
-
-import { useRef, useState } from "react";
-import { WordTooltip } from "../WordTooltip";
-import { createPortal } from "react-dom";
-import { tv } from "tailwind-variants";
-import { DBWord, ParsedWordDictionaryEntry } from "@/lib/types/types";
-
-const wordStyle = tv({
-  base: [
-    "relative inline rounded-sm",
-    "hover:isolate hover:z-20 hover:cursor-pointer hover:bg-surface-light hover:shadow-word",
-  ],
-  variants: {
-    isActive: {
-      true: "isolate z-20 cursor-pointer bg-surface-light shadow-word",
-    },
-    isClosing: {
-      true: "z-20 bg-transparent shadow-none hover:shadow-none",
-    },
-  },
-});
 
 function Word({ dictionaryEntry, children }: WordProps) {
   const wordRef = useRef<HTMLSpanElement>(null);

@@ -1,25 +1,16 @@
 "use client";
 
-import { FINISHED_BOOK_KEY } from "@/lib/utils/constants";
-import { BookInfo } from "@/lib/types/types";
-import { IconCircleCheckFilled } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { tv } from "tailwind-variants";
+import { FINISHED_BOOK_KEY } from "@/lib/utils/constants";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
+import { contentWrapperStyles } from "./BookCard.styles";
+import type { BookInfo } from "@/lib/types/types";
 
 type BookCardProps = {
   bookInfo: BookInfo;
 };
-
-const contentWrapperStyles = tv({
-  base: "w-full",
-  variants: {
-    isFinished: {
-      true: "opacity-50 grayscale",
-    },
-  },
-});
 
 function BookCard({ bookInfo }: BookCardProps) {
   const [isFinished, setIsFinished] = useState(false);

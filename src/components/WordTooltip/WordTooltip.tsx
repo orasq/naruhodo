@@ -1,18 +1,18 @@
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
-import { Dispatcher } from "@/lib/types/generics.types";
-import { ParsedWordDictionaryEntry } from "@/lib/types/types";
 import { Tag } from "../Tag";
 import {
   tooltipBackgroundStyle,
   tooltipContentWrapperStyle,
   tooltipPanelStyle,
 } from "./WordTooltip.styles";
-import type { TooltipPosition } from "./WordTooltip.types";
 import {
   defineTooltipPosition,
   formatDictionaryEntry,
 } from "./WordTooltip.helpers";
+import type { Dispatcher } from "@/lib/types/generics.types";
+import type { ParsedWordDictionaryEntry } from "@/lib/types/dictionary.types";
+import type { TooltipPosition } from "./WordTooltip.types";
 
 type WordTooltipProps = {
   linkedTo: RefObject<HTMLSpanElement>;

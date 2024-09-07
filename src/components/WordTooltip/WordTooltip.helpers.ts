@@ -1,10 +1,10 @@
+import { getDictionaryTag } from "@/lib/utils/functions/getDictionaryTag";
+import type { TooltipPosition } from "./WordTooltip.types";
 import type {
   FormatedDictionaryEntry,
   ParsedWordDictionaryEntry,
   RawDictionaryEntry,
-} from "@/lib/types/types";
-import type { TooltipPosition } from "./WordTooltip.types";
-import { getDictionaryTag } from "@/lib/utils/functions/getDictionaryTag";
+} from "@/lib/types/dictionary.types";
 
 export function defineTooltipPosition(
   tooltip: HTMLDivElement | null,

@@ -1,7 +1,12 @@
 "use server";
 
 import { BatchItem } from "@/hooks/useParseText";
-import { DBKanji, DBResultEntry, DBWord, ParsedWord } from "@/lib/types/types";
+import {
+  DBKanji,
+  DBResultEntry,
+  DBWord,
+  ParsedWord,
+} from "@/lib/types/dictionary.types";
 import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
 import sqlite3, { Database } from "sqlite3";
 
