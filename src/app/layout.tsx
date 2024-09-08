@@ -9,6 +9,12 @@ import {
   THEME_COOKIE_KEY,
 } from "@/lib/utils/constants";
 
+declare global {
+  interface Window {
+    kuromojin: any;
+  }
+}
+
 export const metadata: Metadata = {
   title: { template: "%s | なるほど", default: "なるほど" },
   description: "...",

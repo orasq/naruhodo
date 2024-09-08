@@ -1,43 +1,66 @@
-// "use server";
-
-// import { BatchItem } from "@/hooks/useParseText";
-// import {
+// import { NextRequest, NextResponse } from "next/server";
+// import path from "path";
+// import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
+// import sqlite3, { type Database } from "sqlite3";
+// import type {
 //   DBKanji,
 //   DBResultEntry,
 //   DBWord,
 //   ParsedWord,
 // } from "@/lib/types/dictionary.types";
-// import { getTokenizer, KuromojiToken, tokenize } from "kuromojin";
-// import sqlite3, { Database } from "sqlite3";
 
-// const DIC_URL = "src/lib/kuromoji/dict";
-// const JMDICT_DB_PATH = "src/lib/jmdict/jmdict.db";
+// const DIC_URL = "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict";
+// // const DIC_URL = path.resolve(process.cwd(), "src/lib/kuromoji/dict");
+// const JMDICT_DB_PATH = path.resolve(process.cwd(), "src/lib/jmdict/jmdict.db");
 
-// export const getTokens = async (paragraphs: BatchItem[]) => {
-//   getTokenizer({ dicPath: DIC_URL });
+// export async function POST(req: NextRequest) {
+//   console.log({ DIC_URL, JMDICT_DB_PATH });
 
-//   // Open database
-//   const db = new sqlite3.Database(JMDICT_DB_PATH);
-//   db.run("PRAGMA journal_mode = WAL;");
+//   try {
+//     const { paragraphs } = await req.json();
 
-//   const parsedParagraphs = await Promise.all(
-//     paragraphs.map(async (paragraph) => {
-//       const tokens = await getTextTokens(paragraph.baseText);
+//     if (!paragraphs || !Array.isArray(paragraphs)) {
+//       return NextResponse.json(
+//         { error: "Invalid or missing paragraphs" },
+//         { status: 400 },
+//       );
+//     }
 
-//       return {
-//         ...paragraph,
-//         parsedText: await mapTokenWithDictionaryEntries(db, tokens),
-//       };
-//     }),
-//   );
+//     // initialize tokenizer
+//     await getTokenizer({ dicPath: DIC_URL });
 
-//   db.close();
+//     // open the SQLite database
+//     const db = new sqlite3.Database(JMDICT_DB_PATH);
+//     db.run("PRAGMA journal_mode = WAL;");
 
-//   return parsedParagraphs;
-// };
+//     // Process paragraphs and tokenize them
+//     const parsedParagraphs = await Promise.all(
+//       paragraphs.map(async (paragraph: { baseText: string }) => {
+//         const tokens = await getTextTokens(paragraph.baseText);
+
+//         return {
+//           ...paragraph,
+//           parsedText: await mapTokenWithDictionaryEntries(db, tokens),
+//         };
+//       }),
+//     );
+
+//     // close database connection
+//     db.close();
+
+//     // return the tokenized paragraphs
+//     return NextResponse.json({ parsedParagraphs }, { status: 200 });
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json(
+//       { error: "Internal server error" },
+//       { status: 500 },
+//     );
+//   }
+// }
 
 // /**
-//  * Utils
+//  * Utility functions for tokenizing and fetching dictionary entries
 //  */
 
 // type SkippableKuromojiToken = KuromojiToken & { skip: boolean };

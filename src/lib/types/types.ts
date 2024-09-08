@@ -1,4 +1,5 @@
-import { tags } from "../utils/functions/getDictionaryTag";
+import { KuromojiToken } from "kuromojin";
+import { ParsedWord } from "./dictionary.types";
 
 export type ThemeMode = "light" | "dark";
 
@@ -18,4 +19,19 @@ export type BookInfo = {
     filePath: string;
     path: string;
   };
+};
+
+export type ParagraphObject = {
+  baseText: string;
+  tokens: KuromojiToken[];
+  parsedText: ParsedWord[];
+  htmlTag: TextBlockTag;
+  isVisible: boolean;
+  isBookmarked: boolean;
+};
+
+export type WordToken = {
+  index: number;
+  baseText: string;
+  tokens: KuromojiToken[];
 };

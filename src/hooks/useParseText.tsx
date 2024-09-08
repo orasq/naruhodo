@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getTokens } from "@/actions/getTokens";
 import { Dispatcher } from "@/lib/types/generics.types";
-import type { ParagraphObject } from "@/components/BookText/BookText.types";
+import type { ParagraphObject } from "@/lib/types/types";
+import { getTokens } from "@/lib/utils/functions/getTokens";
+import { getDictionaryEntries } from "@/lib/utils/functions/getDictionaryEntries";
 
 type QueueItem = number;
 
@@ -33,12 +34,12 @@ function useParseText(
       (await processBatch(batchToProcess, paragraphs)) ?? paragraphs;
 
     // visibility
-    const newParagraphs = setParagraphsVisibility(
-      processedParagraphs,
-      visibleParagraphs,
-    );
+    // const newParagraphs = setParagraphsVisibility(
+    //   processedParagraphs,
+    //   visibleParagraphs,
+    // );
 
-    setParagraphs(newParagraphs);
+    // setParagraphs(newParagraphs);
 
     canProcessNewBatch.current = true;
   }, [queue]);
@@ -111,14 +112,36 @@ async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
   if (!batch.length) return;
 
   const nextParagraphs = [...paragraphs];
-  const parsedText = await getTokens(batch);
 
-  // add parsed text
-  parsedText.forEach((paragraph) => {
-    nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
-  });
+  const wordTokens = await getTokens(batch);
 
-  return nextParagraphs;
+  const parsedParagraphs = await getDictionaryEntries(wordTokens);
+
+  return wordTokens;
+
+  // try {
+  //   const response = await fetch("/api/parseText", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ paragraphs: batch }),
+  //   });
+
+  //   if (!response.ok) throw new Error("Failed to process batch");
+
+  //   const { parsedParagraphs } = await response.json();
+
+  //   // add parsed text
+  //   parsedParagraphs.forEach((paragraph: any) => {
+  //     nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
+  //   });
+
+  //   return nextParagraphs;
+  // } catch (error) {
+  //   console.error("Error processing batch:", error);
+  //   throw error; // You can handle the error or rethrow it
+  // }
 }
 
 function setCurrentParagraphVisibility(
