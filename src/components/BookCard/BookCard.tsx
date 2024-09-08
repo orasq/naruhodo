@@ -42,7 +42,9 @@ function BookCard({ bookInfo }: BookCardProps) {
             className="rounded-lg object-cover"
             src={`/images/covers/${bookInfo.image}`}
             alt={bookInfo.title}
+            sizes="(max-width: 639px) 146px, 275px"
             fill
+            quality="75"
           />
         </div>
 

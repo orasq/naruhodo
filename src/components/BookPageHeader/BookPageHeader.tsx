@@ -16,6 +16,8 @@ function BookPageHeader({
           src={`/images/covers/${image}`}
           alt={title}
           fill
+          sizes="208px"
+          quality="75"
           priority
         />
       </div>

@@ -48,7 +48,7 @@ async function Book({ params }: BookProps) {
     .filter((paragraph) => paragraph.length > 0);
 
   const savedFontSize = cookies().get(BOOK_FONT_SIZE_COOKIE_VALUE);
-  const initialFontSize = (savedFontSize?.value as BookFontSize) || "sm";
+  const initialFontSize = (savedFontSize?.value as BookFontSize) || "md";
 
   return (
     <>

@@ -1,7 +1,7 @@
-import { getTokens } from "@/actions/getTokens";
-import type { ParagraphObject } from "@/components/BookText/BookText";
-import { Dispatcher } from "@/lib/types/generics.types";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getTokens } from "@/actions/getTokens";
+import { Dispatcher } from "@/lib/types/generics.types";
+import type { ParagraphObject } from "@/components/BookText/BookText.types";
 
 type QueueItem = number;
 
