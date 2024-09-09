@@ -115,7 +115,11 @@ async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
 
   const wordTokens = await getTokens(batch);
 
+  console.log({ wordTokens });
+
   const parsedParagraphs = await getDictionaryEntries(wordTokens);
+
+  console.log({ parsedParagraphs });
 
   return wordTokens;
 

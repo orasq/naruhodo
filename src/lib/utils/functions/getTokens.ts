@@ -12,8 +12,6 @@ export async function getTokens(paragraphs: BatchItem[]) {
     paragraphs.map(async (paragraph) => {
       const tokens = await tokenize(paragraph.baseText);
 
-      console.log({ tokens });
-
       return {
         ...paragraph,
         tokens: tokens,
