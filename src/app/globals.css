@@ -6,6 +6,8 @@
   --text-max-width: 60ch;
   --toolbox-width: 37px;
   --book-font-size: 1.25rem;
+
+  overscroll-behavior: none;
 }
 
 html[data-color-mode="light"] {

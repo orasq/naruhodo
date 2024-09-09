@@ -61,6 +61,7 @@ function ToolBox({
             <button
               className={toolboxButtonStyle()}
               onClick={toggleBookmarkMode}
+              aria-label={`Toggle bookmark mode (${isBookmarkModeActive ? "on" : "off"})`}
             >
               {isBookmarkModeActive ? (
                 <IconBookmarkFilled size={ICON_SIZE} />
@@ -75,6 +76,7 @@ function ToolBox({
             <button
               className={toolboxButtonStyle()}
               onClick={handleBookFinishedClick}
+              aria-label="Toggle finished book"
             >
               {isBookFinished ? (
                 <IconCircleCheckFilled size={ICON_SIZE} />
@@ -86,7 +88,11 @@ function ToolBox({
 
           {/* Toggle font size */}
           <li>
-            <button className={toolboxButtonStyle()} onClick={toggleFontSize}>
+            <button
+              className={toolboxButtonStyle()}
+              onClick={toggleFontSize}
+              aria-label="Change text font size"
+            >
               <IconTextSize size={ICON_SIZE} />
             </button>
           </li>

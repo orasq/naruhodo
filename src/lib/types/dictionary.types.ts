@@ -19,7 +19,7 @@ export type DBKana = {
 };
 
 export type DBResultEntry = {
-  row: DBWord;
+  row?: DBWord;
   foundInKanji?: boolean;
 };
 

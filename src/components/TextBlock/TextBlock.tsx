@@ -38,6 +38,8 @@ function TextBlock({
   const { slug } = useParams();
 
   const words = useMemo(() => {
+    if (!parsedParagraph) return [];
+
     return parsedParagraph.map((word) => {
       const id = crypto.randomUUID();
 

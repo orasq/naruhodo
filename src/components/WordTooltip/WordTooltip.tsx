@@ -136,8 +136,8 @@ function WordTooltip({
 
               {/* Tags */}
               <ul className="flex flex-wrap gap-2">
-                {readings?.map((reading) => (
-                  <li>
+                {readings?.map((reading, index) => (
+                  <li key={index}>
                     <Tag theme="secondary">{reading}</Tag>
                   </li>
                 ))}
@@ -152,8 +152,11 @@ function WordTooltip({
               {/* Definitions */}
               {meanings && (
                 <ul className="mt-5">
-                  {meanings.map((meaning) => (
-                    <li className="border-dotted border-copy/30 [&:not(:last-child)]:mb-3 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-3">
+                  {meanings.map((meaning, index) => (
+                    <li
+                      key={index}
+                      className="border-dotted border-copy/30 [&:not(:last-child)]:mb-3 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-3"
+                    >
                       <p className="text-xs italic opacity-50">
                         {meaning.tags}
                       </p>
@@ -165,9 +168,9 @@ function WordTooltip({
 
               {/* Alternatives */}
               {!!alternatives?.length && (
-                <ul className="mt-5 flex gap-3">
-                  {alternatives?.map((alternative) => (
-                    <li>
+                <ul className="mt-5 flex flex-wrap gap-3">
+                  {alternatives?.map((alternative, index) => (
+                    <li key={index}>
                       <Tag theme="neutral">{alternative.text}</Tag>
                     </li>
                   ))}

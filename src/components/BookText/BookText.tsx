@@ -6,8 +6,9 @@ import { TextBlock } from "@/components/TextBlock";
 import initializeBaseText from "@/lib/utils/initializeBaseText";
 import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
 import { ScrollQueue } from "../ScrollQueue";
-import type { ParagraphObject } from "./BookText.types";
+
 import { BOOKMARK_KEY } from "@/lib/utils/constants";
+import type { ParagraphObject } from "@/lib/types/types";
 
 type BookTextProps = {
   textParagraphs: string[];
@@ -18,6 +19,7 @@ function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {
   const [paragraphs, setParagraphs] = useState<ParagraphObject[]>(() => {
     return textParagraphs.map((text) => ({
       baseText: initializeBaseText(text)?.baseText,
+      tokens: [],
       parsedText: [],
       htmlTag: initializeBaseText(text)?.htmlTag,
       isVisible: false,

@@ -1,7 +1,8 @@
-import { getTokens } from "@/actions/getTokens";
-import type { ParagraphObject } from "@/components/BookText/BookText";
-import { Dispatcher } from "@/lib/types/generics.types";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Dispatcher } from "@/lib/types/generics.types";
+import type { ParagraphObject } from "@/lib/types/types";
+import { getTokens } from "@/lib/utils/functions/getTokens";
+import { getDictionaryEntries } from "@/lib/utils/functions/getDictionaryEntries";
 
 type QueueItem = number;
 
@@ -111,10 +112,13 @@ async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
   if (!batch.length) return;
 
   const nextParagraphs = [...paragraphs];
-  const parsedText = await getTokens(batch);
+
+  const wordTokens = await getTokens(batch);
+
+  const parsedParagraphs = await getDictionaryEntries(wordTokens);
 
   // add parsed text
-  parsedText.forEach((paragraph) => {
+  parsedParagraphs.forEach((paragraph: any) => {
     nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
   });
 
