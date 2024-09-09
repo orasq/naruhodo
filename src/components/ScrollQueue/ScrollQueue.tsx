@@ -4,8 +4,9 @@
 
 import { MutableRefObject, useEffect } from "react";
 import useParseText from "@/hooks/useParseText";
-import type { ParagraphObject } from "../BookText/BookText.types";
+
 import type { Dispatcher } from "@/lib/types/generics.types";
+import type { ParagraphObject } from "@/lib/types/types";
 
 type ScrollQueueProps = {
   textBlockRefs: MutableRefObject<HTMLParagraphElement[]>;

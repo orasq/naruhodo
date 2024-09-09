@@ -168,7 +168,7 @@ function WordTooltip({
 
               {/* Alternatives */}
               {!!alternatives?.length && (
-                <ul className="mt-5 flex gap-3">
+                <ul className="mt-5 flex flex-wrap gap-3">
                   {alternatives?.map((alternative, index) => (
                     <li key={index}>
                       <Tag theme="neutral">{alternative.text}</Tag>

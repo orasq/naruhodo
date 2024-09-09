@@ -47,8 +47,9 @@ async function fetchDictionaryEntry(
   word: string,
 ): Promise<DBResultEntry | undefined> {
   return new Promise(async (resolve) => {
-    const result = await getWordId(word);
-    const wordId = result?.[0].word_id as number;
+    const resultRow = await getWordId(word);
+
+    const wordId = resultRow?.row[0].word_id as number;
 
     if (!wordId) {
       resolve(undefined);
@@ -57,17 +58,19 @@ async function fetchDictionaryEntry(
 
     const dictionaryEntry = await fetchWord(wordId);
 
-    resolve(dictionaryEntry);
+    resolve({ row: dictionaryEntry, foundInKanji: resultRow?.foundInKanji });
   });
 }
 
-async function getWordId(word: string): Promise<Row[] | undefined> {
+async function getWordId(
+  word: string,
+): Promise<{ row: Row[]; foundInKanji: boolean } | undefined> {
   return new Promise(async (resolve) => {
     // first try to find in kanji table
     const wordByKanji = await fetchKanji(word);
 
     if (wordByKanji && wordByKanji.length > 0) {
-      resolve(wordByKanji);
+      resolve({ row: wordByKanji, foundInKanji: true });
       return;
     }
 
@@ -75,7 +78,7 @@ async function getWordId(word: string): Promise<Row[] | undefined> {
     const wordByKana = await fetchKana(word);
 
     if (wordByKana && wordByKana.length > 0) {
-      resolve(wordByKana);
+      resolve({ row: wordByKana, foundInKanji: false });
       return;
     }
 
@@ -105,7 +108,7 @@ async function fetchKana(word: string): Promise<Row[] | undefined> {
   });
 }
 
-async function fetchWord(wordId: number): Promise<DBResultEntry | undefined> {
+async function fetchWord(wordId: number): Promise<DBWord | undefined> {
   return new Promise(async (resolve) => {
     const { rows } = await turso.execute({
       sql: "SELECT * FROM word WHERE id = ? LIMIT 1",
@@ -119,6 +122,6 @@ async function fetchWord(wordId: number): Promise<DBResultEntry | undefined> {
 
     const wordRow = rows[0] as unknown as DBWord;
 
-    resolve({ row: wordRow, foundInKanji: true });
+    resolve(wordRow);
   });
 }

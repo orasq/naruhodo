@@ -34,12 +34,12 @@ function useParseText(
       (await processBatch(batchToProcess, paragraphs)) ?? paragraphs;
 
     // visibility
-    // const newParagraphs = setParagraphsVisibility(
-    //   processedParagraphs,
-    //   visibleParagraphs,
-    // );
+    const newParagraphs = setParagraphsVisibility(
+      processedParagraphs,
+      visibleParagraphs,
+    );
 
-    // setParagraphs(newParagraphs);
+    setParagraphs(newParagraphs);
 
     canProcessNewBatch.current = true;
   }, [queue]);
@@ -115,37 +115,14 @@ async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
 
   const wordTokens = await getTokens(batch);
 
-  console.log({ wordTokens });
-
   const parsedParagraphs = await getDictionaryEntries(wordTokens);
 
-  console.log({ parsedParagraphs });
+  // add parsed text
+  parsedParagraphs.forEach((paragraph: any) => {
+    nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
+  });
 
-  return wordTokens;
-
-  // try {
-  //   const response = await fetch("/api/parseText", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ paragraphs: batch }),
-  //   });
-
-  //   if (!response.ok) throw new Error("Failed to process batch");
-
-  //   const { parsedParagraphs } = await response.json();
-
-  //   // add parsed text
-  //   parsedParagraphs.forEach((paragraph: any) => {
-  //     nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
-  //   });
-
-  //   return nextParagraphs;
-  // } catch (error) {
-  //   console.error("Error processing batch:", error);
-  //   throw error; // You can handle the error or rethrow it
-  // }
+  return nextParagraphs;
 }
 
 function setCurrentParagraphVisibility(
