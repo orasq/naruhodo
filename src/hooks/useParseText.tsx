@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Dispatcher } from "@/lib/types/generics.types";
 import type { ParagraphObject } from "@/lib/types/types";
-import { getTokens } from "@/lib/utils/functions/getTokens";
-import { getDictionaryEntries } from "@/lib/utils/functions/getDictionaryEntries";
 
 type QueueItem = number;
 
@@ -11,6 +9,7 @@ export type BatchItem = {
   index: number;
 };
 
+const TOKENIZE_API_URL = process.env.NEXT_PUBLIC_TOKENIZE_API_ENDPOINT;
 const QUEUE_DEBOUNCE_TIME = 1000;
 
 function useParseText(
@@ -113,16 +112,27 @@ async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
 
   const nextParagraphs = [...paragraphs];
 
-  const wordTokens = await getTokens(batch);
+  if (!TOKENIZE_API_URL) throw new Error("TOKENIZE_API_URL is not set");
 
-  const parsedParagraphs = await getDictionaryEntries(wordTokens);
+  try {
+    const response = await fetch(`${TOKENIZE_API_URL}/api/tokenize`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(batch),
+    });
 
-  // add parsed text
-  parsedParagraphs.forEach((paragraph: any) => {
-    nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
-  });
+    const { parsedText } = await response.json();
 
-  return nextParagraphs;
+    parsedText.forEach((paragraph: any) => {
+      nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
+    });
+
+    return nextParagraphs;
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 function setCurrentParagraphVisibility(
