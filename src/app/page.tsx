@@ -4,8 +4,6 @@ import { allBooks } from "content-collections";
 export default function Home() {
   return (
     <div className="mx-auto max-w-6xl">
-      <h1 className="text-center text-3xl">Book collection</h1>
-
       {/* Book list */}
       <ul className="mt-10 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-5 xl:gap-3">
         {allBooks.map((book) => (
