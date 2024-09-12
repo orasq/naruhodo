@@ -1,4 +1,4 @@
-import { TextBlockTag } from "../types/types";
+import { TextBlockTag } from "../../types/types";
 
 function initializeBaseText(text: string): {
   baseText: string;

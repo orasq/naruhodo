@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { TextBlock } from "@/components/TextBlock";
-import initializeBaseText from "@/lib/utils/initializeBaseText";
-import prefersReducedMotion from "@/lib/utils/prefersReducedMotion";
+import initializeBaseText from "@/lib/utils/functions/initializeBaseText";
+import prefersReducedMotion from "@/lib/utils/functions/prefersReducedMotion";
 import { ScrollQueue } from "../ScrollQueue";
 
 import { BOOKMARK_KEY } from "@/lib/utils/constants";
