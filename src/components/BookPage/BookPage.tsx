@@ -43,7 +43,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
       />
 
       {/* Toolbox */}
-      <div className="pointer-events-none fixed left-1/2 top-0 mx-auto h-full w-full max-w-toolbox-wrapper -translate-x-1/2">
+      <div className="pointer-events-none fixed bottom-0 left-1/2 mx-auto w-full max-w-toolbox-wrapper -translate-x-1/2">
         <ToolBox
           toggleFontSize={toggleFontSize}
           toggleBookmarkMode={setIsBookmarkModeActive}

@@ -41,6 +41,10 @@ function ScrollQueue({
           entry.target as HTMLParagraphElement,
         );
 
+        console.log(
+          `DEBUG: Element ${index} is intersecting: ${entry.isIntersecting}`,
+        );
+
         // remove from queue (if applicable)
         if (!entry.isIntersecting) {
           removeFromQueue(index);
