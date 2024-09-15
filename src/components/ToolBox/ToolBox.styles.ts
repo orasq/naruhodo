@@ -5,6 +5,11 @@ export const toolboxButtonStyle = tv({
     "flex h-toolbox w-toolbox shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent",
     "hover:bg-orange-0",
   ],
+  variants: {
+    disabled: {
+      true: "cursor-not-allowed opacity-50",
+    },
+  },
 });
 
 export const toolboxListStyle = tv({

@@ -8,6 +8,7 @@ import { ToolBox } from "../ToolBox";
 import useToggle from "@/hooks/useToggle";
 import type { BookFontSize, BookInfo } from "@/lib/types/types";
 import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
+import { LoadingParagraphsProvider } from "@/contexts/LoadingParagraphsContext";
 
 type BookPageProps = {
   bookInfo: BookInfo;
@@ -32,25 +33,27 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
   }, [fontSize]);
 
   return (
-    <article className="relative mx-auto w-full max-w-[var(--text-max-width)] text-book-fs">
-      {/* Book info */}
-      <BookPageHeader bookInfo={bookInfo} />
+    <LoadingParagraphsProvider>
+      <article className="relative mx-auto w-full max-w-[var(--text-max-width)] text-book-fs">
+        {/* Book info */}
+        <BookPageHeader bookInfo={bookInfo} />
 
-      {/* Main text */}
-      <BookText
-        textParagraphs={paragraphs}
-        isBookmarkModeActive={isBookmarkModeActive}
-      />
-
-      {/* Toolbox */}
-      <div className="pointer-events-none fixed bottom-0 left-1/2 mx-auto w-full max-w-toolbox-wrapper -translate-x-1/2">
-        <ToolBox
-          toggleFontSize={toggleFontSize}
-          toggleBookmarkMode={setIsBookmarkModeActive}
+        {/* Main text */}
+        <BookText
+          textParagraphs={paragraphs}
           isBookmarkModeActive={isBookmarkModeActive}
         />
-      </div>
-    </article>
+
+        {/* Toolbox */}
+        <div className="pointer-events-none fixed bottom-0 left-1/2 z-10 mx-auto w-full max-w-toolbox-wrapper -translate-x-1/2">
+          <ToolBox
+            toggleFontSize={toggleFontSize}
+            toggleBookmarkMode={setIsBookmarkModeActive}
+            isBookmarkModeActive={isBookmarkModeActive}
+          />
+        </div>
+      </article>
+    </LoadingParagraphsProvider>
   );
 }
 
