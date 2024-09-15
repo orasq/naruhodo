@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Dispatcher } from "@/lib/types/generics.types";
 import type { ParagraphObject } from "@/lib/types/types";
+import { LoadingParagraphsContext } from "@/contexts/LoadingParagraphsContext";
 
 type QueueItem = number;
 
@@ -19,10 +20,12 @@ function useParseText(
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [visibleParagraphs, setVisibleParagraphs] = useState<QueueItem[]>([]);
 
+  const { setIsLoading } = useContext(LoadingParagraphsContext);
   const canProcessNewBatch = useRef(true);
 
   const processQueue = useCallback(async () => {
     canProcessNewBatch.current = false;
+    setIsLoading(true);
 
     // queue
     const batchToProcess = getParagraphsFromQueue(queue, paragraphs);
@@ -41,6 +44,7 @@ function useParseText(
     setParagraphs(newParagraphs);
 
     canProcessNewBatch.current = true;
+    setIsLoading(false);
   }, [queue]);
 
   useEffect(() => {

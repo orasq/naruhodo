@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import {
   IconBookmark,
@@ -14,6 +14,7 @@ import {
 import useToggle from "@/hooks/useToggle";
 import { toolboxButtonStyle, toolboxListStyle } from "./ToolBox.styles";
 import { FINISHED_BOOK_KEY, ICON_SIZE } from "@/lib/utils/constants";
+import { LoadingParagraphsContext } from "@/contexts/LoadingParagraphsContext";
 
 type ToolBoxProps = {
   toggleFontSize: () => void;
@@ -28,6 +29,8 @@ function ToolBox({
 }: ToolBoxProps) {
   const [isToolboxOpen, toggleToolbox] = useToggle(false);
   const [isBookFinished, setIsBookFinished] = useState(false); // TODO: use useToggle when understood why it's not working in strict mode
+
+  const { isLoading } = useContext(LoadingParagraphsContext);
 
   const { slug } = useParams();
 
@@ -48,7 +51,7 @@ function ToolBox({
   }
 
   return (
-    <div className="pointer-events-auto absolute bottom-8 right-4 flex flex-col items-center justify-center rounded-xl bg-surface-light p-1 shadow-sm">
+    <div className="pointer-events-auto absolute bottom-8 right-4 z-20 flex flex-col items-center justify-center rounded-xl bg-surface-light p-1 shadow-sm">
       <div
         id="toolList"
         className={toolboxListStyle({
@@ -59,7 +62,7 @@ function ToolBox({
           {/* Bookmark */}
           <li>
             <button
-              className={toolboxButtonStyle()}
+              className={toolboxButtonStyle({ disabled: isLoading })}
               onClick={toggleBookmarkMode}
               aria-label={`Toggle bookmark mode (${isBookmarkModeActive ? "on" : "off"})`}
             >
@@ -74,7 +77,7 @@ function ToolBox({
           {/* Finished reading */}
           <li>
             <button
-              className={toolboxButtonStyle()}
+              className={toolboxButtonStyle({ disabled: isLoading })}
               onClick={handleBookFinishedClick}
               aria-label="Toggle finished book"
             >
@@ -89,7 +92,7 @@ function ToolBox({
           {/* Toggle font size */}
           <li>
             <button
-              className={toolboxButtonStyle()}
+              className={toolboxButtonStyle({ disabled: isLoading })}
               onClick={toggleFontSize}
               aria-label="Change text font size"
             >
@@ -99,21 +102,27 @@ function ToolBox({
         </ul>
       </div>
 
-      {/* Open / close button   */}
-      <button
-        className={toolboxButtonStyle()}
-        onClick={toggleToolbox}
-        aria-haspopup="true"
-        aria-label="Toggle toolbox opening"
-        aria-expanded={isToolboxOpen}
-        aria-controls="toolList"
-      >
-        {isToolboxOpen ? (
-          <IconX size={ICON_SIZE} />
-        ) : (
-          <IconSettings size={ICON_SIZE} />
-        )}
-      </button>
+      {/* Loading icon or Open/close button */}
+      {isLoading ? (
+        <div className={toolboxButtonStyle()}>
+          <div className="h-[22px] w-[22px] animate-spin rounded-full border-2 border-copy border-l-copy/10 border-t-copy/10 duration-100" />
+        </div>
+      ) : (
+        <button
+          className={toolboxButtonStyle()}
+          onClick={toggleToolbox}
+          aria-haspopup="true"
+          aria-label="Toggle toolbox opening"
+          aria-expanded={isToolboxOpen}
+          aria-controls="toolList"
+        >
+          {isToolboxOpen ? (
+            <IconX size={ICON_SIZE} />
+          ) : (
+            <IconSettings size={ICON_SIZE} />
+          )}
+        </button>
+      )}
     </div>
   );
 }
