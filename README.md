@@ -18,5 +18,6 @@ For the "tokenize" API endpoint, you could run the following app locally as well
 - Implement list virtualization on book pages to avoid rendering too many DOM elements (paragraphs).
 - Add authentication to enable private book collections.
 - Add search and filtering functionality to the book collection
+- Write tests
 - Improve accessibility
 - Generate AI audio on demand for each paragraph?
