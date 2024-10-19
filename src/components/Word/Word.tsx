@@ -15,7 +15,7 @@ function Word({ dictionaryEntry, children }: WordProps) {
   const [tooltipIsClosing, setTooltipIsClosing] = useState(false);
 
   function handleClick() {
-    setShowTooltip(!showTooltip);
+    setShowTooltip(true);
   }
 
   return (
