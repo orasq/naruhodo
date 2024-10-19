@@ -18,7 +18,7 @@
     "@types/sqlite3": "^3.1.11",
     "js-cookie": "^3.0.5",
     "kuromojin": "^3.0.0",
-    "next": "14.2.4",
+    "next": "^14.2.15",
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.77.6",
