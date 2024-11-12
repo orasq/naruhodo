@@ -1,19 +1,14 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Dispatcher } from "@/lib/types/generics.types";
-import type { ParagraphObject } from "@/lib/types/types";
 import { LoadingParagraphsContext } from "@/contexts/LoadingParagraphsContext";
+import { Dispatcher } from "@/lib/types/generics.types";
+import type { BatchItem, ParagraphObject } from "@/lib/types/types";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import parseText from "../lib/utils/functions/parseText";
 
 type QueueItem = number;
 
-export type BatchItem = {
-  baseText: string;
-  index: number;
-};
-
-const TOKENIZE_API_URL = process.env.NEXT_PUBLIC_TOKENIZE_API_ENDPOINT;
 const QUEUE_DEBOUNCE_TIME = 1000;
 
-function useParseText(
+function useScrollQueue(
   paragraphs: ParagraphObject[],
   setParagraphs: Dispatcher<ParagraphObject[]>,
 ) {
@@ -33,7 +28,7 @@ function useParseText(
 
     // batch
     const processedParagraphs =
-      (await processBatch(batchToProcess, paragraphs)) ?? paragraphs;
+      (await parseText(batchToProcess, paragraphs)) ?? paragraphs;
 
     // visibility
     const newParagraphs = setParagraphsVisibility(
@@ -71,7 +66,7 @@ function useParseText(
   };
 }
 
-export default useParseText;
+export default useScrollQueue;
 
 /**
  * Utils
@@ -109,34 +104,6 @@ function getParagraphsFromQueue(
     },
     [] as BatchItem[],
   );
-}
-
-async function processBatch(batch: BatchItem[], paragraphs: ParagraphObject[]) {
-  if (!batch.length) return;
-
-  const nextParagraphs = [...paragraphs];
-
-  if (!TOKENIZE_API_URL) throw new Error("TOKENIZE_API_URL is not set");
-
-  try {
-    const response = await fetch(`${TOKENIZE_API_URL}/api/tokenize`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(batch),
-    });
-
-    const { parsedText } = await response.json();
-
-    parsedText.forEach((paragraph: any) => {
-      nextParagraphs[paragraph.index].parsedText = paragraph.parsedText;
-    });
-
-    return nextParagraphs;
-  } catch (error) {
-    console.error("Error:", error);
-  }
 }
 
 function setCurrentParagraphVisibility(

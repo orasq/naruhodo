@@ -3,7 +3,7 @@
  */
 
 import { MutableRefObject, useEffect } from "react";
-import useParseText from "@/hooks/useParseText";
+import useScrollQueue from "@/hooks/useScrollQueue";
 
 import type { Dispatcher } from "@/lib/types/generics.types";
 import type { ParagraphObject } from "@/lib/types/types";
@@ -26,7 +26,7 @@ function ScrollQueue({
     removeFromQueue,
     isInQueue,
     setCurrentParagraphVisibility,
-  } = useParseText(paragraphs, setParagraphs);
+  } = useScrollQueue(paragraphs, setParagraphs);
 
   /**
    * Add IntersectionObserver to ascertain if a <TextBlock> is visible on the screen or not.
