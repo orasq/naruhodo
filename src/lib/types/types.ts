@@ -35,3 +35,8 @@ export type WordToken = {
   baseText: string;
   tokens: KuromojiToken[];
 };
+
+export type BatchItem = {
+  baseText: string;
+  index: number;
+};
