@@ -15,9 +15,10 @@ For the "tokenize" API endpoint, you could run the following app locally as well
 ## To-do
 
 - Use React Query to make requests to the tokenize API
-- Implement list virtualization on book pages to avoid rendering too many DOM elements (paragraphs).
-- Add authentication to enable private book collections.
+- Implement list virtualization on book pages to avoid rendering too many DOM elements (paragraphs)
+- Add authentication to enable private book collections
 - Add search and filtering functionality to the book collection
+- Remember scroll position when changing font size
 - Write tests
 - Improve accessibility
 - Generate AI audio on demand for each paragraph?
