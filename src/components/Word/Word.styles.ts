@@ -2,7 +2,7 @@ import { tv } from "tailwind-variants";
 
 export const wordStyle = tv({
   base: [
-    "relative inline rounded-sm",
+    "relative inline rounded-xs",
     "hover:isolate hover:z-20 hover:cursor-pointer hover:bg-surface-light hover:shadow-word",
   ],
   variants: {

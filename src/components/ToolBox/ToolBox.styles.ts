@@ -15,7 +15,7 @@ export const toolboxButtonStyle = tv({
 export const toolboxListStyle = tv({
   base: [
     "relative grid duration-1000 ease-smooth motion-safe:transition-[opacity,grid]",
-    "after:delay-20 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-copy/15 after:opacity-0 after:duration-1000 after:motion-safe:transition-opacity",
+    "after:delay-20 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-copy/15 after:opacity-0 after:duration-1000 motion-safe:after:transition-opacity",
   ],
   variants: {
     state: {

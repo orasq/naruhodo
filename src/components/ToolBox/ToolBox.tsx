@@ -51,7 +51,7 @@ function ToolBox({
   }
 
   return (
-    <div className="pointer-events-auto absolute bottom-8 right-4 z-20 flex flex-col items-center justify-center rounded-xl bg-surface-light p-1 shadow-sm">
+    <div className="bg-surface-light pointer-events-auto absolute right-4 bottom-8 z-20 flex flex-col items-center justify-center rounded-xl p-1 shadow-xs">
       <div
         id="toolList"
         className={toolboxListStyle({
@@ -105,7 +105,7 @@ function ToolBox({
       {/* Loading icon or Open/close button */}
       {isLoading ? (
         <div className={toolboxButtonStyle()}>
-          <div className="h-[22px] w-[22px] animate-spin rounded-full border-2 border-copy border-l-copy/10 border-t-copy/10 duration-100" />
+          <div className="border-copy border-l-copy/10 border-t-copy/10 h-[22px] w-[22px] animate-spin rounded-full border-2 duration-100" />
         </div>
       ) : (
         <button

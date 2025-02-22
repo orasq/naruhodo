@@ -40,7 +40,7 @@ export default function RootLayout({
       data-font-size={initialFontSize}
       className="max-w-full-screen overflow-x-clip"
     >
-      <body className="relative max-w-full-screen overflow-x-clip bg-background px-6 text-copy">
+      <body className="max-w-full-screen bg-background text-copy relative overflow-x-clip px-6">
         <Header initialTheme={initialTheme} />
         <main>{children}</main>
       </body>
