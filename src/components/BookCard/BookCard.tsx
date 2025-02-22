@@ -26,18 +26,18 @@ function BookCard({ bookInfo }: BookCardProps) {
   return (
     <Link
       href={`/books/${bookInfo._meta?.path}`}
-      className="group/card motion-safe:transition-background motion-safe:transition-filter relative block rounded-xl p-2 duration-100 hover:bg-surface-light hover:shadow-sm"
+      className="group/card motion-safe:transition-background motion-safe:transition-filter hover:bg-surface-light relative block rounded-xl p-2 duration-100 hover:shadow-xs"
     >
       {/* Book finished icon */}
       {isFinished && (
-        <div className="absolute right-5 top-0 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-background text-copy/50 group-hover/card:bg-surface-light">
+        <div className="bg-background text-copy/50 group-hover/card:bg-surface-light absolute top-0 right-5 z-10 flex h-6 w-6 items-center justify-center rounded-full">
           <IconCircleCheckFilled />
         </div>
       )}
 
       <div className={contentWrapperStyles({ isFinished })}>
         {/* Image */}
-        <div className="relative aspect-[9/13]">
+        <div className="relative aspect-9/13">
           <Image
             className="rounded-lg object-cover"
             src={`/images/covers/${bookInfo.image}`}

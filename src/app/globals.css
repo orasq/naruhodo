@@ -1,55 +1,104 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --text-max-width: 60ch;
-  --toolbox-width: 37px;
-  --book-font-size: 1.25rem;
+@theme {
+  --border-width-1: 1px;
+
+  --shadow-word: 0 0 0 4px var(--surface-light);
+
+  --radius-4xl: 2rem;
+
+  --color-background: var(--bg-color);
+  --color-backdrop: var(--backdrop-color);
+  --color-copy: var(--copy-color);
+  --color-accent-primary: var(--accent-primary-color);
+  --color-accent-secondary: var(--accent-secondary-color);
+  --color-surface-light: var(--surface-light);
+  --color-surface-medium: var(--surface-medium);
+
+  --text-book-fs: var(--book-font-size);
+
+  --height-toolbox: var(--toolbox-width);
+
+  --max-height-full-screen: 100vh;
+
+  --container-full-screen: 100vw;
+  --container-toolbox-wrapper: calc(
+    var(--text-max-width) + (var(--toolbox-width) * 2) + 10rem
+  );
+
+  --transition-duration-2000: 2000ms;
+
+  --ease-smooth: cubic-bezier(0, 1, 0, 1);
+
+  --width-toolbox: var(--toolbox-width);
 }
 
-html[data-color-mode="light"] {
-  --bg-color: #f2f1eb;
-  --copy-color: #483E2B;
-  --accent-primary-color: #EEA460;
-  --accent-secondary-color: #8ec689;
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
 
-  --surface-light: #fff;
-  --surface-medium: #E5E7EB;
-  --backdrop-color: #483E2B;
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
-html[data-color-mode="dark"] {
-  --bg-color: #282C35;
-  --copy-color: #D7DCEB;
-  --accent-primary-color: #8250B0;
-  --accent-secondary-color: #4A8587;
-
-  --surface-light: #363F55;
-  --surface-medium: #2C3345;
-  --backdrop-color: #1A222D;
-}
-
-html[data-font-size="sm"] {
-  --book-font-size: 1rem;
-}
-
-html[data-font-size="md"] {
-  --book-font-size: 1.25rem;
-}
-
-html[data-font-size="lg"] {
-  --book-font-size: 1.5rem;
-}
-
-@layer utilities {
+@utility no-scrollbar {
   /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     display: none;
   }
   /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+@layer utilities {
+  :root {
+    --text-max-width: 60ch;
+    --toolbox-width: 37px;
+    --book-font-size: 1.25rem;
+  }
+
+  html[data-color-mode="light"] {
+    --bg-color: #f2f1eb;
+    --copy-color: #483e2b;
+    --accent-primary-color: #eea460;
+    --accent-secondary-color: #8ec689;
+
+    --surface-light: #fff;
+    --surface-medium: #e5e7eb;
+    --backdrop-color: #483e2b;
+  }
+
+  html[data-color-mode="dark"] {
+    --bg-color: #282c35;
+    --copy-color: #d7dceb;
+    --accent-primary-color: #8250b0;
+    --accent-secondary-color: #4a8587;
+
+    --surface-light: #363f55;
+    --surface-medium: #2c3345;
+    --backdrop-color: #1a222d;
+  }
+
+  html[data-font-size="sm"] {
+    --book-font-size: 1rem;
+  }
+
+  html[data-font-size="md"] {
+    --book-font-size: 1.25rem;
+  }
+
+  html[data-font-size="lg"] {
+    --book-font-size: 1.5rem;
   }
 }

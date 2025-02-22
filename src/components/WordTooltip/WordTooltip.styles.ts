@@ -14,10 +14,10 @@ export const tooltipBackgroundStyle = tv({
 
 export const tooltipPanelStyle = tv({
   base: [
-    "relative overflow-clip rounded-t-4xl bg-surface-light shadow-sm transition-[opacity,transform] duration-1000 ease-smooth",
+    "relative overflow-clip rounded-t-4xl bg-surface-light shadow-xs transition-[opacity,transform] duration-1000 ease-smooth",
     "sm:rounded-xl",
-    "before:absolute before:left-0 before:top-0 before:z-10 before:h-6 before:w-full before:bg-gradient-to-b before:from-surface-light before:to-surface-light/0",
-    "after:absolute after:bottom-0 after:left-0 after:h-6 after:w-full after:bg-gradient-to-t after:from-surface-light after:to-surface-light/0",
+    "before:absolute before:left-0 before:top-0 before:z-10 before:h-6 before:w-full before:bg-linear-to-b before:from-surface-light before:to-surface-light/0",
+    "after:absolute after:bottom-0 after:left-0 after:h-6 after:w-full after:bg-linear-to-t after:from-surface-light after:to-surface-light/0",
   ],
   variants: {
     state: {

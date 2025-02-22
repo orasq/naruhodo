@@ -24,7 +24,7 @@ function Header({ initialTheme }: HeaderProps) {
   }
 
   return (
-    <header className="mx-auto flex max-w-6xl items-center justify-between pb-16 pt-7 md:pb-28 md:pt-10">
+    <header className="mx-auto flex max-w-6xl items-center justify-between pt-7 pb-16 md:pt-10 md:pb-28">
       {/* Logo */}
       <Link href="/" className="text-xl" aria-label="Go back to homepage">
         <svg
@@ -45,7 +45,7 @@ function Header({ initialTheme }: HeaderProps) {
         <button
           onClick={handleThemeToggle}
           aria-label={`Toggle theme (${theme})`}
-          className="motion-safe:transition-background flex h-[45px] w-[45px] items-center justify-center rounded-xl duration-100 hover:bg-surface-light hover:shadow-sm"
+          className="motion-safe:transition-background hover:bg-surface-light flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-xl duration-100 hover:shadow-xs"
         >
           {theme === "light" ? <IconSunFilled /> : <IconMoonFilled />}
         </button>

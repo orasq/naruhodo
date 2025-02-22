@@ -155,7 +155,7 @@ function WordTooltip({
                   {meanings.map((meaning, index) => (
                     <li
                       key={index}
-                      className="border-dotted border-copy/30 [&:not(:last-child)]:mb-3 [&:not(:last-child)]:border-b-2 [&:not(:last-child)]:pb-3"
+                      className="border-dotted border-copy/30 not-last:mb-3 not-last:border-b-2 not-last:pb-3"
                     >
                       <p className="text-xs italic opacity-50">
                         {meaning.tags}
