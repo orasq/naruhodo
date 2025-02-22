@@ -7,19 +7,19 @@ module.exports = {
         1: "1px",
       },
       boxShadow: {
-        word: "0 0 0 4px rgba(var(--surface-light))",
+        word: "0 0 0 4px var(--surface-light)",
       },
       borderRadius: {
         "4xl": "2rem",
       },
       colors: {
-        background: "rgba(var(--bg-color))",
-        backdrop: "rgba(var(--backdrop-color))",
-        copy: "rgba(var(--copy-color))",
-        "accent-primary": "rgba(var(--accent-primary-color))",
-        "accent-secondary": "rgba(var(--accent-secondary-color))",
-        "surface-light": "rgba(var(--surface-light))",
-        "surface-medium": "rgba(var(--surface-medium))",
+        background: "var(--bg-color)",
+        backdrop: "var(--backdrop-color)",
+        copy: "var(--copy-color)",
+        "accent-primary": "var(--accent-primary-color)",
+        "accent-secondary": "var(--accent-secondary-color)",
+        "surface-light": "var(--surface-light)",
+        "surface-medium": "var(--surface-medium)",
       },
       fontSize: {
         "book-fs": "var(--book-font-size)",

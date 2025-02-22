@@ -9,25 +9,25 @@
 }
 
 html[data-color-mode="light"] {
-  --bg-color: 255, 243, 217;
-  --copy-color: 72, 62, 43;
-  --accent-primary-color: 238, 164, 96;
-  --accent-secondary-color: 142, 198, 137;
+  --bg-color: #f2f1eb;
+  --copy-color: #483E2B;
+  --accent-primary-color: #EEA460;
+  --accent-secondary-color: #8ec689;
 
-  --surface-light: 255, 255, 255;
-  --surface-medium: 229, 231, 235;
-  --backdrop-color: 72, 62, 43;
+  --surface-light: #fff;
+  --surface-medium: #E5E7EB;
+  --backdrop-color: #483E2B;
 }
 
 html[data-color-mode="dark"] {
-  --bg-color: 40, 44, 53;
-  --copy-color: 215, 220, 235;
-  --accent-primary-color: 130, 80, 176;
-  --accent-secondary-color: 74, 133, 135;
+  --bg-color: #282C35;
+  --copy-color: #D7DCEB;
+  --accent-primary-color: #8250B0;
+  --accent-secondary-color: #4A8587;
 
-  --surface-light: 54, 63, 85;
-  --surface-medium: 44, 51, 69;
-  --backdrop-color: 26, 34, 45;
+  --surface-light: #363F55;
+  --surface-medium: #2C3345;
+  --backdrop-color: #1A222D;
 }
 
 html[data-font-size="sm"] {
