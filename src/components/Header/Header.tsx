@@ -6,6 +6,7 @@ import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState } from "react";
+import { darkModeIconStyle } from "./Header.styles";
 
 type HeaderProps = {
   initialTheme: ThemeMode;
@@ -45,9 +46,15 @@ function Header({ initialTheme }: HeaderProps) {
         <button
           onClick={handleThemeToggle}
           aria-label={`Toggle theme (${theme})`}
-          className="motion-safe:transition-background hover:bg-surface-light flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-xl duration-100 hover:shadow-xs"
+          className="motion-safe:transition-background hover:bg-surface-light relative flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-xl duration-100 hover:shadow-xs"
         >
-          {theme === "light" ? <IconSunFilled /> : <IconMoonFilled />}
+          <IconSunFilled
+            className={darkModeIconStyle({ active: theme === "light" })}
+          />
+
+          <IconMoonFilled
+            className={darkModeIconStyle({ active: theme === "dark" })}
+          />
         </button>
       </div>
     </header>
