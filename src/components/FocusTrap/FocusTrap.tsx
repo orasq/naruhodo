@@ -1,18 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type FocusTrapProps = {
   children: React.ReactNode;
 };
 
 function FocusTrap({ children }: FocusTrapProps) {
+  const [previousActiveElement, setPreviousActiveElement] =
+    useState<HTMLElement | null>(null);
   const [focusableElements, setFocusableElements] = useState<HTMLElement[]>([]);
 
+  const focusWrapperRef = useRef<HTMLDivElement>(null);
+
   const defineFocusableElements = useCallback(() => {
+    if (!focusWrapperRef.current) return;
+
     const elements = Array.from(
-      document.querySelectorAll(
+      focusWrapperRef.current.querySelectorAll(
         "button, a, input, textarea, select, details, [tabindex]:not([tabindex='-1'])",
       ),
     ) as HTMLElement[];
+
     setFocusableElements(elements);
 
     // focus first element
@@ -46,16 +53,18 @@ function FocusTrap({ children }: FocusTrapProps) {
   );
 
   useEffect(() => {
+    setPreviousActiveElement(document.activeElement as HTMLElement);
     defineFocusableElements();
 
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      previousActiveElement?.focus();
     };
   }, []);
 
-  return <>{children}</>;
+  return <div ref={focusWrapperRef}>{children}</div>;
 }
 
 export default FocusTrap;
