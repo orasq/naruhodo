@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState } from "react";
 import { darkModeIconStyle } from "./Header.styles";
+import { Button } from "../Button";
 
 type HeaderProps = {
   initialTheme: ThemeMode;
@@ -41,7 +42,12 @@ function Header({ initialTheme }: HeaderProps) {
         </svg>
       </Link>
 
-      <div>
+      <div className="flex items-center justify-center gap-3">
+        {/* Login / Register button */}
+        <Button as="a" href="/login" className="mr-4">
+          Login
+        </Button>
+
         {/* Light / Dark theme toggle */}
         <button
           onClick={handleThemeToggle}
