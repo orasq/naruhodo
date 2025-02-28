@@ -17,7 +17,7 @@ function FormInput({
 }: FormInputProps) {
   return (
     <input
-      className="w-full rounded-md border border-gray-300 p-2"
+      className="border-surface-strong w-full rounded-md border p-2"
       id={id}
       name={name}
       placeholder={placeholder}

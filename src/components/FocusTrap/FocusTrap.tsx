@@ -5,9 +5,7 @@ type FocusTrapProps = {
 };
 
 function FocusTrap({ children }: FocusTrapProps) {
-  const [previousActiveElement, setPreviousActiveElement] =
-    useState<HTMLElement | null>(null);
-
+  const previousActiveElement = useRef<HTMLElement | null>(null);
   const focusableElementsRef = useRef<HTMLElement[]>([]);
   const focusWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -48,14 +46,16 @@ function FocusTrap({ children }: FocusTrapProps) {
   }, []);
 
   useEffect(() => {
-    setPreviousActiveElement(document.activeElement as HTMLElement);
+    // save element that was focused before modal opening
+    previousActiveElement.current = document.activeElement as HTMLElement;
+
     defineFocusableElements();
 
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      previousActiveElement.current?.focus();
       document.removeEventListener("keydown", handleKeyDown);
-      previousActiveElement?.focus();
     };
   }, []);
 
