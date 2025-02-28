@@ -1,12 +1,12 @@
 import { tv } from "tailwind-variants";
 
 export const buttonStyles = tv({
-  base: "bg-copy transition- text-surface-light flex cursor-pointer items-center justify-center rounded-xl px-5 py-2 text-base",
+  base: "bg-copy text-copy-inverted flex cursor-pointer items-center justify-center rounded-xl px-5 py-2 text-base",
   variants: {
     variant: {
-      white: "bg-surface-light text-copy shadow-xs",
-      primary: "bg-blue-500 text-white",
-      secondary: "bg-gray-200 text-gray-800",
+      white: "bg-surface-base text-copy shadow-xs",
+      primary: "bg-primary-medium text-white",
+      secondary: "bg-secondary-medium text-white",
     },
   },
 });

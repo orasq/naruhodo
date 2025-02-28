@@ -41,7 +41,7 @@ function Header({ initialTheme }: HeaderProps) {
         <button
           onClick={handleThemeToggle}
           aria-label={`Toggle theme (${theme})`}
-          className="motion-safe:transition-background hover:bg-surface-light relative flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-xl duration-100 hover:shadow-xs"
+          className="motion-safe:transition-background hover:bg-surface-base relative flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-xl duration-100 hover:shadow-xs"
         >
           <IconSunFilled
             className={darkModeIconStyle({ active: theme === "light" })}

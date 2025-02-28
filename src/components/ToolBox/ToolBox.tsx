@@ -51,7 +51,7 @@ function ToolBox({
   }
 
   return (
-    <div className="bg-surface-light pointer-events-auto absolute right-4 bottom-8 z-20 flex flex-col items-center justify-center rounded-xl p-1 shadow-xs">
+    <div className="bg-surface-base pointer-events-auto absolute right-4 bottom-8 z-20 flex flex-col items-center justify-center rounded-xl p-1 shadow-xs">
       <div
         id="toolList"
         className={toolboxListStyle({

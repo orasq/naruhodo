@@ -27,7 +27,7 @@ function LoginDropdown() {
           <Modal.Backdrop />
 
           {/* Panel */}
-          <div className="bg-surface-light min-w-80 rounded-xl p-5 shadow-sm">
+          <div className="bg-surface-base min-w-80 rounded-xl p-5 shadow-sm">
             <Modal.Title className="sr-only">
               {isLoginForm ? "Connect to your account" : "Create an account"}
             </Modal.Title>

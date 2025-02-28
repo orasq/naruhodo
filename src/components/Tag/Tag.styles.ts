@@ -4,8 +4,8 @@ export const tagStyle = tv({
   base: "rounded-md px-2 py-1 text-sm text-white",
   variants: {
     theme: {
-      primary: "bg-accent-primary",
-      secondary: "bg-accent-secondary",
+      primary: "bg-primary-soft",
+      secondary: "bg-secondary-soft",
       neutral: "bg-surface-medium text-copy",
     },
     size: {
