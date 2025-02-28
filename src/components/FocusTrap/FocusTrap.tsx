@@ -7,8 +7,8 @@ type FocusTrapProps = {
 function FocusTrap({ children }: FocusTrapProps) {
   const [previousActiveElement, setPreviousActiveElement] =
     useState<HTMLElement | null>(null);
-  const [focusableElements, setFocusableElements] = useState<HTMLElement[]>([]);
 
+  const focusableElementsRef = useRef<HTMLElement[]>([]);
   const focusWrapperRef = useRef<HTMLDivElement>(null);
 
   const defineFocusableElements = useCallback(() => {
@@ -20,37 +20,32 @@ function FocusTrap({ children }: FocusTrapProps) {
       ),
     ) as HTMLElement[];
 
-    setFocusableElements(elements);
+    focusableElementsRef.current = elements;
 
     // focus first element
     const firstElement = elements[0];
     firstElement.focus();
   }, []);
 
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (event.key === "Tab") {
-        const focusedElement = document.activeElement as HTMLElement;
-        const focusedIndex = focusableElements.indexOf(focusedElement);
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Tab") {
+      const focusableElements = focusableElementsRef.current;
+      const previousFocusedElement = document.activeElement as HTMLElement;
+      const focusedIndex = focusableElements.indexOf(previousFocusedElement);
 
-        // if focused element is last in the list, focus the first element
-        if (focusedIndex === focusableElements.length - 1) {
-          focusableElements[0].focus();
-          event.preventDefault();
-        }
-
-        // reversed tabbing
-        if (event.shiftKey) {
-          // if focused element is first in the list, focus the last element
-          if (focusedIndex === 0) {
-            focusableElements[focusableElements.length - 1].focus();
-            event.preventDefault();
-          }
-        }
+      // if focused element is last in the list, focus the first element
+      if (!e.shiftKey && focusedIndex === focusableElements.length - 1) {
+        focusableElements[0].focus();
+        e.preventDefault();
       }
-    },
-    [focusableElements],
-  );
+
+      // if reversed tabbing and focused element is first in the list, focus the last element
+      if (e.shiftKey && focusedIndex === 0) {
+        focusableElements[focusableElements.length - 1].focus();
+        e.preventDefault();
+      }
+    }
+  }, []);
 
   useEffect(() => {
     setPreviousActiveElement(document.activeElement as HTMLElement);

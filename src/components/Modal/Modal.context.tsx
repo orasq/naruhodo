@@ -4,13 +4,13 @@ import { createContext, useContext } from "react";
 type ModalContext = {
   id: string;
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  closeModal: () => void;
 };
 
 type ModalContextProviderProps = {
   id: string;
   isModalOpen: boolean;
-  setIsModalOpen: Dispatcher<boolean>;
+  onClose: Dispatcher<void>;
   children: React.ReactNode;
 };
 
@@ -19,12 +19,12 @@ const ModalContext = createContext({} as ModalContext);
 export function ModalContextProvider({
   id,
   isModalOpen,
-  setIsModalOpen,
+  onClose,
   children,
 }: ModalContextProviderProps) {
   return (
     <ModalContext.Provider
-      value={{ id, isOpen: isModalOpen, setIsOpen: setIsModalOpen }}
+      value={{ id, isOpen: isModalOpen, closeModal: onClose }}
     >
       {children}
     </ModalContext.Provider>

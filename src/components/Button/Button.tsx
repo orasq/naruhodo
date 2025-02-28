@@ -26,11 +26,25 @@ function Button(props: ButtonProps) {
     const { as, ...rest } = props;
 
     return (
-      <Link {...rest} className={buttonStyles({ variant: props.variant })} />
+      <Link
+        {...rest}
+        className={buttonStyles({
+          variant: props.variant,
+          class: props.className,
+        })}
+      />
     );
   }
 
-  return <button {...props} />;
+  return (
+    <button
+      {...props}
+      className={buttonStyles({
+        variant: props.variant,
+        class: props.className,
+      })}
+    />
+  );
 }
 
 export default Button;

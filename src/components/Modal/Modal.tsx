@@ -2,6 +2,7 @@ import { Dispatcher } from "@/lib/types/generics.types";
 import { TitleTag } from "@/lib/types/types";
 import { useEffect, useId } from "react";
 import { ModalContextProvider, useModalContext } from "./Modal.context";
+import FocusTrap from "../FocusTrap/FocusTrap";
 
 const LABEL_ID_TEXT = "modal-label-";
 
@@ -12,16 +13,16 @@ const LABEL_ID_TEXT = "modal-label-";
 type ModalProps = {
   className?: string;
   isOpen: boolean;
-  onClose: Dispatcher<boolean>;
+  closeModal: Dispatcher<void>;
   children: React.ReactNode;
 };
 
-function Modal({ className, isOpen, onClose, children }: ModalProps) {
+function Modal({ className, isOpen, closeModal, children }: ModalProps) {
   const id = useId();
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
-      onClose(false);
+      closeModal();
     }
   };
 
@@ -34,16 +35,18 @@ function Modal({ className, isOpen, onClose, children }: ModalProps) {
   }, []);
 
   return (
-    <ModalContextProvider id={id} isModalOpen={isOpen} setIsModalOpen={onClose}>
-      <div
-        className={className}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={LABEL_ID_TEXT + id}
-        aria-hidden={!isOpen}
-      >
-        {children}
-      </div>
+    <ModalContextProvider id={id} isModalOpen={isOpen} onClose={closeModal}>
+      <FocusTrap>
+        <div
+          className={`isolate z-10 ${className}`}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={LABEL_ID_TEXT + id}
+          aria-hidden={!isOpen}
+        >
+          {children}
+        </div>
+      </FocusTrap>
     </ModalContextProvider>
   );
 }
@@ -53,12 +56,12 @@ function Modal({ className, isOpen, onClose, children }: ModalProps) {
  */
 
 function Backdrop() {
-  const { setIsOpen } = useModalContext();
+  const { closeModal } = useModalContext();
 
   return (
     <div
-      className="fixed inset-0 -z-10 bg-black/80"
-      onClick={() => setIsOpen(false)}
+      className={`bg-backdrop fixed inset-0 -z-10 opacity-50 transition-opacity`}
+      onClick={() => closeModal()}
     ></div>
   );
 }
@@ -99,13 +102,13 @@ function CloseButton({
   ariaLabel = "close the modal",
   children,
 }: CloseButtonProps) {
-  const { setIsOpen } = useModalContext();
+  const { closeModal } = useModalContext();
 
   return (
     <button
       className={className}
       aria-label={ariaLabel}
-      onClick={() => setIsOpen(false)}
+      onClick={() => closeModal()}
     >
       {children}
     </button>
