@@ -19,6 +19,7 @@
     "@tabler/icons-react": "^3.11.0",
     "@types/mdx": "^2.0.13",
     "@types/sqlite3": "^3.1.11",
+    "argon2": "^0.41.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.3",
     "js-cookie": "^3.0.5",

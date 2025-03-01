@@ -33,8 +33,8 @@ function RegisterForm() {
       {/* Confirm password field */}
       <FormField id="password" label="Confirm password">
         <FormInput
-          id="password"
-          name="password"
+          id="confirmPassword"
+          name="confirmPassword"
           type="password"
           autocomplete="password"
           required={true}
