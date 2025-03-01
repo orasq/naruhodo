@@ -2,7 +2,7 @@ import Link, { LinkProps } from "next/link";
 import { buttonStyles } from "./Button.styles";
 
 type ButtonBaseProps = {
-  variant?: "primary" | "secondary";
+  variant?: "dark" | "light" | "primary" | "secondary";
   ariaLabel?: string;
   className?: string;
   children: React.ReactNode;
@@ -29,7 +29,7 @@ function Button(props: ButtonProps) {
       <Link
         {...rest}
         className={buttonStyles({
-          variant: props.variant,
+          variant: props.variant ?? "dark",
           class: props.className,
         })}
       />
@@ -40,7 +40,7 @@ function Button(props: ButtonProps) {
     <button
       {...props}
       className={buttonStyles({
-        variant: props.variant,
+        variant: props.variant ?? "dark",
         class: props.className,
       })}
     />

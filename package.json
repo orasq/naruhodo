@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "npx drizzle-kit push",
+    "db:generate": "npx drizzle-kit generate",
+    "db:migrate": "npx drizzle-kit migrate"
   },
   "dependencies": {
     "@libsql/client": "^0.10.0",
@@ -26,7 +29,8 @@
     "sass": "^1.77.6",
     "sharp": "^0.33.5",
     "sqlite3": "^5.1.7",
-    "tailwind-variants": "^0.2.1"
+    "tailwind-variants": "^0.2.1",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@content-collections/core": "^0.7.0",
