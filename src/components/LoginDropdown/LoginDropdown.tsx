@@ -50,7 +50,7 @@ function LoginDropdown() {
           <Modal.Backdrop />
 
           {/* Panel */}
-          <div className="bg-surface-base min-w-80 rounded-xl p-5 shadow-sm">
+          <div className="bg-surface-base relative min-w-80 overflow-hidden rounded-xl p-5 shadow-sm">
             <Modal.Title className="sr-only">
               {visibleForm ? "Connect to your account" : "Create an account"}
             </Modal.Title>
@@ -61,49 +61,14 @@ function LoginDropdown() {
             )}
 
             {/* Sign in form */}
-            {visibleForm === "register" && <RegisterForm />}
+            {visibleForm === "register" && (
+              <RegisterForm setVisibleForm={setVisibleForm} />
+            )}
 
             {/* Reset password form */}
-            {visibleForm === "forgot-password" && <ResetPasswordForm />}
-
-            {/* Switch to sign in / log in form */}
-            <div className="mt-5 border-t pt-4 text-center text-sm">
-              {visibleForm === "login" && (
-                <>
-                  Don't have an account?{" "}
-                  <button
-                    className="cursor-pointer underline"
-                    onClick={() => setVisibleForm("register")}
-                  >
-                    Sign in now
-                  </button>
-                </>
-              )}
-
-              {visibleForm === "register" && (
-                <>
-                  Have an account?{" "}
-                  <button
-                    className="cursor-pointer underline"
-                    onClick={() => setVisibleForm("login")}
-                  >
-                    Log in here
-                  </button>
-                </>
-              )}
-
-              {visibleForm === "forgot-password" && (
-                <>
-                  Remember your password?{" "}
-                  <button
-                    className="cursor-pointer underline"
-                    onClick={() => setVisibleForm("login")}
-                  >
-                    Log in here
-                  </button>
-                </>
-              )}
-            </div>
+            {visibleForm === "forgot-password" && (
+              <ResetPasswordForm setVisibleForm={setVisibleForm} />
+            )}
           </div>
         </Modal>
       )}
