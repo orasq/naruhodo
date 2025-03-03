@@ -8,7 +8,7 @@ type ResetPasswordFormProps = {
 };
 
 function ResetPasswordForm({ setVisibleForm }: ResetPasswordFormProps) {
-  const [showConfirmation, setShowConfirmation] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   return (
     <>
