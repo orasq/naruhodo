@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import FormField from "../FormField/FormField";
 import { FormInput } from "../FormInput";
+import { logUser } from "@/actions/users/logUser";
 
 type LoginFormProps = {
   setVisibleForm: (value: "register" | "forgot-password") => void;
@@ -9,7 +10,7 @@ type LoginFormProps = {
 function LoginForm({ setVisibleForm }: LoginFormProps) {
   return (
     <>
-      <form className="space-y-4">
+      <form className="space-y-4" action={logUser}>
         {/* Email field */}
         <FormField id="email" label="Email">
           <FormInput
@@ -33,7 +34,8 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
             placeholder="Password"
           />
           <button
-            className="mt-2 block text-right text-sm underline"
+            type="button"
+            className="mt-2 block cursor-pointer text-right text-sm underline"
             onClick={() => setVisibleForm("forgot-password")}
           >
             Forgot password?

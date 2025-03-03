@@ -50,7 +50,7 @@ function ResetPasswordForm({ setVisibleForm }: ResetPasswordFormProps) {
       {showConfirmation && (
         <div className="text-center text-sm">
           <h3 className="mb-3 text-lg font-semibold">
-            Password Reset Email Sent
+            Password reset email sent
           </h3>
           <p>
             A password reset link has been sent to your email address.{" "}
