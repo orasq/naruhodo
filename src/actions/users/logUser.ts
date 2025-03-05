@@ -7,7 +7,7 @@ import {
 import findUserByEmail from "@/db/utils/functions/findUserByEmail";
 import { verifyHashedPassword } from "@/lib/utils/functions/hashPassword";
 
-export type LogUserState = {
+type LogUserState = {
   formData?: LoginFormData;
   errors?: {
     email?: string[] | undefined;

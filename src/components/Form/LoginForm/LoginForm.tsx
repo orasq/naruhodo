@@ -8,13 +8,18 @@ import { useRef } from "react";
 import { useFormState } from "react-dom";
 import FormField from "../FormField/FormField";
 import { FormInput } from "../FormInput";
-import { LoginFormData, loginValidationSchema } from "./LoginForm.validation";
+import {
+  type LoginFormData,
+  loginValidationSchema,
+} from "./LoginForm.validation";
 
 type LoginFormProps = {
   setVisibleForm: (value: "register" | "forgot-password") => void;
 };
 
 function LoginForm({ setVisibleForm }: LoginFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [actionState, submitAction] = useFormState(logUser, {
     formData: { email: "", password: "" },
     errors: {},
@@ -27,12 +32,15 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
     resetField,
   } = useForm<LoginFormData>({ resolver: zodResolver(loginValidationSchema) });
 
-  const formRef = useRef<HTMLFormElement>(null);
+  const errorMessages = {
+    email: errors.email?.message || actionState.errors?.email,
+    password: errors.password?.message || actionState.errors?.password,
+  };
 
-  const onSubmit = async (_: FieldValues) => {
+  const onSubmit = async () => {
     if (!formRef.current) return;
 
-    await sleep(1000);
+    await sleep(500);
 
     const formData = new FormData(formRef.current);
     submitAction(formData);
@@ -58,16 +66,12 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
         {/* Success */}
         {actionState.success && (
           <div className="text-success bg-success-subtle border-success rounded-md border p-2 text-sm">
-            Yeeaaaaaah!!!!
+            Successfully logged in
           </div>
         )}
 
         {/* Email field */}
-        <FormField
-          id="email"
-          label="Email"
-          errorMessage={errors.email?.message}
-        >
+        <FormField id="email" label="Email" errorMessage={errorMessages.email}>
           <FormInput
             {...register("email")}
             id="email"
@@ -75,7 +79,7 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
             type="email"
             autoComplete="email"
             placeholder="Email address"
-            hasErrors={errors.email?.message}
+            hasErrors={errorMessages.email}
           />
         </FormField>
 
@@ -83,7 +87,7 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
         <FormField
           id="password"
           label="Password"
-          errorMessage={errors.password?.message}
+          errorMessage={errorMessages.password}
         >
           <FormInput
             {...register("password")}
@@ -92,7 +96,7 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
             type="password"
             autoComplete="password"
             placeholder="Password"
-            hasErrors={errors.password?.message}
+            hasErrors={errorMessages.password}
           />
         </FormField>
         <button

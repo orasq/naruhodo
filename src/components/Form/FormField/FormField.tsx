@@ -1,7 +1,7 @@
 type FormFieldProps = {
   id: string;
   label: string;
-  errorMessage?: string;
+  errorMessage?: string | string[];
   children: React.ReactNode;
 };
 
@@ -15,7 +15,7 @@ function FormField({ id, label, errorMessage, children }: FormFieldProps) {
       <div>{children}</div>
 
       {errorMessage && (
-        <div role="alert" className="text-error mt-2 text-sm">
+        <div role="alert" className="text-error mt-2 text-xs">
           {errorMessage}
         </div>
       )}

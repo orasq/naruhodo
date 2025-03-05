@@ -2,7 +2,7 @@ import { forwardRef, InputHTMLAttributes } from "react";
 
 type FormInputCustomProps = {
   id: string;
-  hasErrors?: string;
+  hasErrors?: string | string[];
 };
 
 type FormInputProps = InputHTMLAttributes<HTMLInputElement> &

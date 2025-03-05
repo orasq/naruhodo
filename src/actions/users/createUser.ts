@@ -11,7 +11,21 @@ import { resend } from "@/emails";
 import { EmailTemplate } from "@/emails/templates/EmailTemplate";
 import { hashPassword } from "@/lib/utils/functions/hashPassword";
 
-export async function createUser(data: FormData) {
+type CreateUserState = {
+  formData?: RegisterFormData;
+  errors?: {
+    email?: string[] | undefined;
+    password?: string[] | undefined;
+    confirmPassword?: string[] | undefined;
+    general?: string;
+  };
+  success?: boolean;
+};
+
+export async function createUser(
+  _: CreateUserState,
+  data: FormData,
+): Promise<CreateUserState> {
   const formData = Object.fromEntries(data.entries()) as RegisterFormData;
 
   // validate the form data
@@ -31,7 +45,7 @@ export async function createUser(data: FormData) {
   if (user) {
     return {
       formData,
-      errors: "This email is already in use",
+      errors: { email: ["This email is already in use"] },
     };
   }
 
@@ -53,8 +67,8 @@ export async function createUser(data: FormData) {
   });
 
   if (error) {
-    console.log({ error });
-  } else {
-    console.log({ resendData });
+    return { errors: { general: "An error occured. Please retry later." } };
   }
+
+  return { success: true };
 }
