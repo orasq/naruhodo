@@ -56,20 +56,6 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-4"
       >
-        {/* General error */}
-        {actionState.errors?.general && (
-          <div className="text-error bg-error-subtle border-error rounded-md border p-2 text-sm">
-            {actionState.errors?.general}
-          </div>
-        )}
-
-        {/* Success */}
-        {actionState.success && (
-          <div className="text-success bg-success-subtle border-success rounded-md border p-2 text-sm">
-            Successfully logged in
-          </div>
-        )}
-
         {/* Email field */}
         <FormField id="email" label="Email" errorMessage={errorMessages.email}>
           <FormInput
@@ -106,6 +92,20 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
         >
           Forgot password?
         </button>
+
+        {/* General error */}
+        {actionState.errors?.general && (
+          <div className="text-error bg-error-subtle border-error rounded-md border p-2 text-center text-sm">
+            {actionState.errors?.general}
+          </div>
+        )}
+
+        {/* Success */}
+        {actionState.success && (
+          <div className="text-success bg-success-subtle border-success rounded-md border p-2 text-center text-sm">
+            Successfully logged in
+          </div>
+        )}
 
         {/* Submit button */}
         <Button type="submit" className="mx-auto" isLoading={isSubmitting}>
