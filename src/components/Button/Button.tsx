@@ -2,7 +2,7 @@ import Link, { LinkProps } from "next/link";
 import { buttonStyles } from "./Button.styles";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
 
-type ButtonBaseProps = {
+type ButtonCustomProps = {
   variant?: "dark" | "light" | "primary" | "secondary";
   ariaLabel?: string;
   isLoading?: boolean;
@@ -10,12 +10,12 @@ type ButtonBaseProps = {
   children: React.ReactNode;
 };
 
-type ButtonAsLinkProps = ButtonBaseProps &
+type ButtonAsLinkProps = ButtonCustomProps &
   LinkProps & {
     as: "a";
   };
 
-type ButtonAsButtonProps = ButtonBaseProps &
+type ButtonAsButtonProps = ButtonCustomProps &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     as?: "button";
   };

@@ -1,7 +1,7 @@
 import {
   emailValidation,
   passwordValidation,
-} from "@/lib/utils/schemaValidation";
+} from "@/lib/types/validation.types";
 import { z } from "zod";
 
 export const loginValidationSchema = z.object({

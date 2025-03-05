@@ -7,15 +7,30 @@ import {
 import findUserByEmail from "@/db/utils/functions/findUserByEmail";
 import { verifyHashedPassword } from "@/lib/utils/functions/hashPassword";
 
-export async function logUser(formData: FormData) {
-  const form = Object.fromEntries(formData.entries()) as LoginFormData;
+export type LogUserState = {
+  formData?: LoginFormData;
+  errors?: {
+    email?: string[] | undefined;
+    password?: string[] | undefined;
+    general?: string;
+  };
+  success?: boolean;
+};
+
+export async function logUser(
+  _: LogUserState,
+  data: FormData,
+): Promise<LogUserState> {
+  const formData = Object.fromEntries(data.entries()) as LoginFormData;
 
   // validate the form data
-  const parsedForm = loginValidationSchema.safeParse(form);
+  const parsedForm = loginValidationSchema.safeParse(formData);
+
+  console.log({ parsedForm });
 
   if (!parsedForm.success) {
     return {
-      formData: form,
+      formData,
       errors: parsedForm.error.flatten().fieldErrors,
     };
   }
@@ -25,8 +40,8 @@ export async function logUser(formData: FormData) {
 
   if (!user) {
     return {
-      formData: form,
-      errors: "Invalid email or password",
+      formData,
+      errors: { general: "Invalid email or password" },
     };
   }
 
@@ -38,10 +53,12 @@ export async function logUser(formData: FormData) {
 
   if (!passwordMatch) {
     return {
-      formData: form,
-      errors: "Invalid email or password",
+      formData,
+      errors: { general: "Invalid email or password" },
     };
   }
 
-  console.log({ passwordMatch });
+  return {
+    success: true,
+  };
 }

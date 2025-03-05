@@ -14,7 +14,11 @@ function FormField({ id, label, errorMessage, children }: FormFieldProps) {
 
       <div>{children}</div>
 
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && (
+        <div role="alert" className="text-error mt-2 text-sm">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,31 +1,32 @@
-type FormInputProps = {
+import { forwardRef, InputHTMLAttributes } from "react";
+
+type FormInputCustomProps = {
   id: string;
-  name: string;
-  placeholder: string;
-  type?: "text" | "email" | "password";
-  required?: boolean;
-  autocomplete?: string;
+  hasErrors?: string;
 };
 
-function FormInput({
-  id,
-  name,
-  placeholder,
-  type = "text",
-  required,
-  autocomplete,
-}: FormInputProps) {
-  return (
-    <input
-      className="border-surface-strong w-full rounded-md border p-2"
-      id={id}
-      name={name}
-      placeholder={placeholder}
-      type={type}
-      required={required}
-      autoComplete={autocomplete}
-    />
-  );
-}
+type FormInputProps = InputHTMLAttributes<HTMLInputElement> &
+  FormInputCustomProps;
+
+/**
+ * Using forwardRef to be able to use React Hook Form's register() directly on it
+ */
+const FormInput = forwardRef(
+  (
+    { id, type = "text", hasErrors, ...rest }: FormInputProps,
+    ref: React.Ref<HTMLInputElement>,
+  ) => {
+    return (
+      <input
+        ref={ref}
+        className={`w-full rounded-md border p-2 ${hasErrors ? "border-error" : "border-surface-strong"}`}
+        id={id}
+        type={type}
+        aria-invalid={hasErrors && hasErrors.length > 0 ? "true" : "false"}
+        {...rest}
+      />
+    );
+  },
+);
 
 export default FormInput;

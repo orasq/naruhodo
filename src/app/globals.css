@@ -22,6 +22,12 @@
   --color-surface-intense: var(--surface-intense);
   --color-surface-deep: var(--surface-deep);
 
+  --color-error-subtle: var(--error-color-subtle);
+  --color-error: var(--error-color);
+
+  --color-success-subtle: var(--success-color-subtle);
+  --color-success: var(--success-color);
+
   --color-background: var(--bg-color);
   --color-backdrop: var(--backdrop-color);
 
@@ -113,6 +119,12 @@
     --surface-strong: #cac9c4;
     --surface-intense: #bebcb8;
     --surface-deep: #483e2b;
+
+    --error-color-subtle: #fae6ea;
+    --error-color: #dd1c49;
+
+    --success-color-subtle: #ebf9e7;
+    --success-color: #49a32b;
 
     --copy-color-subtle: #6a6254;
     --copy-color-soft: #59503f;

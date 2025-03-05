@@ -11,15 +11,15 @@ import { resend } from "@/emails";
 import { EmailTemplate } from "@/emails/templates/EmailTemplate";
 import { hashPassword } from "@/lib/utils/functions/hashPassword";
 
-export async function createUser(formData: FormData) {
-  const form = Object.fromEntries(formData.entries()) as RegisterFormData;
+export async function createUser(data: FormData) {
+  const formData = Object.fromEntries(data.entries()) as RegisterFormData;
 
   // validate the form data
-  const parsedForm = registerValidationSchema.safeParse(form);
+  const parsedForm = registerValidationSchema.safeParse(formData);
 
   if (!parsedForm.success) {
     return {
-      formData: form,
+      formData,
       errors: parsedForm.error.flatten().fieldErrors,
     };
   }
@@ -30,7 +30,7 @@ export async function createUser(formData: FormData) {
 
   if (user) {
     return {
-      formData: form,
+      formData,
       errors: "This email is already in use",
     };
   }
@@ -45,7 +45,7 @@ export async function createUser(formData: FormData) {
   });
 
   // sens confirmation email
-  const { data, error } = await resend.emails.send({
+  const { data: resendData, error } = await resend.emails.send({
     from: "Naruhodo <onboarding@naruhodo.app>",
     to: [emailAddress],
     subject: "Hello world",
@@ -55,6 +55,6 @@ export async function createUser(formData: FormData) {
   if (error) {
     console.log({ error });
   } else {
-    console.log({ data });
+    console.log({ resendData });
   }
 }

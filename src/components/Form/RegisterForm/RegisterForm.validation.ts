@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   emailValidation,
   passwordValidation,
-} from "@/lib/utils/schemaValidation";
+} from "@/lib/types/validation.types";
 
 export const registerValidationSchema = z
   .object({
