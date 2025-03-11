@@ -20,17 +20,19 @@ export const metadata: Metadata = {
   description: "...",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+
   // get initial theme
-  const savedTheme = cookies().get(THEME_COOKIE_KEY);
+  const savedTheme = cookieStore.get(THEME_COOKIE_KEY);
   const initialTheme = (savedTheme?.value as ThemeMode) ?? "light";
 
   // get initial font size
-  const savedFontSize = cookies().get(BOOK_FONT_SIZE_COOKIE_VALUE);
+  const savedFontSize = cookieStore.get(BOOK_FONT_SIZE_COOKIE_VALUE);
   const initialFontSize = (savedFontSize?.value as BookFontSize) || "sm";
 
   return (

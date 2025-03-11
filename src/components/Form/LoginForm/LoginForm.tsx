@@ -1,11 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { logUser } from "@/actions/users/logUser";
 import { Button } from "@/components/Button";
 import { sleep } from "@/lib/utils/functions/sleep";
-import { useRef } from "react";
-import { useFormState } from "react-dom";
+import { useActionState, useRef } from "react";
 import FormField from "../FormField/FormField";
 import { FormInput } from "../FormInput";
 import {
@@ -20,7 +19,7 @@ type LoginFormProps = {
 function LoginForm({ setVisibleForm }: LoginFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [actionState, submitAction] = useFormState(logUser, {
+  const [actionState, submitAction] = useActionState(logUser, {
     formData: { email: "", password: "" },
     errors: {},
   });

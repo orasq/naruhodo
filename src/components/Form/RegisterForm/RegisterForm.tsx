@@ -1,17 +1,16 @@
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useActionState, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { createUser } from "@/actions/users/createUser";
+import { Button } from "@/components/Button";
+import { sleep } from "@/lib/utils/functions/sleep";
 import FormField from "../FormField/FormField";
 import { FormInput } from "../FormInput";
-import { Button } from "@/components/Button";
 import {
   type RegisterFormData,
   registerValidationSchema,
 } from "./RegisterForm.validation";
-import { useFormState } from "react-dom";
-import { sleep } from "@/lib/utils/functions/sleep";
 
 type RegisterFormProps = {
   setVisibleForm: (value: "login") => void;
@@ -20,7 +19,7 @@ type RegisterFormProps = {
 function RegisterForm({ setVisibleForm }: RegisterFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [actionState, submitAction] = useFormState(createUser, {
+  const [actionState, submitAction] = useActionState(createUser, {
     formData: { email: "", password: "", confirmPassword: "" },
     errors: {},
   });

@@ -7,16 +7,17 @@ import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
 import { cache } from "react";
 
 type BookProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 const getBook = cache(async (slug: string) => {
   return allBooks.find((book) => book._meta.path === slug);
 });
 
-export async function generateMetadata({ params }: BookProps) {
+export async function generateMetadata(props: BookProps) {
+  const params = await props.params;
   const book = await getBook(params.slug);
 
   return {
@@ -30,7 +31,8 @@ export async function generateStaticParams() {
   }));
 }
 
-async function Book({ params }: BookProps) {
+async function Book(props: BookProps) {
+  const params = await props.params;
   const book = await getBook(params.slug);
 
   if (!book) notFound();
@@ -47,7 +49,9 @@ async function Book({ params }: BookProps) {
     .split("\n")
     .filter((paragraph) => paragraph.length > 0);
 
-  const savedFontSize = cookies().get(BOOK_FONT_SIZE_COOKIE_VALUE);
+  const cookieStore = await cookies();
+
+  const savedFontSize = cookieStore.get(BOOK_FONT_SIZE_COOKIE_VALUE);
   const initialFontSize = (savedFontSize?.value as BookFontSize) || "md";
 
   return (
