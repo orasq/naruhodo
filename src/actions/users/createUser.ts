@@ -5,7 +5,7 @@ import {
   registerValidationSchema,
 } from "@/components/Form/RegisterForm/RegisterForm.validation";
 import { db } from "@/db";
-import { users } from "@/db/schema/users";
+import { activeToken, users } from "@/db/schema/users";
 import findUserByEmail from "@/db/utils/functions/findUserByEmail";
 import { resend } from "@/emails";
 import { EmailTemplate } from "@/emails/templates/EmailTemplate";
@@ -50,20 +50,29 @@ export async function createUser(
   }
 
   // insert the user into the database
+  const userId = crypto.randomUUID();
   const hashedPassword = await hashPassword(parsedForm.data.password);
 
   await db.insert(users).values({
-    id: crypto.randomUUID(),
+    id: userId,
     email: emailAddress,
     password: hashedPassword,
+  });
+
+  // create validation token
+  const token = `${crypto.randomUUID()}`.replace(/-/g, "");
+
+  await db.insert(activeToken).values({
+    token,
+    userId,
   });
 
   // sens confirmation email
   const { data: resendData, error } = await resend.emails.send({
     from: "Naruhodo <onboarding@naruhodo.app>",
     to: [emailAddress],
-    subject: "Hello world",
-    react: EmailTemplate({ firstName: "John" }),
+    subject: "Please activate your account",
+    react: EmailTemplate({ emailAddress, token }),
   });
 
   if (error) {

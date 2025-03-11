@@ -45,6 +45,17 @@ export async function logUser(
     };
   }
 
+  // check if account has been activated
+  if (!user.active) {
+    return {
+      formData,
+      errors: {
+        general:
+          "Your account has not been activated yet. Please check your mailbox",
+      },
+    };
+  }
+
   // check if the password is correct
   const passwordMatch = await verifyHashedPassword(
     user.password,

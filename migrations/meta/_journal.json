@@ -15,6 +15,13 @@
       "when": 1740840410542,
       "tag": "0001_tan_menace",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1741675802762,
+      "tag": "0002_outstanding_snowbird",
+      "breakpoints": true
     }
   ]
 }
