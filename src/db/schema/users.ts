@@ -33,3 +33,15 @@ export const activeToken = sqliteTable("activateToken", {
     .notNull()
     .references(() => users.id),
 });
+
+export const passwordResetToken = sqliteTable("passwordResetToken", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  token: text("token").notNull().unique(),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  resetAt: integer({ mode: "timestamp" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+});

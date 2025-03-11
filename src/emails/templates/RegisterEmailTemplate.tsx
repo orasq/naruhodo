@@ -1,11 +1,12 @@
 import * as React from "react";
 
-interface EmailTemplateProps {
-  emailAddress: string;
+interface RegisterEmailTemplateProps {
   token: string;
 }
 
-export const EmailTemplate = ({ emailAddress, token }: EmailTemplateProps) => (
+export const RegisterEmailTemplate = ({
+  token,
+}: RegisterEmailTemplateProps) => (
   <div>
     <p>
       Please activate your account by clicking this link:{" "}

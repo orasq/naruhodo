@@ -8,7 +8,8 @@ import { db } from "@/db";
 import { activeToken, users } from "@/db/schema/users";
 import findUserByEmail from "@/db/utils/functions/findUserByEmail";
 import { resend } from "@/emails";
-import { EmailTemplate } from "@/emails/templates/EmailTemplate";
+import { RegisterEmailTemplate } from "@/emails/templates/RegisterEmailTemplate";
+import generateToken from "@/lib/utils/functions/generateToken";
 import { hashPassword } from "@/lib/utils/functions/hashPassword";
 
 type CreateUserState = {
@@ -60,19 +61,19 @@ export async function createUser(
   });
 
   // create validation token
-  const token = `${crypto.randomUUID()}`.replace(/-/g, "");
+  const token = generateToken();
 
   await db.insert(activeToken).values({
     token,
     userId,
   });
 
-  // sens confirmation email
+  // send confirmation email
   const { data: resendData, error } = await resend.emails.send({
-    from: "Naruhodo <onboarding@naruhodo.app>",
+    from: "Naruhodo <account@naruhodo.app>",
     to: [emailAddress],
     subject: "Please activate your account",
-    react: EmailTemplate({ emailAddress, token }),
+    react: RegisterEmailTemplate({ token }),
   });
 
   if (error) {

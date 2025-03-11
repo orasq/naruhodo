@@ -1,75 +1,124 @@
+"use client";
+
+import { resetPassword } from "@/actions/users/resetPassword";
 import { Button } from "@/components/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { startTransition, useActionState, useRef } from "react";
+import { useForm } from "react-hook-form";
 import FormField from "../FormField/FormField";
 import { FormInput } from "../FormInput";
-import { useState } from "react";
+import {
+  ResetPasswordFormData,
+  resetPasswordValidationSchema,
+} from "./ResetPasswordForm.validation";
 
 type ResetPasswordFormProps = {
-  setVisibleForm: (value: "login") => void;
+  token: string;
 };
 
-function ResetPasswordForm({ setVisibleForm }: ResetPasswordFormProps) {
-  const [showConfirmation, setShowConfirmation] = useState(false);
+function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [actionState, submitAction, isLoading] = useActionState(resetPassword, {
+    formData: {
+      password: "",
+      confirmPassword: "",
+      token: "",
+    },
+    errors: {},
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    resetField,
+  } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordValidationSchema),
+  });
+
+  const errorMessages = {
+    password: errors.password?.message || actionState.errors?.password,
+    confirmPassword:
+      errors.confirmPassword?.message || actionState.errors?.confirmPassword,
+  };
+
+  const onSubmit = async () => {
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
+
+    startTransition(() => {
+      submitAction(formData);
+    });
+
+    resetField("password");
+    resetField("confirmPassword");
+  };
 
   return (
     <>
-      {!showConfirmation && (
-        <>
-          <form className="space-y-4">
-            {/* Email field */}
-            <FormField id="email" label="Email">
-              <FormInput
-                id="email"
-                name="email"
-                type="email"
-                autocomplete="email"
-                required={true}
-                placeholder="Email address"
-              />
-            </FormField>
+      <form
+        ref={formRef}
+        action={submitAction}
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4 text-left"
+      >
+        {/* Password field */}
+        <FormField
+          id="password"
+          label="Password"
+          errorMessage={errorMessages.password}
+        >
+          <FormInput
+            {...register("password")}
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="password"
+            placeholder="Password"
+            hasErrors={errorMessages.password}
+          />
+        </FormField>
 
-            {/* Submit button */}
-            <Button type="submit" className="mx-auto">
-              Rest my password
-            </Button>
-          </form>
+        {/* Confirm password field */}
+        <FormField
+          id="password"
+          label="Confirm password"
+          errorMessage={errorMessages.confirmPassword}
+        >
+          <FormInput
+            {...register("confirmPassword")}
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            autoComplete="password"
+            placeholder="Password"
+            hasErrors={errorMessages.confirmPassword}
+          />
+        </FormField>
 
-          {/* Bottom CTA */}
-          <div className="mt-5 border-t pt-4 text-center text-sm">
-            Have an account?{" "}
-            <button
-              className="cursor-pointer underline"
-              onClick={() => setVisibleForm("login")}
-            >
-              Log in here
-            </button>
+        <input type="hidden" name="token" defaultValue={token} />
+
+        {/* General error */}
+        {actionState.errors?.general && (
+          <div className="text-error bg-error-subtle border-error rounded-md border p-2 text-center text-sm">
+            {actionState.errors?.general}
           </div>
-        </>
-      )}
+        )}
 
-      {/* Confirmation */}
-      {showConfirmation && (
-        <div className="text-center text-sm">
-          <h3 className="mb-3 text-lg font-semibold">
-            Password reset email sent
-          </h3>
-          <p>
-            A password reset link has been sent to your email address.{" "}
-            <strong>Please check your inbox</strong> and follow the instructions
-            to reset your password.
-          </p>
-
-          {/* Bottom CTA */}
-          <div className="mt-5 border-t pt-4 text-center">
-            Already reset your password?{" "}
-            <button
-              className="cursor-pointer underline"
-              onClick={() => setVisibleForm("login")}
-            >
-              Log in here
-            </button>
+        {/* Success */}
+        {actionState.success && (
+          <div className="text-success bg-success-subtle border-success rounded-md border p-2 text-center text-sm">
+            Your password has successfully been changed.
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Submit button */}
+        <Button type="submit" className="mx-auto mt-8" isLoading={isLoading}>
+          Define a new password
+        </Button>
+      </form>
     </>
   );
 }

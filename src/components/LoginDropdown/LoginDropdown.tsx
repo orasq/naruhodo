@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button } from "../Button";
-import { Modal } from "../Modal";
-import FormField from "../Form/FormField/FormField";
-import { FormInput } from "../Form/FormInput";
-import type { LoginDropdownMode } from "./LoginDropdown.types";
-import { createUser } from "@/actions/users/createUser";
-import { RegisterForm } from "../Form/RegisterForm";
+import { ForgotPasswordForm } from "../Form/ForgotPasswordForm";
 import { LoginForm } from "../Form/LoginForm";
-import { ResetPasswordForm } from "../Form/ResetPasswordForm";
+import { RegisterForm } from "../Form/RegisterForm";
+import { Modal } from "../Modal";
+import type { LoginDropdownMode } from "./LoginDropdown.types";
 
 function LoginDropdown() {
   const [visibleForm, setVisibleForm] = useState<LoginDropdownMode>("login");
@@ -65,9 +62,9 @@ function LoginDropdown() {
               <RegisterForm setVisibleForm={setVisibleForm} />
             )}
 
-            {/* Reset password form */}
+            {/* Forgot password form */}
             {visibleForm === "forgot-password" && (
-              <ResetPasswordForm setVisibleForm={setVisibleForm} />
+              <ForgotPasswordForm setVisibleForm={setVisibleForm} />
             )}
           </div>
         </Modal>

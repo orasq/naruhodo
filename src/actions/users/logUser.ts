@@ -26,8 +26,6 @@ export async function logUser(
   // validate the form data
   const parsedForm = loginValidationSchema.safeParse(formData);
 
-  console.log({ parsedForm });
-
   if (!parsedForm.success) {
     return {
       formData,
