@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { logUser } from "@/actions/users/logUser";
 import { Button } from "@/components/Button";
 import { sleep } from "@/lib/utils/functions/sleep";
-import { useActionState, useRef } from "react";
+import { startTransition, useActionState, useRef } from "react";
 import FormField from "../FormField/FormField";
 import { FormInput } from "../FormInput";
 import {
@@ -19,7 +19,7 @@ type LoginFormProps = {
 function LoginForm({ setVisibleForm }: LoginFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [actionState, submitAction] = useActionState(logUser, {
+  const [actionState, submitAction, isLoading] = useActionState(logUser, {
     formData: { email: "", password: "" },
     errors: {},
   });
@@ -27,7 +27,7 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     resetField,
   } = useForm<LoginFormData>({ resolver: zodResolver(loginValidationSchema) });
 
@@ -39,10 +39,10 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
   const onSubmit = async () => {
     if (!formRef.current) return;
 
-    await sleep(500);
-
     const formData = new FormData(formRef.current);
-    submitAction(formData);
+    startTransition(() => {
+      submitAction(formData);
+    });
 
     resetField("password");
   };
@@ -107,7 +107,7 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
         )}
 
         {/* Submit button */}
-        <Button type="submit" className="mx-auto" isLoading={isSubmitting}>
+        <Button type="submit" className="mx-auto" isLoading={isLoading}>
           Log in to your account
         </Button>
       </form>

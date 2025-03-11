@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState, useRef, useState } from "react";
+import { startTransition, useActionState, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { createUser } from "@/actions/users/createUser";
@@ -19,16 +19,15 @@ type RegisterFormProps = {
 function RegisterForm({ setVisibleForm }: RegisterFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [actionState, submitAction] = useActionState(createUser, {
+  const [actionState, submitAction, isPending] = useActionState(createUser, {
     formData: { email: "", password: "", confirmPassword: "" },
     errors: {},
   });
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerValidationSchema),
   });
@@ -43,15 +42,18 @@ function RegisterForm({ setVisibleForm }: RegisterFormProps) {
   const onSubmit = async () => {
     if (!formRef.current) return;
 
-    await sleep(500);
+    // await sleep(500);
 
     const formData = new FormData(formRef.current);
-    submitAction(formData);
+
+    startTransition(() => {
+      submitAction(formData);
+    });
   };
 
   return (
     <>
-      {!showConfirmation && (
+      {!actionState.success && (
         <>
           <form
             ref={formRef}
@@ -111,7 +113,7 @@ function RegisterForm({ setVisibleForm }: RegisterFormProps) {
             </FormField>
 
             {/* Submit button */}
-            <Button type="submit" className="mx-auto" isLoading={isSubmitting}>
+            <Button type="submit" className="mx-auto" isLoading={isPending}>
               Create an account
             </Button>
           </form>
@@ -130,10 +132,10 @@ function RegisterForm({ setVisibleForm }: RegisterFormProps) {
       )}
 
       {/* Confirmation */}
-      {showConfirmation && (
+      {actionState.success && (
         <div className="text-center text-sm">
           <h3 className="mb-3 text-lg font-semibold">
-            Registration successful!
+            Thank you for signing in
           </h3>
           <p>
             A confirmation email has been sent to your address.{" "}
