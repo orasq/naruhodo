@@ -155,6 +155,12 @@
     --surface-intense: #646f8d;
     --surface-deep: #d7dceb;
 
+    --error-color-subtle: #35282c;
+    --error-color: #c2687d;
+
+    --success-color-subtle: #283529;
+    --success-color: #6b9e5b;
+
     --copy-color-subtle: #a3aabf;
     --copy-color-soft: #bdc2d1;
     --copy-color: #d7dceb;
