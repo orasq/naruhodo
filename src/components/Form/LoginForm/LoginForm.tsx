@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form";
 
 import { logUser } from "@/actions/users/logUser";
 import { Button } from "@/components/Button";
-import { sleep } from "@/lib/utils/functions/sleep";
 import { startTransition, useActionState, useRef } from "react";
 import FormField from "../FormField/FormField";
 import { FormInput } from "../FormInput";
+import { FormNotification } from "../FormNotification";
 import {
   type LoginFormData,
   loginValidationSchema,
@@ -94,16 +94,15 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
 
         {/* General error */}
         {actionState.errors?.general && (
-          <div className="text-error bg-error-subtle border-error rounded-md border p-2 text-center text-sm">
-            {actionState.errors?.general}
-          </div>
+          <FormNotification
+            type="error"
+            message={actionState.errors?.general}
+          />
         )}
 
         {/* Success */}
         {actionState.success && (
-          <div className="text-success bg-success-subtle border-success rounded-md border p-2 text-center text-sm">
-            Successfully logged in
-          </div>
+          <FormNotification type="success" message="Successfully logged in" />
         )}
 
         {/* Submit button */}

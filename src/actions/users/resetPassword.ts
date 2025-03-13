@@ -48,7 +48,12 @@ export async function resetPassword(
     .limit(1);
 
   if (resetToken.length === 0) {
-    return { errors: { general: "Invalid token" } };
+    return {
+      errors: {
+        general:
+          "This password change request is no longer valid. Please submit a new password reset request.",
+      },
+    };
   }
 
   // create transaction to update both the user's password and the resetToken validity

@@ -11,6 +11,7 @@ import {
   ResetPasswordFormData,
   resetPasswordValidationSchema,
 } from "./ResetPasswordForm.validation";
+import { FormNotification } from "../FormNotification";
 
 type ResetPasswordFormProps = {
   token: string;
@@ -102,16 +103,18 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
         {/* General error */}
         {actionState.errors?.general && (
-          <div className="text-error bg-error-subtle border-error rounded-md border p-2 text-center text-sm">
-            {actionState.errors?.general}
-          </div>
+          <FormNotification
+            type="error"
+            message={actionState.errors?.general}
+          />
         )}
 
         {/* Success */}
         {actionState.success && (
-          <div className="text-success bg-success-subtle border-success rounded-md border p-2 text-center text-sm">
-            Your password has successfully been changed.
-          </div>
+          <FormNotification
+            type="success"
+            message="Your password has successfully been changed."
+          />
         )}
 
         {/* Submit button */}
