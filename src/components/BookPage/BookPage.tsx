@@ -34,7 +34,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
 
   return (
     <LoadingParagraphsProvider>
-      <article className="relative mx-auto w-full max-w-[var(--text-max-width)] text-book-fs">
+      <article className="text-book-fs relative mx-auto w-full max-w-[var(--text-max-width)]">
         {/* Book info */}
         <BookPageHeader bookInfo={bookInfo} />
 
@@ -45,7 +45,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
         />
 
         {/* Toolbox */}
-        <div className="pointer-events-none fixed bottom-0 left-1/2 z-10 mx-auto w-full max-w-toolbox-wrapper -translate-x-1/2">
+        <div className="max-w-toolbox-wrapper pointer-events-none fixed bottom-0 left-1/2 z-10 mx-auto w-full -translate-x-1/2">
           <ToolBox
             toggleFontSize={toggleFontSize}
             toggleBookmarkMode={setIsBookmarkModeActive}
