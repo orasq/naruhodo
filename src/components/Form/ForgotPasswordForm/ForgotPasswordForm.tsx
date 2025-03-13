@@ -55,7 +55,6 @@ function ForgotPasswordForm({ setVisibleForm }: ForgotPasswordFormProps) {
         <>
           <form
             ref={formRef}
-            action={submitAction}
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
           >
@@ -75,7 +74,7 @@ function ForgotPasswordForm({ setVisibleForm }: ForgotPasswordFormProps) {
 
             {/* Submit button */}
             <Button type="submit" className="mx-auto" isLoading={isLoading}>
-              Rest my password
+              Reset my password
             </Button>
           </form>
 

@@ -28,10 +28,27 @@ function LoginDropdown() {
     }
   };
 
+  const panelTitle = () => {
+    switch (visibleForm) {
+      case "login":
+        return "Connect to your account";
+      case "register":
+        return "Create an account";
+      case "forgot-password":
+        return "Reset your password";
+
+      default:
+        return "Connect to your account";
+    }
+  };
+
   return (
     <div className="relative">
       <Button
         className={isOpen ? "relative isolate z-20" : ""}
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-controls="login-dropdown-panel"
         onClick={() => setIsOpen(!isOpen)}
       >
         {buttonLabel()}
@@ -47,10 +64,11 @@ function LoginDropdown() {
           <Modal.Backdrop />
 
           {/* Panel */}
-          <div className="bg-surface-base relative min-w-80 overflow-hidden rounded-xl p-5 shadow-sm">
-            <Modal.Title className="sr-only">
-              {visibleForm ? "Connect to your account" : "Create an account"}
-            </Modal.Title>
+          <div
+            id="login-dropdown-panel"
+            className="bg-surface-base relative min-w-80 overflow-hidden rounded-xl p-5 shadow-sm"
+          >
+            <Modal.Title className="sr-only">{panelTitle()}</Modal.Title>
 
             {/* Login form */}
             {visibleForm === "login" && (

@@ -51,7 +51,6 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
     <>
       <form
         ref={formRef}
-        action={submitAction}
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-4"
       >

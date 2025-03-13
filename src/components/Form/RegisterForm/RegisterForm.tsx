@@ -58,7 +58,6 @@ function RegisterForm({ setVisibleForm }: RegisterFormProps) {
           <form
             ref={formRef}
             className="space-y-4"
-            action={submitAction}
             onSubmit={handleSubmit(onSubmit)}
           >
             {/* Email field */}
