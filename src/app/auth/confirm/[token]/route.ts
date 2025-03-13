@@ -1,8 +1,7 @@
 import { db } from "@/db";
 import { activeToken, users } from "@/db/schema/users";
 import { and, eq, isNull } from "drizzle-orm";
-import { redirect } from "next/navigation";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
@@ -18,20 +17,29 @@ export async function GET(
     .where(and(eq(activeToken.token, token), isNull(activeToken.activatedAt)))
     .limit(1);
 
-  // TODO - better handling of this
-  if (!user) throw new Error("Invalid token");
+  if (!user) new NextResponse("Invalid token", { status: 404 });
 
-  // update user to mark it as "active"
-  await db
-    .update(users)
-    .set({ active: true })
-    .where(eq(users.id, user[0].users.id));
+  // create transaction to update both the user's active status and the activeToken validity
+  // if one of the two fails, we don't want the other to go through either
+  try {
+    await db.transaction(async (tx) => {
+      // update user to mark it as "active"
+      await tx
+        .update(users)
+        .set({ active: true })
+        .where(eq(users.id, user[0].users.id));
 
-  // update token to mark it as "used"
-  await db
-    .update(activeToken)
-    .set({ activatedAt: new Date() })
-    .where(eq(activeToken.token, token));
+      // update token to mark it as "used"
+      await tx
+        .update(activeToken)
+        .set({ activatedAt: new Date() })
+        .where(eq(activeToken.token, token));
+    });
 
-  redirect("/auth/activated");
+    return NextResponse.redirect(new URL("/auth/activated", request.url));
+  } catch {
+    return new NextResponse("An error occurred. Please try again later.", {
+      status: 500,
+    });
+  }
 }
