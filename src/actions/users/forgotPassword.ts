@@ -8,7 +8,7 @@ import { db } from "@/db";
 import { passwordResetToken } from "@/db/schema/users";
 import findUserByEmail from "@/db/utils/functions/findUserByEmail";
 import { resend } from "@/emails";
-import { ResetPasswordEmailTemplate } from "@/emails/templates/ResetPasswordEmailTemplate";
+import { AuthEmailTemplate } from "@/emails/templates/AuthEmailTemplate";
 import generateToken from "@/lib/utils/functions/generateToken";
 
 type ForgotPasswordState = {
@@ -60,7 +60,17 @@ export async function forgotPassword(
     from: "Naruhodo <account@naruhodo.app>",
     to: [emailAddress],
     subject: "Reset your password",
-    react: ResetPasswordEmailTemplate({ token }),
+    react: AuthEmailTemplate({
+      titleText: "Reset your password",
+      mainText:
+        "Looks like you lost your password.<br />Click on the button below to change your password.",
+      button: {
+        label: "Change my password",
+        href: `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password/${token}`,
+      },
+      bottomText:
+        "If you didn't ask to reset your password, please ignore this email.",
+    }),
   });
 
   if (error) {

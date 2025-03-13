@@ -8,7 +8,7 @@ import { db } from "@/db";
 import { activeToken, users } from "@/db/schema/users";
 import findUserByEmail from "@/db/utils/functions/findUserByEmail";
 import { resend } from "@/emails";
-import { RegisterEmailTemplate } from "@/emails/templates/RegisterEmailTemplate";
+import { AuthEmailTemplate } from "@/emails/templates/AuthEmailTemplate";
 import generateToken from "@/lib/utils/functions/generateToken";
 import { hashPassword } from "@/lib/utils/functions/hashPassword";
 
@@ -72,8 +72,17 @@ export async function createUser(
   const { data: resendData, error } = await resend.emails.send({
     from: "Naruhodo <account@naruhodo.app>",
     to: [emailAddress],
-    subject: "Please activate your account",
-    react: RegisterEmailTemplate({ token }),
+    subject: "Verify your email address",
+    react: AuthEmailTemplate({
+      titleText: "Verify your email address",
+      mainText: `In order to start using your account, you need to confirm your email.`,
+      button: {
+        label: "Confirm your email address",
+        href: `${process.env.NEXT_PUBLIC_APP_URL}/auth/confirm/${token}`,
+      },
+      bottomText:
+        "If you didn't sign up for this account, please ignore this email.",
+    }),
   });
 
   if (error) {
