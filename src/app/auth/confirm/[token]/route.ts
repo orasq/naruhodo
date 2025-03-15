@@ -36,7 +36,10 @@ export async function GET(
         .where(eq(activeToken.token, token));
     });
 
-    const redirectUrl = new URL("/auth/activated", request.url);
+    const redirectUrl = new URL(
+      `${process.env.NEXT_PUBLIC_APP_URL}/auth/activated`,
+      request.url,
+    );
     console.log({ redirectUrl });
 
     return NextResponse.redirect(redirectUrl);
