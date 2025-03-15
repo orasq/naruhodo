@@ -6,6 +6,8 @@ import {
 } from "@/components/Form/LoginForm/LoginForm.validation";
 import findUserByEmail from "@/db/utils/functions/findUserByEmail";
 import { verifyHashedPassword } from "@/lib/utils/functions/hashPassword";
+import { createSession, deleteSession } from "@/lib/utils/functions/session";
+import { redirect } from "next/navigation";
 
 type LogUserState = {
   formData?: LoginFormData;
@@ -67,7 +69,12 @@ export async function logUser(
     };
   }
 
-  return {
-    success: true,
-  };
+  // create session and redirect to dashboard
+  await createSession(user.id);
+  redirect("/dashboard");
+}
+
+export async function logUserOut() {
+  await deleteSession();
+  redirect("/");
 }

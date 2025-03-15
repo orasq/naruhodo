@@ -7,7 +7,7 @@ import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
 import useToggle from "@/hooks/useToggle";
 import type { BookFontSize, BookInfo } from "@/lib/types/types";
-import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
+import { BOOK_FONT_SIZE_COOKIE_KEY } from "@/lib/utils/constants";
 import { LoadingParagraphsProvider } from "@/contexts/LoadingParagraphsContext";
 
 type BookPageProps = {
@@ -29,7 +29,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
   useEffect(() => {
     document.documentElement.setAttribute("data-font-size", fontSize);
 
-    Cookies.set(BOOK_FONT_SIZE_COOKIE_VALUE, fontSize, { expires: 365 });
+    Cookies.set(BOOK_FONT_SIZE_COOKIE_KEY, fontSize, { expires: 365 });
   }, [fontSize]);
 
   return (

@@ -3,7 +3,7 @@ import { allBooks } from "content-collections";
 import { notFound } from "next/navigation";
 import { BookFontSize } from "@/lib/types/types";
 import { cookies } from "next/headers";
-import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
+import { BOOK_FONT_SIZE_COOKIE_KEY } from "@/lib/utils/constants";
 import { cache } from "react";
 
 type BookProps = {
@@ -51,7 +51,7 @@ async function Book(props: BookProps) {
 
   const cookieStore = await cookies();
 
-  const savedFontSize = cookieStore.get(BOOK_FONT_SIZE_COOKIE_VALUE);
+  const savedFontSize = cookieStore.get(BOOK_FONT_SIZE_COOKIE_KEY);
   const initialFontSize = (savedFontSize?.value as BookFontSize) || "md";
 
   return (

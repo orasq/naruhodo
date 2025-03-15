@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { cookies } from "next/headers";
 import { BookFontSize, ThemeMode } from "@/lib/types/types";
 import {
-  BOOK_FONT_SIZE_COOKIE_VALUE,
+  BOOK_FONT_SIZE_COOKIE_KEY,
   THEME_COOKIE_KEY,
 } from "@/lib/utils/constants";
 
@@ -32,7 +32,7 @@ export default async function RootLayout({
   const initialTheme = (savedTheme?.value as ThemeMode) ?? "light";
 
   // get initial font size
-  const savedFontSize = cookieStore.get(BOOK_FONT_SIZE_COOKIE_VALUE);
+  const savedFontSize = cookieStore.get(BOOK_FONT_SIZE_COOKIE_KEY);
   const initialFontSize = (savedFontSize?.value as BookFontSize) || "sm";
 
   return (
