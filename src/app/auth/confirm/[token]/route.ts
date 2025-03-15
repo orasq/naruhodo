@@ -36,7 +36,10 @@ export async function GET(
         .where(eq(activeToken.token, token));
     });
 
-    return NextResponse.redirect(new URL("/auth/activated", request.url));
+    const redirectUrl = new URL("/auth/activated", request.url);
+    console.log({ redirectUrl });
+
+    return NextResponse.redirect(redirectUrl);
   } catch {
     return new NextResponse("An error occurred. Please try again later.", {
       status: 500,

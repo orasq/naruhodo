@@ -42,7 +42,5 @@ export async function decryptSession(sessionToken: string | undefined = "") {
     });
 
     return payload;
-  } catch {
-    console.log("Failed to verify session");
-  }
+  } catch {}
 }
