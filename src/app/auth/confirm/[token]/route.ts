@@ -40,7 +40,6 @@ export async function GET(
       `${process.env.NEXT_PUBLIC_APP_URL}/auth/activated`,
       request.url,
     );
-    console.log({ redirectUrl });
 
     return NextResponse.redirect(redirectUrl);
   } catch {
