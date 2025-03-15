@@ -68,6 +68,6 @@
   "optionalDependencies": {
     "@parcel/watcher-linux-x64-glibc": "^2.5.1",
     "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
-    "lightningcss-linux-x64-gnu": "^1.29.1"
+    "@libsql/linux-x64-gnu": "^0.4.7"
   }
 }
