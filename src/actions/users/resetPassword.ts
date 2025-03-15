@@ -58,9 +58,9 @@ export async function resetPassword(
 
   // create transaction to update both the user's password and the resetToken validity
   // if one of the two fails, we don't want the other to go through either
-  const hashedPassword = await hashPassword(formData.password);
-
   try {
+    const hashedPassword = await hashPassword(formData.password);
+
     await db.transaction(async (tx) => {
       // update user's password
       await tx

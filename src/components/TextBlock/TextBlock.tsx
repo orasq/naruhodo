@@ -60,9 +60,9 @@ function TextBlock({
     setBookmarked(isBookmarked ? null : blockId);
 
     if (isBookmarked) {
-      localStorage.removeItem(BOOKMARK_KEY(slug));
+      localStorage.removeItem(BOOKMARK_KEY(slug ?? ""));
     } else {
-      localStorage.setItem(BOOKMARK_KEY(slug), JSON.stringify(blockId));
+      localStorage.setItem(BOOKMARK_KEY(slug ?? ""), JSON.stringify(blockId));
     }
   }
 
