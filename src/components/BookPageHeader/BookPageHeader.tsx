@@ -30,7 +30,7 @@ function BookPageHeader({
         {publishedYear && <p>Published in {publishedYear}</p>}
 
         {synopsis && (
-          <p className="relative mt-5 border-t-1 border-dotted border-copy/20 pt-5 text-sm italic">
+          <p className="border-copy/20 relative mt-5 border-t-1 border-dotted pt-5 text-sm italic">
             {synopsis}
           </p>
         )}

@@ -15,6 +15,7 @@ import useToggle from "@/hooks/useToggle";
 import { toolboxButtonStyle, toolboxListStyle } from "./ToolBox.styles";
 import { FINISHED_BOOK_KEY, ICON_SIZE } from "@/lib/utils/constants";
 import { LoadingParagraphsContext } from "@/contexts/LoadingParagraphsContext";
+import LoadingIcon from "../LoadingIcon/LoadingIcon";
 
 type ToolBoxProps = {
   toggleFontSize: () => void;
@@ -51,7 +52,7 @@ function ToolBox({
   }
 
   return (
-    <div className="bg-surface-light pointer-events-auto absolute right-4 bottom-8 z-20 flex flex-col items-center justify-center rounded-xl p-1 shadow-xs">
+    <div className="bg-surface-base pointer-events-auto absolute right-4 bottom-8 z-20 flex flex-col items-center justify-center rounded-xl p-1 shadow-xs">
       <div
         id="toolList"
         className={toolboxListStyle({
@@ -105,7 +106,7 @@ function ToolBox({
       {/* Loading icon or Open/close button */}
       {isLoading ? (
         <div className={toolboxButtonStyle()}>
-          <div className="border-copy border-l-copy/10 border-t-copy/10 h-[22px] w-[22px] animate-spin rounded-full border-2 duration-100" />
+          <LoadingIcon />
         </div>
       ) : (
         <button

@@ -7,7 +7,7 @@ import { BookText } from "../BookText";
 import { ToolBox } from "../ToolBox";
 import useToggle from "@/hooks/useToggle";
 import type { BookFontSize, BookInfo } from "@/lib/types/types";
-import { BOOK_FONT_SIZE_COOKIE_VALUE } from "@/lib/utils/constants";
+import { BOOK_FONT_SIZE_COOKIE_KEY } from "@/lib/utils/constants";
 import { LoadingParagraphsProvider } from "@/contexts/LoadingParagraphsContext";
 
 type BookPageProps = {
@@ -29,12 +29,12 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
   useEffect(() => {
     document.documentElement.setAttribute("data-font-size", fontSize);
 
-    Cookies.set(BOOK_FONT_SIZE_COOKIE_VALUE, fontSize, { expires: 365 });
+    Cookies.set(BOOK_FONT_SIZE_COOKIE_KEY, fontSize, { expires: 365 });
   }, [fontSize]);
 
   return (
     <LoadingParagraphsProvider>
-      <article className="relative mx-auto w-full max-w-[var(--text-max-width)] text-book-fs">
+      <article className="text-book-fs relative mx-auto w-full max-w-[var(--text-max-width)]">
         {/* Book info */}
         <BookPageHeader bookInfo={bookInfo} />
 
@@ -45,7 +45,7 @@ function BookPage({ bookInfo, paragraphs, initialFontSize }: BookPageProps) {
         />
 
         {/* Toolbox */}
-        <div className="pointer-events-none fixed bottom-0 left-1/2 z-10 mx-auto w-full max-w-toolbox-wrapper -translate-x-1/2">
+        <div className="max-w-toolbox-wrapper pointer-events-none fixed bottom-0 left-1/2 z-10 mx-auto w-full -translate-x-1/2">
           <ToolBox
             toggleFontSize={toggleFontSize}
             toggleBookmarkMode={setIsBookmarkModeActive}

@@ -107,7 +107,7 @@ function WordTooltip({
   }, []);
 
   return (
-    <div className="absolute left-0 top-0 h-full w-full">
+    <div className="absolute top-0 left-0 h-full w-full">
       {/* Backdrop */}
       <div
         className={tooltipBackgroundStyle({
@@ -155,7 +155,7 @@ function WordTooltip({
                   {meanings.map((meaning, index) => (
                     <li
                       key={index}
-                      className="border-dotted border-copy/30 not-last:mb-3 not-last:border-b-2 not-last:pb-3"
+                      className="border-copy/30 border-dotted not-last:mb-3 not-last:border-b-2 not-last:pb-3"
                     >
                       <p className="text-xs italic opacity-50">
                         {meaning.tags}

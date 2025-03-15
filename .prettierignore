@@ -77,3 +77,4 @@ build
 
 # vercel
 **/.vercel
+migrations/

@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { cookies } from "next/headers";
 import { BookFontSize, ThemeMode } from "@/lib/types/types";
 import {
-  BOOK_FONT_SIZE_COOKIE_VALUE,
+  BOOK_FONT_SIZE_COOKIE_KEY,
   THEME_COOKIE_KEY,
 } from "@/lib/utils/constants";
 
@@ -20,17 +20,19 @@ export const metadata: Metadata = {
   description: "...",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+
   // get initial theme
-  const savedTheme = cookies().get(THEME_COOKIE_KEY);
+  const savedTheme = cookieStore.get(THEME_COOKIE_KEY);
   const initialTheme = (savedTheme?.value as ThemeMode) ?? "light";
 
   // get initial font size
-  const savedFontSize = cookies().get(BOOK_FONT_SIZE_COOKIE_VALUE);
+  const savedFontSize = cookieStore.get(BOOK_FONT_SIZE_COOKIE_KEY);
   const initialFontSize = (savedFontSize?.value as BookFontSize) || "sm";
 
   return (
@@ -40,7 +42,7 @@ export default function RootLayout({
       data-font-size={initialFontSize}
       className="max-w-full-screen overflow-x-clip"
     >
-      <body className="max-w-full-screen bg-background text-copy relative overflow-x-clip px-6">
+      <body className="max-w-full-screen bg-background text-copy transition-background relative overflow-x-clip px-6 duration-200">
         <Header initialTheme={initialTheme} />
         <main>{children}</main>
       </body>

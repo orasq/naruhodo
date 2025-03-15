@@ -12,12 +12,12 @@ export const textBlockStyle = tv({
 
 export const bookmarkZoneStyle = tv({
   base: [
-    "motion-safe:background absolute -inset-3 z-10 rounded-xl border-1 border-dashed border-copy/40 duration-100",
-    "hover:bg-surface-light/30",
+    "motion-safe:background border-copy/40 absolute -inset-3 z-10 rounded-xl border-1 border-dashed duration-100",
+    "hover:bg-surface-base/30",
   ],
   variants: {
     isBookmarked: {
-      true: "border-2 border-solid border-copy",
+      true: "border-copy border-2 border-solid",
     },
   },
 });

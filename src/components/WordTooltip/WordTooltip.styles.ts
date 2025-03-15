@@ -1,7 +1,7 @@
 import { tv } from "tailwind-variants";
 
 export const tooltipBackgroundStyle = tv({
-  base: "pointer-events-none fixed inset-0 h-full w-full bg-backdrop opacity-0 transition-opacity",
+  base: "bg-backdrop pointer-events-none fixed inset-0 h-full w-full opacity-0 transition-opacity",
   variants: {
     isVisible: {
       true: "pointer-events-auto opacity-50",
@@ -14,10 +14,10 @@ export const tooltipBackgroundStyle = tv({
 
 export const tooltipPanelStyle = tv({
   base: [
-    "relative overflow-clip rounded-t-4xl bg-surface-light shadow-xs transition-[opacity,transform] duration-1000 ease-smooth",
+    "bg-surface-base ease-smooth relative overflow-clip rounded-t-4xl shadow-xs transition-[opacity,transform] duration-1000",
     "sm:rounded-xl",
-    "before:absolute before:left-0 before:top-0 before:z-10 before:h-6 before:w-full before:bg-linear-to-b before:from-surface-light before:to-surface-light/0",
-    "after:absolute after:bottom-0 after:left-0 after:h-6 after:w-full after:bg-linear-to-t after:from-surface-light after:to-surface-light/0",
+    "before:from-surface-light before:to-surface-light/0 before:absolute before:top-0 before:left-0 before:z-10 before:h-6 before:w-full before:bg-linear-to-b",
+    "after:from-surface-light after:to-surface-light/0 after:absolute after:bottom-0 after:left-0 after:h-6 after:w-full after:bg-linear-to-t",
   ],
   variants: {
     state: {
@@ -35,7 +35,7 @@ export const tooltipPanelStyle = tv({
 
 export const tooltipContentWrapperStyle = tv({
   base: [
-    "no-scrollbar max-h-96 w-full overflow-auto p-8 text-copy",
+    "no-scrollbar text-copy max-h-96 w-full overflow-auto p-8",
     "sm:max-h-72 sm:w-max sm:max-w-sm sm:p-6",
   ],
 });

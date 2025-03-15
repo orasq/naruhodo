@@ -83,7 +83,7 @@ function TextBlock({
           >
             {/* Bookmark icon */}
             {isBookmarked && (
-              <div className="absolute left-[0.5em] right-auto top-[-1em] cursor-pointer p-[0.25em] pt-[0.2em] text-xs">
+              <div className="absolute top-[-1em] right-auto left-[0.5em] cursor-pointer p-[0.25em] pt-[0.2em] text-xs">
                 <IconBookmarkFilled />
               </div>
             )}
