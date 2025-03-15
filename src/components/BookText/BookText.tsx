@@ -49,7 +49,9 @@ function BookText({ textParagraphs, isBookmarkModeActive }: BookTextProps) {
 
   // check localeStorage bookmarked value and scroll to it
   useEffect(() => {
-    const storageBookmarked = localStorage.getItem(BOOKMARK_KEY(slug));
+    const storageBookmarked = localStorage.getItem(
+      BOOKMARK_KEY(slug as string),
+    );
 
     if (!storageBookmarked) return;
 

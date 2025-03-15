@@ -50,23 +50,33 @@ export async function createUser(
     };
   }
 
-  // insert the user into the database
-  const userId = crypto.randomUUID();
-  const hashedPassword = await hashPassword(parsedForm.data.password);
-
-  await db.insert(users).values({
-    id: userId,
-    email: emailAddress,
-    password: hashedPassword,
-  });
-
   // create validation token
   const token = generateToken();
 
-  await db.insert(activeToken).values({
-    token,
-    userId,
-  });
+  // create transaction to create both the user and the activeToken
+  // if one of the two fails, we don't want the other to go through either
+  try {
+    db.transaction(async (tx) => {
+      // insert the user into the database
+      const userId = crypto.randomUUID();
+      const hashedPassword = await hashPassword(parsedForm.data.password);
+
+      await tx.insert(users).values({
+        id: userId ?? "",
+        email: emailAddress,
+        password: hashedPassword,
+      });
+
+      await tx.insert(activeToken).values({
+        token,
+        userId,
+      });
+    });
+  } catch {
+    return {
+      errors: { general: "An error occurred. Please try again later." },
+    };
+  }
 
   // send confirmation email
   const { data: resendData, error } = await resend.emails.send({

@@ -21,7 +21,7 @@ function BookCard({ bookInfo }: BookCardProps) {
     );
 
     if (savedFinishedBook) setIsFinished(true);
-  }, []);
+  }, [bookInfo]);
 
   return (
     <Link

@@ -112,7 +112,7 @@ function LoginForm({ setVisibleForm }: LoginFormProps) {
 
       {/* Bottom CTA */}
       <div className="mt-5 border-t pt-4 text-center text-sm">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <button
           className="cursor-pointer underline"
           onClick={() => setVisibleForm("register")}

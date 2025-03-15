@@ -36,13 +36,15 @@ function ToolBox({
   const { slug } = useParams();
 
   useEffect(() => {
-    const savedFinishedBook = localStorage.getItem(FINISHED_BOOK_KEY(slug));
+    const savedFinishedBook = localStorage.getItem(
+      FINISHED_BOOK_KEY(slug ?? ""),
+    );
 
     if (savedFinishedBook === "true") setIsBookFinished(true);
   }, []);
 
   function handleBookFinishedClick() {
-    const storageKey = FINISHED_BOOK_KEY(slug);
+    const storageKey = FINISHED_BOOK_KEY(slug ?? "");
 
     isBookFinished
       ? localStorage.removeItem(storageKey)

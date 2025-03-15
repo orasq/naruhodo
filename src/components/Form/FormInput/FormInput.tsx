@@ -29,4 +29,7 @@ const FormInput = forwardRef(
   },
 );
 
+// Exporting an arrow function directly doesn't give the component a displayName
+FormInput.displayName = "FormInput";
+
 export default FormInput;
